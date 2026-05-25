@@ -5,6 +5,7 @@ dist/
 .DS_Store
 *.log
 .superpowers/
+.cache/
 node_modules/
 dist/
 .env

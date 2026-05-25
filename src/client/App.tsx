@@ -74,10 +74,10 @@ export function App() {
   const [sources, setSources] = useState<Source[]>([]);
   const [years, setYears] = useState<number[]>([]);
   const [quality, setQuality] = useState<QualityResponse | null>(null);
-  const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedYear, setSelectedYear] = useState(2025);
   const [selectedDistrictId, setSelectedDistrictId] = useState("ufa");
-  const [selectedGroupId, setSelectedGroupId] = useState("bdmo_6_territoriya");
-  const [selectedIndicatorId, setSelectedIndicatorId] = useState("bdmo_y48006001");
+  const [selectedGroupId, setSelectedGroupId] = useState("bdmo_2_roznichnaya_torgovlya_i_obschestvennoe_pitanie");
+  const [selectedIndicatorId, setSelectedIndicatorId] = useState("bdmo_y48401003");
   const [ranking, setRanking] = useState<RankingRow[]>([]);
   const [profile, setProfile] = useState<DistrictProfile | null>(null);
   const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummary | null>(null);
