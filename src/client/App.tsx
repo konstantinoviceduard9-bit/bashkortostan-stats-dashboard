@@ -67,6 +67,7 @@ async function readStaticJson<T>(url: string): Promise<T> {
 
 export function App() {
   const [currentUser, setCurrentUser] = useState<DemoUser | null>(null);
+  const [loginDistrictId, setLoginDistrictId] = useState("ufa");
   const [districts, setDistricts] = useState<District[]>([]);
   const [groups, setGroups] = useState<IndicatorGroup[]>([]);
   const [indicators, setIndicators] = useState<Indicator[]>([]);
@@ -99,6 +100,7 @@ export function App() {
         setYears(nextYears);
         setQuality(nextQuality);
         setSelectedYear(nextYears[0] ?? 2024);
+        setLoginDistrictId(nextDistricts[0]?.id ?? "ufa");
       })
       .catch((loadError: Error) => setError(loadError.message));
   }, []);
@@ -147,29 +149,62 @@ export function App() {
   const selectedIndicator = indicators.find((indicator) => indicator.id === selectedIndicatorId);
   const selectedDistrict = districts.find((district) => district.id === selectedDistrictId);
   const selectedDistrictRank = ranking.find((row) => row.districtId === selectedDistrictId);
+  const isDistrictUser = currentUser?.role === "district_manager";
 
   if (!currentUser) {
     return (
       <main className="login-shell">
-        <section className="login-card">
-          <p className="eyebrow">Демо-вход</p>
-          <h1>Единый дашборд статистики</h1>
-          <p>
-            Сейчас вход демонстрационный: он задает роль пользователя. Позже этот слой заменим на настоящие логины,
-            пароли и доступы по районам.
-          </p>
-          <button
-            className="primary-button"
-            onClick={() =>
-              setCurrentUser({
-                id: "region-manager-demo",
-                name: "Руководство региона",
-                role: "region_manager"
-              })
-            }
-          >
-            Войти как руководство региона
-          </button>
+        <section className="login-grid">
+          <div className="login-card">
+            <p className="eyebrow">Демо-вход</p>
+            <h1>Единый дашборд статистики</h1>
+            <p>
+              Сейчас вход демонстрационный: он задает роль пользователя. Позже этот слой заменим на настоящие логины,
+              пароли и доступы по районам.
+            </p>
+            <button
+              className="primary-button"
+              onClick={() =>
+                setCurrentUser({
+                  id: "region-manager-demo",
+                  name: "Руководство региона",
+                  role: "region_manager"
+                })
+              }
+            >
+              Войти как руководство региона
+            </button>
+          </div>
+          <div className="login-card district-login-card">
+            <p className="eyebrow">Для районов</p>
+            <h2>Вход руководителя района</h2>
+            <p>Выберите свой район, чтобы видеть его показатели и текущее место в рейтингах.</p>
+            <label>
+              Район
+              <select value={loginDistrictId} onChange={(event) => setLoginDistrictId(event.target.value)}>
+                {districts.map((district) => (
+                  <option key={district.id} value={district.id}>
+                    {district.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              className="primary-button"
+              onClick={() => {
+                const district = districts.find((item) => item.id === loginDistrictId);
+                setSelectedDistrictId(loginDistrictId);
+                setCurrentUser({
+                  id: `district-manager-${loginDistrictId}`,
+                  name: district ? `Руководитель: ${district.name}` : "Руководитель района",
+                  role: "district_manager",
+                  districtId: loginDistrictId
+                });
+              }}
+            >
+              Войти по выбранному району
+            </button>
+          </div>
         </section>
       </main>
     );
@@ -189,7 +224,7 @@ export function App() {
         <div className="quality-card">
           <span>{currentUser.name}</span>
           <strong>Единый вход</strong>
-          <small>Роль: руководство региона</small>
+          <small>{isDistrictUser ? "Роль: руководитель района" : "Роль: руководство региона"}</small>
           <button className="ghost-button" onClick={() => setCurrentUser(null)}>
             Выйти
           </button>
@@ -211,7 +246,11 @@ export function App() {
         </label>
         <label>
           Район
-          <select value={selectedDistrictId} onChange={(event) => setSelectedDistrictId(event.target.value)}>
+          <select
+            value={selectedDistrictId}
+            disabled={isDistrictUser}
+            onChange={(event) => setSelectedDistrictId(event.target.value)}
+          >
             {districts.map((district) => (
               <option key={district.id} value={district.id}>
                 {district.name}
@@ -286,6 +325,35 @@ export function App() {
                   <em>{signal.reason}</em>
                 </button>
               ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {isDistrictUser ? (
+        <section className="panel district-focus-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Ваш район в текущей статистике</h2>
+              <p>
+                {selectedDistrict?.name}: место, значение и изменение позиции по выбранному показателю. Сравнение идет
+                со всеми районами в рейтинге.
+              </p>
+            </div>
+            <span>{selectedYear}</span>
+          </div>
+          <div className="district-focus-grid">
+            <div className="summary-card accent">
+              <span>Текущее место</span>
+              <strong>{selectedDistrictRank ? `${selectedDistrictRank.rank} из ${selectedDistrictRank.total}` : "-"}</strong>
+              <small>{selectedIndicator?.name}</small>
+            </div>
+            <div className="summary-card">
+              <span>Значение района</span>
+              <strong>
+                {selectedDistrictRank ? `${formatNumber(selectedDistrictRank.value)} ${selectedDistrictRank.unit}` : "-"}
+              </strong>
+              <small>{formatDelta(selectedDistrictRank?.rankDelta)}</small>
             </div>
           </div>
         </section>
