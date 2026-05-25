@@ -6,6 +6,7 @@ dist/
 *.log
 .superpowers/
 .cache/
+__pycache__/
 node_modules/
 dist/
 .env

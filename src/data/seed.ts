@@ -1,12 +1,17 @@
 import type { District, ImportRun, Indicator, IndicatorGroup, Source, StatValue } from "../shared/types";
 import { bdmoSnapshotGroups, bdmoSnapshotIndicators, bdmoSnapshotValues } from "./bdmoSnapshot";
 import { bashkortostanMunicipalities } from "./bashkortostanMunicipalities";
+import {
+  operationalSnapshotGroups,
+  operationalSnapshotIndicators,
+  operationalSnapshotValues
+} from "./operationalSnapshot";
 
 export const districts: District[] = bashkortostanMunicipalities;
 
-export const indicatorGroups: IndicatorGroup[] = bdmoSnapshotGroups;
+export const indicatorGroups: IndicatorGroup[] = [...operationalSnapshotGroups, ...bdmoSnapshotGroups];
 
-export const indicators: Indicator[] = bdmoSnapshotIndicators;
+export const indicators: Indicator[] = [...operationalSnapshotIndicators, ...bdmoSnapshotIndicators];
 
 export const sources: Source[] = [
   {
@@ -48,10 +53,18 @@ export const sources: Source[] = [
     url: "https://data.bashkortostan.ru/",
     format: "json",
     publishedAt: "2025-12-31"
+  },
+  {
+    id: "bashkortostan_open_data",
+    name: "Портал открытых данных Республики Башкортостан",
+    publisher: "Официальные открытые данные Республики Башкортостан",
+    url: "https://opendata.sf2.simai.ru/",
+    format: "csv",
+    publishedAt: "2026-01-28"
   }
 ];
 
-export const statValues: StatValue[] = bdmoSnapshotValues;
+export const statValues: StatValue[] = [...operationalSnapshotValues, ...bdmoSnapshotValues];
 
 export const importRuns: ImportRun[] = [
   {
@@ -61,6 +74,16 @@ export const importRuns: ImportRun[] = [
     startedAt: "2026-05-25T08:00:00.000Z",
     finishedAt: "2026-05-25T08:00:02.000Z",
     updatedRows: statValues.length,
+    warnings: [],
+    errors: []
+  },
+  {
+    id: "operational-health-2026",
+    sourceId: "bashkortostan_open_data",
+    status: "success",
+    startedAt: "2026-05-25T15:30:00.000Z",
+    finishedAt: "2026-05-25T15:30:02.000Z",
+    updatedRows: operationalSnapshotValues.length,
     warnings: [],
     errors: []
   }

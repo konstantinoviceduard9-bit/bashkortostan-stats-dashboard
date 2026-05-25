@@ -17,9 +17,9 @@ describe("Bashkortostan municipality catalog", () => {
     expect(districtAliases["город Уфа"]).toBe("ufa");
   });
 
-  it("ships only official BDMO snapshot statistic values", () => {
+  it("ships only official statistic values", () => {
     expect(statValues.length).toBeGreaterThan(63);
-    expect(statValues.every((value) => value.sourceId === "bdmo_rosstat")).toBe(true);
+    expect(statValues.every((value) => ["bdmo_rosstat", "bashkortostan_open_data"].includes(value.sourceId))).toBe(true);
     expect(statValues.some((value) => value.indicatorId === "population_total")).toBe(false);
   });
 });
