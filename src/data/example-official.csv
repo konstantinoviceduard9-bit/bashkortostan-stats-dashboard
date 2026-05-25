@@ -1,0 +1,9 @@
+district,indicator,year,value,source
+Уфа,population_total,2024,1144000,rosstat
+Стерлитамак,population_total,2024,274000,rosstat
+Белорецкий район,population_total,2024,101200,rosstat
+Бирский район,population_total,2024,81800,rosstat
+Уфа,average_salary,2024,82000,rosstat
+Стерлитамак,average_salary,2024,61000,rosstat
+Белорецкий район,average_salary,2024,56000,rosstat
+Бирский район,average_salary,2024,51000,rosstat
