@@ -18,6 +18,54 @@ select {
   font: inherit;
 }
 
+.login-shell {
+  align-items: center;
+  background: linear-gradient(135deg, #183b70, #0d8b7b);
+  display: flex;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  box-shadow: 0 24px 80px rgba(10, 25, 48, 0.22);
+  margin: 0 auto;
+  max-width: 620px;
+  padding: 36px;
+}
+
+.login-card h1 {
+  font-size: 42px;
+  line-height: 1;
+  margin: 8px 0 16px;
+}
+
+.login-card p {
+  color: #61708a;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.primary-button,
+.ghost-button {
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 12px 16px;
+}
+
+.primary-button {
+  background: #0d8b7b;
+  color: #fff;
+}
+
+.ghost-button {
+  background: #eef6f4;
+  color: #0d8b7b;
+}
+
 .app-shell {
   min-height: 100vh;
   padding: 32px;
@@ -73,6 +121,10 @@ select {
   flex-direction: column;
   gap: 8px;
   padding: 24px;
+}
+
+.quality-card button {
+  margin-top: 8px;
 }
 
 .quality-card span,
@@ -142,6 +194,56 @@ select {
 .content-grid {
   grid-template-columns: minmax(320px, 0.9fr) minmax(380px, 1.1fr);
   margin-bottom: 24px;
+}
+
+.executive-panel {
+  margin-bottom: 24px;
+}
+
+.executive-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.executive-cards,
+.signal-list {
+  display: grid;
+  gap: 12px;
+}
+
+.signal-card {
+  background: #fff;
+  border: 1px solid #e5edf4;
+  border-left: 6px solid #f59f00;
+  border-radius: 18px;
+  color: #172033;
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  text-align: left;
+}
+
+.signal-card.critical {
+  border-left-color: #d4380d;
+}
+
+.signal-card span {
+  color: #8c4b00;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.signal-card.critical span {
+  color: #a8071a;
+}
+
+.signal-card em {
+  color: #61708a;
+  font-style: normal;
 }
 
 .panel {
@@ -252,6 +354,7 @@ select {
   .filters,
   .summary-grid,
   .content-grid,
+  .executive-grid,
   .source-grid {
     grid-template-columns: 1fr;
   }

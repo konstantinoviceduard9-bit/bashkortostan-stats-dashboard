@@ -1,6 +1,7 @@
 export type DistrictType = "district" | "city";
 export type RankDirection = "asc" | "desc" | "neutral";
 export type ImportStatus = "success" | "warning" | "failed";
+export type UserRole = "region_manager" | "district_manager" | "admin" | "analyst";
 
 export interface District {
   id: string;
@@ -77,4 +78,38 @@ export interface DashboardSummary {
     rank?: number;
     total?: number;
   }>;
+}
+
+export interface DemoUser {
+  id: string;
+  name: string;
+  role: UserRole;
+  districtId?: string;
+}
+
+export interface ExecutiveSignal {
+  districtId: string;
+  districtName: string;
+  indicatorId: string;
+  indicatorName: string;
+  value: number;
+  unit: string;
+  rank: number;
+  total: number;
+  rankDelta?: number;
+  severity: "warning" | "critical";
+  reason: string;
+}
+
+export interface ExecutiveSummary {
+  year: number;
+  cards: Array<{
+    indicatorId: string;
+    indicatorName: string;
+    worstDistrictName: string;
+    worstRank: number;
+    total: number;
+    unit: string;
+  }>;
+  problemSignals: ExecutiveSignal[];
 }

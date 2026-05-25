@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { District, Indicator, IndicatorGroup, RankingRow, Source } from "../shared/types";
+import type { DemoUser, District, ExecutiveSummary, Indicator, IndicatorGroup, RankingRow, Source } from "../shared/types";
 
 interface QualityResponse {
   errors: Array<{ code: string; message: string }>;
@@ -30,6 +30,7 @@ async function fetchJson<T>(url: string): Promise<T> {
 }
 
 export function App() {
+  const [currentUser, setCurrentUser] = useState<DemoUser | null>(null);
   const [districts, setDistricts] = useState<District[]>([]);
   const [groups, setGroups] = useState<IndicatorGroup[]>([]);
   const [indicators, setIndicators] = useState<Indicator[]>([]);
@@ -42,6 +43,7 @@ export function App() {
   const [selectedIndicatorId, setSelectedIndicatorId] = useState("population_total");
   const [ranking, setRanking] = useState<RankingRow[]>([]);
   const [profile, setProfile] = useState<DistrictProfile | null>(null);
+  const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -85,6 +87,16 @@ export function App() {
       .catch((loadError: Error) => setError(loadError.message));
   }, [selectedDistrictId, selectedYear]);
 
+  useEffect(() => {
+    if (!selectedYear || currentUser?.role !== "region_manager") {
+      return;
+    }
+
+    fetchJson<ExecutiveSummary>(`/api/executive-summary?year=${selectedYear}`)
+      .then(setExecutiveSummary)
+      .catch((loadError: Error) => setError(loadError.message));
+  }, [currentUser?.role, selectedYear]);
+
   const filteredIndicators = useMemo(
     () => indicators.filter((indicator) => indicator.groupId === selectedGroupId),
     [indicators, selectedGroupId]
@@ -100,6 +112,33 @@ export function App() {
   const selectedDistrict = districts.find((district) => district.id === selectedDistrictId);
   const selectedDistrictRank = ranking.find((row) => row.districtId === selectedDistrictId);
 
+  if (!currentUser) {
+    return (
+      <main className="login-shell">
+        <section className="login-card">
+          <p className="eyebrow">Демо-вход</p>
+          <h1>Единый дашборд статистики</h1>
+          <p>
+            Сейчас вход демонстрационный: он задает роль пользователя. Позже этот слой заменим на настоящие логины,
+            пароли и доступы по районам.
+          </p>
+          <button
+            className="primary-button"
+            onClick={() =>
+              setCurrentUser({
+                id: "region-manager-demo",
+                name: "Руководство региона",
+                role: "region_manager"
+              })
+            }
+          >
+            Войти как руководство региона
+          </button>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="app-shell">
       <section className="hero">
@@ -112,9 +151,12 @@ export function App() {
           </p>
         </div>
         <div className="quality-card">
-          <span>Качество данных</span>
-          <strong>{quality ? `${quality.errors.length} ошибок` : "Загрузка..."}</strong>
-          <small>{quality ? `${quality.warnings.length} предупреждений` : "Проверяем справочники"}</small>
+          <span>{currentUser.name}</span>
+          <strong>Единый вход</strong>
+          <small>Роль: руководство региона</small>
+          <button className="ghost-button" onClick={() => setCurrentUser(null)}>
+            Выйти
+          </button>
         </div>
       </section>
 
@@ -162,6 +204,56 @@ export function App() {
           </select>
         </label>
       </section>
+
+      {currentUser.role === "region_manager" ? (
+        <section className="panel executive-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Сводка для руководства</h2>
+              <p>Ключевые показатели, проблемные сигналы и районы в нижней части рейтинга.</p>
+            </div>
+            <span>{selectedYear}</span>
+          </div>
+          <div className="executive-grid">
+            <div className="executive-cards">
+              {executiveSummary?.cards.slice(0, 6).map((card) => (
+                <div className="indicator-card" key={card.indicatorId}>
+                  <span>{card.indicatorName}</span>
+                  <strong>
+                    {card.worstDistrictName}: {card.worstRank} из {card.total}
+                  </strong>
+                  <small>Худшая позиция среди районов · {card.unit}</small>
+                </div>
+              ))}
+            </div>
+            <div className="signal-list">
+              {(executiveSummary?.problemSignals ?? []).slice(0, 6).map((signal) => (
+                <button
+                  className={`signal-card ${signal.severity}`}
+                  key={`${signal.indicatorId}-${signal.districtId}`}
+                  onClick={() => {
+                    const signalIndicator = indicators.find((indicator) => indicator.id === signal.indicatorId);
+                    setSelectedDistrictId(signal.districtId);
+                    if (signalIndicator) {
+                      setSelectedGroupId(signalIndicator.groupId);
+                    }
+                    setSelectedIndicatorId(signal.indicatorId);
+                  }}
+                >
+                  <span>{signal.severity === "critical" ? "Критично" : "Внимание"}</span>
+                  <strong>
+                    {signal.districtName}: {signal.rank} из {signal.total}
+                  </strong>
+                  <small>
+                    {signal.indicatorName} · {formatNumber(signal.value)} {signal.unit}
+                  </small>
+                  <em>{signal.reason}</em>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="summary-grid">
         <article className="summary-card accent">
@@ -236,8 +328,11 @@ export function App() {
       <section className="panel">
         <div className="panel-header">
           <div>
-            <h2>Источники данных</h2>
-            <p>Для каждого показателя сохраняется ссылка на официальный источник.</p>
+            <h2>Источники и качество данных</h2>
+            <p>
+              Для каждого показателя сохраняется ссылка на официальный источник. Проверка качества:{" "}
+              {quality ? `${quality.errors.length} ошибок, ${quality.warnings.length} предупреждений` : "загрузка"}.
+            </p>
           </div>
         </div>
         <div className="source-grid">

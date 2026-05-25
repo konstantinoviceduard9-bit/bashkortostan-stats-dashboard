@@ -67,6 +67,10 @@ api.get("/dashboard", (request, response) => {
   }
 });
 
+api.get("/executive-summary", (request, response) => {
+  response.json(store.getExecutiveSummary(Number(request.query.year)));
+});
+
 api.get("/quality", (_request, response) => {
   response.json(store.getQualityReport());
 });

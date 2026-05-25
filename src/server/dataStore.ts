@@ -7,6 +7,7 @@ import {
   statValues
 } from "../data/seed";
 import { buildRanking } from "../shared/ranking";
+import { buildExecutiveSummary } from "../shared/executive";
 import type { District, ImportRun, Indicator, IndicatorGroup, Source, StatValue } from "../shared/types";
 import { validateStatValues } from "../shared/quality";
 import type { CsvParseResult } from "./importer";
@@ -111,6 +112,16 @@ export class DataStore {
         total: value.total
       }))
     };
+  }
+
+  getExecutiveSummary(year: number) {
+    return buildExecutiveSummary({
+      districts,
+      indicators: this.indicators,
+      values: this.values,
+      year,
+      keyIndicatorIds: this.indicators.slice(0, 20).map((indicator) => indicator.id)
+    });
   }
 
   addImportedValues(values: StatValue[], run: ImportRun, catalog?: Pick<CsvParseResult, "indicatorGroups" | "indicators">) {
