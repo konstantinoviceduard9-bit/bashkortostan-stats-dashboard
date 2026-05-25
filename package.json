@@ -15,12 +15,13 @@
     "@vitejs/plugin-react": "latest",
     "cors": "latest",
     "express": "latest",
+    "fast-xml-parser": "^5.8.0",
+    "react": "latest",
+    "react-dom": "latest",
     "tsx": "latest",
     "typescript": "latest",
     "vite": "latest",
-    "vitest": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "vitest": "latest"
   },
   "devDependencies": {
     "@types/cors": "latest",

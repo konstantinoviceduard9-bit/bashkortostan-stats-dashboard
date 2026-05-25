@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { districtAliases } from "../shared/districts";
+import { createFedstatSdmxAdapter, type FedstatImportSpec } from "./fedstat";
 import { createCsvUrlAdapter, runImport } from "./importer";
 import { createConfiguredOfficialAdapter, listOfficialImportSources } from "./officialSources";
 import { store } from "./dataStore";
@@ -100,3 +101,38 @@ api.post("/imports/csv-url", async (request, response) => {
   store.addImportedValues(result.values, result.run);
   response.status(result.run.status === "failed" ? 422 : 201).json(result);
 });
+
+api.post("/imports/fedstat", async (request, response) => {
+  const spec = request.body as Partial<FedstatImportSpec>;
+
+  if (!isFedstatImportSpec(spec)) {
+    response.status(400).json({
+      error:
+        "Нужно передать точную Fedstat-спецификацию: fedstatIndicatorId, title, selectedFilterIds, filterObjectIds, localIndicatorId, municipalityDimension, yearDimension"
+    });
+    return;
+  }
+
+  const result = await runImport(createFedstatSdmxAdapter(spec));
+  store.addImportedValues(result.values, result.run);
+  response.status(result.run.status === "failed" ? 422 : 201).json(result);
+});
+
+function isFedstatImportSpec(spec: Partial<FedstatImportSpec>): spec is FedstatImportSpec {
+  return (
+    spec.format === "sdmx" &&
+    typeof spec.fedstatIndicatorId === "string" &&
+    typeof spec.title === "string" &&
+    Array.isArray(spec.selectedFilterIds) &&
+    spec.selectedFilterIds.every((item) => typeof item === "string") &&
+    typeof spec.filterObjectIds?.lineObjectIds === "string" &&
+    typeof spec.filterObjectIds?.columnObjectIds === "string" &&
+    typeof spec.filterObjectIds?.filterObjectIds === "string" &&
+    typeof spec.sourceId === "string" &&
+    typeof spec.localIndicatorId === "string" &&
+    typeof spec.municipalityDimension === "string" &&
+    typeof spec.yearDimension === "string" &&
+    typeof spec.districtAliases === "object" &&
+    spec.districtAliases !== null
+  );
+}

@@ -99,6 +99,14 @@ export const indicators: Indicator[] = [
 
 export const sources: Source[] = [
   {
+    id: "fedstat",
+    name: "Федстат / ЕМИСС",
+    publisher: "Единая межведомственная информационно-статистическая система",
+    url: "https://www.fedstat.ru/",
+    format: "json",
+    publishedAt: "2026-05-25"
+  },
+  {
     id: "bdmo_rosstat",
     name: "БД ПМО Росстата",
     publisher: "Федеральная служба государственной статистики",
