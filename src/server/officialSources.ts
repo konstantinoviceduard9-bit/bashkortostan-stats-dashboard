@@ -1,5 +1,6 @@
 import { districtAliases } from "../shared/districts";
-import { createCsvUrlAdapter, type OfficialSourceAdapter } from "./importer";
+import { indicatorAliases } from "../shared/indicators";
+import { createBdmoFlatCsvUrlAdapter, createCsvUrlAdapter, type OfficialSourceAdapter } from "./importer";
 
 export interface OfficialImportSource {
   sourceId: string;
@@ -10,6 +11,12 @@ export interface OfficialImportSource {
 }
 
 const officialImportSources = [
+  {
+    sourceId: "bdmo_rosstat",
+    name: "БД ПМО Росстата",
+    envVar: "BDMO_FLAT_CSV_URL",
+    description: "Плоская CSV-выгрузка БД ПМО: регион, муниципалитет, ОКТМО, показатель, год, значение"
+  },
   {
     sourceId: "rosstat",
     name: "Росстат",
@@ -46,6 +53,10 @@ export function createConfiguredOfficialAdapter(sourceId: string): OfficialSourc
   const url = process.env[source.envVar];
   if (!url) {
     throw new Error(`Для источника ${source.name} не задана переменная ${source.envVar}`);
+  }
+
+  if (source.sourceId === "bdmo_rosstat") {
+    return createBdmoFlatCsvUrlAdapter(source.sourceId, url, districtAliases, indicatorAliases);
   }
 
   return createCsvUrlAdapter(source.sourceId, url, districtAliases);

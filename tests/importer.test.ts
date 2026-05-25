@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseOfficialCsv } from "../src/server/importer";
+import { parseBdmoFlatCsv, parseOfficialCsv } from "../src/server/importer";
 
 describe("parseOfficialCsv", () => {
   it("normalizes official CSV rows into statistic values", () => {
@@ -35,5 +35,35 @@ describe("parseOfficialCsv", () => {
     expect(parsed.values).toEqual([]);
     expect(parsed.warnings).toHaveLength(1);
     expect(parsed.warnings[0]).toMatchObject({ row: 2 });
+  });
+});
+
+describe("parseBdmoFlatCsv", () => {
+  it("imports Bashkortostan rows from a semicolon-delimited BDMO flat table", () => {
+    const csv = [
+      "region;mo;oktmo;indicator;year;value",
+      "Республика Башкортостан;Уфа;80701000001;Численность населения;2024;1144000",
+      "Республика Татарстан;Казань;92701000001;Численность населения;2024;1320000",
+      "Республика Башкортостан;Белорецкий район;80611000000;Средняя зарплата;2024;56000"
+    ].join("\n");
+
+    const parsed = parseBdmoFlatCsv(csv, {
+      sourceId: "bdmo_rosstat",
+      targetRegion: "Республика Башкортостан",
+      districtAliases: {
+        "Уфа": "ufa",
+        "Белорецкий район": "beloretsk"
+      },
+      indicatorAliases: {
+        "Численность населения": "population_total",
+        "Средняя зарплата": "average_salary"
+      }
+    });
+
+    expect(parsed.values).toEqual([
+      { districtId: "ufa", indicatorId: "population_total", year: 2024, value: 1144000, sourceId: "bdmo_rosstat" },
+      { districtId: "beloretsk", indicatorId: "average_salary", year: 2024, value: 56000, sourceId: "bdmo_rosstat" }
+    ]);
+    expect(parsed.warnings).toEqual([]);
   });
 });

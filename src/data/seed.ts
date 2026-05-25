@@ -99,6 +99,14 @@ export const indicators: Indicator[] = [
 
 export const sources: Source[] = [
   {
+    id: "bdmo_rosstat",
+    name: "БД ПМО Росстата",
+    publisher: "Федеральная служба государственной статистики",
+    url: "https://rosstat.gov.ru/free_doc/new_site/bd_munst/munst.htm",
+    format: "csv",
+    publishedAt: "2025-09-25"
+  },
+  {
     id: "rosstat",
     name: "Росстат",
     publisher: "Федеральная служба государственной статистики",
