@@ -66,4 +66,50 @@ describe("parseBdmoFlatCsv", () => {
     ]);
     expect(parsed.warnings).toEqual([]);
   });
+
+  it("discovers new BDMO indicator groups and indicators when aliases are not predefined", () => {
+    const csv = [
+      "region;section;mo;oktmo;indicator_code;indicator;unit;year;value",
+      "Республика Башкортостан;31. Население;Уфа;80701000001;31010000;Новый показатель населения;чел.;2024;100",
+      "Республика Башкортостан;32. Занятость;Уфа;80701000001;32010000;Новый показатель зарплаты;руб.;2024;200"
+    ].join("\n");
+
+    const parsed = parseBdmoFlatCsv(csv, {
+      sourceId: "bdmo_rosstat",
+      targetRegion: "Республика Башкортостан",
+      districtAliases: { "Уфа": "ufa" },
+      indicatorAliases: {}
+    });
+
+    expect(parsed.indicatorGroups).toEqual([
+      { id: "bdmo_31_naselenie", name: "31. Население", description: "Раздел БД ПМО: 31. Население" },
+      { id: "bdmo_32_zanyatost", name: "32. Занятость", description: "Раздел БД ПМО: 32. Занятость" }
+    ]);
+    expect(parsed.indicators).toEqual([
+      {
+        id: "bdmo_31010000",
+        groupId: "bdmo_31_naselenie",
+        name: "Новый показатель населения",
+        unit: "чел.",
+        description: "Показатель БД ПМО: Новый показатель населения",
+        rankDirection: "desc",
+        sourceId: "bdmo_rosstat",
+        sourceIndicatorId: "31010000"
+      },
+      {
+        id: "bdmo_32010000",
+        groupId: "bdmo_32_zanyatost",
+        name: "Новый показатель зарплаты",
+        unit: "руб.",
+        description: "Показатель БД ПМО: Новый показатель зарплаты",
+        rankDirection: "desc",
+        sourceId: "bdmo_rosstat",
+        sourceIndicatorId: "32010000"
+      }
+    ]);
+    expect(parsed.values).toEqual([
+      { districtId: "ufa", indicatorId: "bdmo_31010000", year: 2024, value: 100, sourceId: "bdmo_rosstat" },
+      { districtId: "ufa", indicatorId: "bdmo_32010000", year: 2024, value: 200, sourceId: "bdmo_rosstat" }
+    ]);
+  });
 });

@@ -82,7 +82,7 @@ api.get("/import-sources", (_request, response) => {
 api.post("/imports/official/:sourceId", async (request, response) => {
   try {
     const result = await runImport(createConfiguredOfficialAdapter(request.params.sourceId));
-    store.addImportedValues(result.values, result.run);
+    store.addImportedValues(result.values, result.run, result);
     response.status(result.run.status === "failed" ? 422 : 201).json(result);
   } catch (error) {
     response.status(400).json({ error: error instanceof Error ? error.message : "Ошибка настройки импорта" });
@@ -98,7 +98,7 @@ api.post("/imports/csv-url", async (request, response) => {
   }
 
   const result = await runImport(createCsvUrlAdapter(sourceId, url, districtAliases));
-  store.addImportedValues(result.values, result.run);
+  store.addImportedValues(result.values, result.run, result);
   response.status(result.run.status === "failed" ? 422 : 201).json(result);
 });
 
@@ -114,7 +114,7 @@ api.post("/imports/fedstat", async (request, response) => {
   }
 
   const result = await runImport(createFedstatSdmxAdapter(spec));
-  store.addImportedValues(result.values, result.run);
+  store.addImportedValues(result.values, result.run, result);
   response.status(result.run.status === "failed" ? 422 : 201).json(result);
 });
 

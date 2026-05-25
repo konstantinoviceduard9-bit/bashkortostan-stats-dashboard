@@ -1,22 +1,44 @@
-import { districts, importRuns, indicatorGroups, indicators, sources, statValues } from "../data/seed";
+import {
+  districts,
+  importRuns as seedImportRuns,
+  indicatorGroups as seedIndicatorGroups,
+  indicators as seedIndicators,
+  sources,
+  statValues
+} from "../data/seed";
 import { buildRanking } from "../shared/ranking";
-import type { District, ImportRun, Indicator, Source, StatValue } from "../shared/types";
+import type { District, ImportRun, Indicator, IndicatorGroup, Source, StatValue } from "../shared/types";
 import { validateStatValues } from "../shared/quality";
+import type { CsvParseResult } from "./importer";
+
+interface DataStoreOptions {
+  seed?: boolean;
+}
 
 export class DataStore {
-  private values: StatValue[] = [...statValues];
-  private runs: ImportRun[] = [...importRuns];
+  private groups: IndicatorGroup[];
+  private indicators: Indicator[];
+  private values: StatValue[];
+  private runs: ImportRun[];
+
+  constructor(options: DataStoreOptions = {}) {
+    const useSeed = options.seed ?? true;
+    this.groups = useSeed ? [...seedIndicatorGroups] : [];
+    this.indicators = useSeed ? [...seedIndicators] : [];
+    this.values = useSeed ? [...statValues] : [];
+    this.runs = useSeed ? [...seedImportRuns] : [];
+  }
 
   listDistricts(): District[] {
     return districts;
   }
 
   listIndicatorGroups() {
-    return indicatorGroups;
+    return this.groups;
   }
 
   listIndicators(groupId?: string): Indicator[] {
-    return groupId ? indicators.filter((indicator) => indicator.groupId === groupId) : indicators;
+    return groupId ? this.indicators.filter((indicator) => indicator.groupId === groupId) : this.indicators;
   }
 
   listSources(): Source[] {
@@ -38,7 +60,7 @@ export class DataStore {
   }
 
   getRanking(indicatorId: string, year: number) {
-    const indicator = indicators.find((item) => item.id === indicatorId);
+    const indicator = this.indicators.find((item) => item.id === indicatorId);
     if (!indicator) {
       throw new Error(`Показатель не найден: ${indicatorId}`);
     }
@@ -58,7 +80,7 @@ export class DataStore {
     }
 
     const values = this.listValues({ districtId, year }).map((value) => {
-      const indicator = indicators.find((item) => item.id === value.indicatorId);
+      const indicator = this.indicators.find((item) => item.id === value.indicatorId);
       const source = sources.find((item) => item.id === value.sourceId);
       const ranking = indicator ? this.getRanking(indicator.id, year).find((row) => row.districtId === districtId) : undefined;
 
@@ -91,7 +113,10 @@ export class DataStore {
     };
   }
 
-  addImportedValues(values: StatValue[], run: ImportRun) {
+  addImportedValues(values: StatValue[], run: ImportRun, catalog?: Pick<CsvParseResult, "indicatorGroups" | "indicators">) {
+    this.upsertIndicatorGroups(catalog?.indicatorGroups ?? []);
+    this.upsertIndicators(catalog?.indicators ?? []);
+
     const nextValues = [...this.values];
     for (const imported of values) {
       const existingIndex = nextValues.findIndex(
@@ -120,9 +145,31 @@ export class DataStore {
   getQualityReport() {
     return validateStatValues({
       districts,
-      indicators,
+      indicators: this.indicators,
       values: this.values
     });
+  }
+
+  private upsertIndicatorGroups(groups: IndicatorGroup[]) {
+    for (const group of groups) {
+      const existingIndex = this.groups.findIndex((item) => item.id === group.id);
+      if (existingIndex >= 0) {
+        this.groups[existingIndex] = group;
+      } else {
+        this.groups.push(group);
+      }
+    }
+  }
+
+  private upsertIndicators(indicators: Indicator[]) {
+    for (const indicator of indicators) {
+      const existingIndex = this.indicators.findIndex((item) => item.id === indicator.id);
+      if (existingIndex >= 0) {
+        this.indicators[existingIndex] = indicator;
+      } else {
+        this.indicators.push(indicator);
+      }
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import type { ImportRun, StatValue } from "../shared/types";
+import type { ImportRun, Indicator, IndicatorGroup, StatValue } from "../shared/types";
 
 interface CsvParseOptions {
   sourceId: string;
@@ -18,6 +18,8 @@ interface CsvParseWarning {
 export interface CsvParseResult {
   values: StatValue[];
   warnings: CsvParseWarning[];
+  indicatorGroups?: IndicatorGroup[];
+  indicators?: Indicator[];
 }
 
 export interface OfficialSourceAdapter {
@@ -68,6 +70,8 @@ export function parseBdmoFlatCsv(csv: string, options: BdmoFlatCsvParseOptions):
   const [headers = [], ...dataRows] = rows;
   const values: StatValue[] = [];
   const warnings: CsvParseWarning[] = [];
+  const discoveredGroups = new Map<string, IndicatorGroup>();
+  const discoveredIndicators = new Map<string, Indicator>();
 
   dataRows.forEach((columns, index) => {
     const rowNumber = index + 2;
@@ -80,10 +84,23 @@ export function parseBdmoFlatCsv(csv: string, options: BdmoFlatCsvParseOptions):
 
     const districtName = getField(row, ["mo", "мо", "municipality", "муниципальное образование"]);
     const indicatorName = getField(row, ["indicator", "показатель", "indicator_name", "название показателя"]);
+    const indicatorCode = getField(row, ["indicator_code", "код показателя", "indicator_id", "код"]);
+    const unit = getField(row, ["unit", "единица измерения", "measure"]) || "значение";
+    const section = getField(row, ["section", "раздел", "group", "группа"]) || "БД ПМО";
     const year = Number(getField(row, ["year", "год"]));
     const value = Number(getField(row, ["value", "значение"]).replace(",", "."));
     const districtId = options.districtAliases[districtName] ?? options.districtAliases[normalizeMunicipalityName(districtName)];
-    const indicatorId = options.indicatorAliases[indicatorName] ?? options.indicatorAliases[normalizeIndicatorName(indicatorName)];
+    const discoveredIndicator = buildBdmoIndicator({
+      sourceId: options.sourceId,
+      indicatorName,
+      indicatorCode,
+      section,
+      unit
+    });
+    const indicatorId =
+      options.indicatorAliases[indicatorName] ??
+      options.indicatorAliases[normalizeIndicatorName(indicatorName)] ??
+      discoveredIndicator.id;
 
     if (!districtId || !indicatorId || !Number.isInteger(year) || !Number.isFinite(value)) {
       warnings.push({
@@ -91,6 +108,12 @@ export function parseBdmoFlatCsv(csv: string, options: BdmoFlatCsvParseOptions):
         message: `Строка БД ПМО ${rowNumber} пропущена: не распознан муниципалитет, показатель, год или значение`
       });
       return;
+    }
+
+    if (!options.indicatorAliases[indicatorName] && !options.indicatorAliases[normalizeIndicatorName(indicatorName)]) {
+      const group = buildBdmoGroup(section);
+      discoveredGroups.set(group.id, group);
+      discoveredIndicators.set(discoveredIndicator.id, discoveredIndicator);
     }
 
     values.push({
@@ -102,7 +125,12 @@ export function parseBdmoFlatCsv(csv: string, options: BdmoFlatCsvParseOptions):
     });
   });
 
-  return { values, warnings };
+  return {
+    values,
+    warnings,
+    indicatorGroups: [...discoveredGroups.values()],
+    indicators: [...discoveredIndicators.values()]
+  };
 }
 
 export function createCsvUrlAdapter(sourceId: string, url: string, districtAliases: Record<string, string>): OfficialSourceAdapter {
@@ -144,13 +172,17 @@ export function createBdmoFlatCsvUrlAdapter(
   };
 }
 
-export async function runImport(adapter: OfficialSourceAdapter): Promise<{ run: ImportRun; values: StatValue[] }> {
+export async function runImport(
+  adapter: OfficialSourceAdapter
+): Promise<{ run: ImportRun; values: StatValue[]; indicatorGroups?: IndicatorGroup[]; indicators?: Indicator[] }> {
   const startedAt = new Date().toISOString();
 
   try {
     const result = await adapter.load();
     return {
       values: result.values,
+      indicatorGroups: result.indicatorGroups,
+      indicators: result.indicators,
       run: {
         id: `${adapter.sourceId}-${Date.now()}`,
         sourceId: adapter.sourceId,
@@ -239,4 +271,79 @@ function normalizeMunicipalityName(name: string): string {
 
 function normalizeIndicatorName(name: string): string {
   return name.trim().replace(/\s+/g, " ");
+}
+
+function buildBdmoGroup(section: string): IndicatorGroup {
+  return {
+    id: `bdmo_${slugify(section)}`,
+    name: section,
+    description: `Раздел БД ПМО: ${section}`
+  };
+}
+
+function buildBdmoIndicator(input: {
+  sourceId: string;
+  indicatorName: string;
+  indicatorCode: string;
+  section: string;
+  unit: string;
+}): Indicator {
+  return {
+    id: `bdmo_${input.indicatorCode ? slugify(input.indicatorCode) : slugify(input.indicatorName)}`,
+    groupId: buildBdmoGroup(input.section).id,
+    name: input.indicatorName,
+    unit: input.unit,
+    description: `Показатель БД ПМО: ${input.indicatorName}`,
+    rankDirection: "desc",
+    sourceId: input.sourceId,
+    sourceIndicatorId: input.indicatorCode || input.indicatorName
+  };
+}
+
+function slugify(value: string): string {
+  return transliterate(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function transliterate(value: string): string {
+  const letters: Record<string, string> = {
+    а: "a",
+    б: "b",
+    в: "v",
+    г: "g",
+    д: "d",
+    е: "e",
+    ё: "e",
+    ж: "zh",
+    з: "z",
+    и: "i",
+    й: "y",
+    к: "k",
+    л: "l",
+    м: "m",
+    н: "n",
+    о: "o",
+    п: "p",
+    р: "r",
+    с: "s",
+    т: "t",
+    у: "u",
+    ф: "f",
+    х: "h",
+    ц: "c",
+    ч: "ch",
+    ш: "sh",
+    щ: "sch",
+    ы: "y",
+    э: "e",
+    ю: "yu",
+    я: "ya"
+  };
+
+  return value
+    .toLowerCase()
+    .replace(/[ъь]/g, "")
+    .replace(/[а-яё]/g, (letter) => letters[letter] ?? letter);
 }

@@ -21,6 +21,8 @@ export interface Indicator {
   unit: string;
   description: string;
   rankDirection: RankDirection;
+  sourceId?: string;
+  sourceIndicatorId?: string;
 }
 
 export interface Source {
