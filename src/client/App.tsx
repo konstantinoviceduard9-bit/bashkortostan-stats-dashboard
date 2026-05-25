@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { staticData } from "./staticData";
 import type { DemoUser, District, ExecutiveSummary, Indicator, IndicatorGroup, RankingRow, Source } from "../shared/types";
 
 interface QualityResponse {
@@ -21,12 +22,47 @@ interface DistrictProfile {
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
+  if (import.meta.env.PROD) {
+    return readStaticJson<T>(url);
+  }
+
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Ошибка API: ${response.status}`);
   }
 
   return response.json() as Promise<T>;
+}
+
+async function readStaticJson<T>(url: string): Promise<T> {
+  const [path, queryString = ""] = url.split("?");
+  const query = new URLSearchParams(queryString);
+
+  switch (path) {
+    case "/api/districts":
+      return staticData.districts as T;
+    case "/api/indicator-groups":
+      return staticData.indicatorGroups as T;
+    case "/api/indicators":
+      return staticData.indicators as T;
+    case "/api/sources":
+      return staticData.sources as T;
+    case "/api/years":
+      return staticData.years as T;
+    case "/api/quality":
+      return staticData.quality as T;
+    case "/api/rankings":
+      return staticData.getRanking(String(query.get("indicatorId")), Number(query.get("year"))) as T;
+    case "/api/executive-summary":
+      return staticData.getExecutiveSummary(Number(query.get("year"))) as T;
+    default: {
+      const profileMatch = path.match(/^\/api\/districts\/([^/]+)\/profile$/);
+      if (profileMatch) {
+        return staticData.getDistrictProfile(profileMatch[1], Number(query.get("year"))) as T;
+      }
+      throw new Error(`Статический режим не поддерживает ${url}`);
+    }
+  }
 }
 
 export function App() {

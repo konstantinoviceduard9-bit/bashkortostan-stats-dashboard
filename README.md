@@ -35,6 +35,14 @@ npm run dev
 - Frontend: `http://127.0.0.1:5173`
 - API: `http://127.0.0.1:4100/api/health`
 
+## Публичная ссылка
+
+GitHub Pages публикует статическую демо-версию дашборда:
+
+`https://konstantinoviceduard9-bit.github.io/bashkortostan-stats-dashboard/`
+
+На GitHub Pages Express API не запускается, поэтому опубликованная версия использует встроенные демонстрационные данные. Локальная версия с API и импортами запускается командами из раздела выше.
+
 ## Проверка
 
 ```bash
