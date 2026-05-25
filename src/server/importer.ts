@@ -76,7 +76,7 @@ export function parseBdmoFlatCsv(csv: string, options: BdmoFlatCsvParseOptions):
   dataRows.forEach((columns, index) => {
     const rowNumber = index + 2;
     const row = Object.fromEntries(headers.map((header, columnIndex) => [normalizeHeader(header), columns[columnIndex] ?? ""]));
-    const region = getField(row, ["region", "регион", "subject", "субъект"]);
+    const region = getField(row, ["region", "region_name", "регион", "subject", "субъект"]);
 
     if (!sameText(region, options.targetRegion)) {
       return;
@@ -85,10 +85,12 @@ export function parseBdmoFlatCsv(csv: string, options: BdmoFlatCsvParseOptions):
     const districtName = getField(row, ["mo", "мо", "municipality", "муниципальное образование"]);
     const indicatorName = getField(row, ["indicator", "показатель", "indicator_name", "название показателя"]);
     const indicatorCode = getField(row, ["indicator_code", "код показателя", "indicator_id", "код"]);
-    const unit = getField(row, ["unit", "единица измерения", "measure"]) || "значение";
-    const section = getField(row, ["section", "раздел", "group", "группа"]) || "БД ПМО";
+    const unit = getField(row, ["unit", "indicator_unit", "единица измерения", "measure"]) || "значение";
+    const sectionName = getField(row, ["section", "indicator_section", "раздел", "group", "группа"]) || "БД ПМО";
+    const sectionCode = getField(row, ["section_code", "indicator_section_code", "код раздела"]);
+    const section = sectionCode && !sectionName.startsWith(`${sectionCode}.`) ? `${sectionCode}. ${sectionName}` : sectionName;
     const year = Number(getField(row, ["year", "год"]));
-    const value = Number(getField(row, ["value", "значение"]).replace(",", "."));
+    const value = Number(getField(row, ["value", "indicator_value", "значение"]).replace(",", "."));
     const districtId = options.districtAliases[districtName] ?? options.districtAliases[normalizeMunicipalityName(districtName)];
     const discoveredIndicator = buildBdmoIndicator({
       sourceId: options.sourceId,

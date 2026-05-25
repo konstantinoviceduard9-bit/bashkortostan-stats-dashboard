@@ -76,8 +76,8 @@ export function App() {
   const [quality, setQuality] = useState<QualityResponse | null>(null);
   const [selectedYear, setSelectedYear] = useState(2024);
   const [selectedDistrictId, setSelectedDistrictId] = useState("ufa");
-  const [selectedGroupId, setSelectedGroupId] = useState("population");
-  const [selectedIndicatorId, setSelectedIndicatorId] = useState("population_total");
+  const [selectedGroupId, setSelectedGroupId] = useState("bdmo_6_territoriya");
+  const [selectedIndicatorId, setSelectedIndicatorId] = useState("bdmo_y48006001");
   const [ranking, setRanking] = useState<RankingRow[]>([]);
   const [profile, setProfile] = useState<DistrictProfile | null>(null);
   const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummary | null>(null);

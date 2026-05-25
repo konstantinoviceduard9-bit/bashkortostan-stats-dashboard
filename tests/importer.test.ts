@@ -112,4 +112,32 @@ describe("parseBdmoFlatCsv", () => {
       { districtId: "ufa", indicatorId: "bdmo_32010000", year: 2024, value: 200, sourceId: "bdmo_rosstat" }
     ]);
   });
+
+  it("imports tochno.st BDMO column names", () => {
+    const csv = [
+      "indicator_section_code;indicator_section;indicator_code;indicator_name;region_name;municipality;year;indicator_value;indicator_unit",
+      "6;Территория;Y48006001;Общая площадь земель муниципального образования;Республика Башкортостан;Абзелиловский муниципальный район;2025;428900.0;Гектар",
+      "6;Территория;Y48006001;Общая площадь земель муниципального образования;Республика Татарстан;Казань;2025;42530.0;Гектар",
+      "31;Население;Y48031001;Численность населения;Республика Башкортостан;городской округ город Уфа;2025;1190254.0;Человек"
+    ].join("\n");
+
+    const parsed = parseBdmoFlatCsv(csv, {
+      sourceId: "bdmo_rosstat",
+      targetRegion: "Республика Башкортостан",
+      districtAliases: {
+        "Абзелиловский муниципальный район": "abzelilovsky",
+        "городской округ город Уфа": "ufa"
+      },
+      indicatorAliases: {}
+    });
+
+    expect(parsed.indicatorGroups).toEqual([
+      { id: "bdmo_6_territoriya", name: "6. Территория", description: "Раздел БД ПМО: 6. Территория" },
+      { id: "bdmo_31_naselenie", name: "31. Население", description: "Раздел БД ПМО: 31. Население" }
+    ]);
+    expect(parsed.values).toEqual([
+      { districtId: "abzelilovsky", indicatorId: "bdmo_y48006001", year: 2025, value: 428900, sourceId: "bdmo_rosstat" },
+      { districtId: "ufa", indicatorId: "bdmo_y48031001", year: 2025, value: 1190254, sourceId: "bdmo_rosstat" }
+    ]);
+  });
 });
