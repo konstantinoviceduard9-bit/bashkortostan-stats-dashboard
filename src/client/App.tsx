@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ARCHIVE_YEARS, getArchiveBaseUrl, isArchiveYear, loadArchiveRanking } from "./archiveData";
 import { staticData } from "./staticData";
 import type { DemoUser, District, ExecutiveSummary, Indicator, IndicatorGroup, RankingRow, Source } from "../shared/types";
 
@@ -42,13 +43,18 @@ async function readStaticJson<T>(url: string): Promise<T> {
     case "/api/districts":
       return staticData.districts as T;
     case "/api/indicator-groups":
-      return staticData.indicatorGroups as T;
+      return staticData.getIndicatorGroups(query.get("year") ? Number(query.get("year")) : undefined) as T;
     case "/api/indicators":
-      return staticData.indicators as T;
+      return staticData.getIndicators(
+        String(query.get("groupId") ?? "") || undefined,
+        query.get("year") ? Number(query.get("year")) : undefined
+      ) as T;
     case "/api/sources":
       return staticData.sources as T;
     case "/api/years":
       return staticData.years as T;
+    case "/api/available-indicators":
+      return staticData.getAvailableIndicatorIds(Number(query.get("year"))) as T;
     case "/api/quality":
       return staticData.quality as T;
     case "/api/rankings":
@@ -81,21 +87,18 @@ export function App() {
   const [ranking, setRanking] = useState<RankingRow[]>([]);
   const [profile, setProfile] = useState<DistrictProfile | null>(null);
   const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummary | null>(null);
+  const [archiveStatus, setArchiveStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
       fetchJson<District[]>("/api/districts"),
-      fetchJson<IndicatorGroup[]>("/api/indicator-groups"),
-      fetchJson<Indicator[]>("/api/indicators"),
       fetchJson<Source[]>("/api/sources"),
       fetchJson<number[]>("/api/years"),
       fetchJson<QualityResponse>("/api/quality")
     ])
-      .then(([nextDistricts, nextGroups, nextIndicators, nextSources, nextYears, nextQuality]) => {
+      .then(([nextDistricts, nextSources, nextYears, nextQuality]) => {
         setDistricts(nextDistricts);
-        setGroups(nextGroups);
-        setIndicators(nextIndicators);
         setSources(nextSources);
         setYears(nextYears);
         setQuality(nextQuality);
@@ -110,6 +113,29 @@ export function App() {
       return;
     }
 
+    if (isArchiveYear(selectedYear)) {
+      const archiveBaseUrl = getArchiveBaseUrl();
+
+      if (!archiveBaseUrl) {
+        setRanking([]);
+        setArchiveStatus("Архивный источник пока не подключен. Укажите VITE_ARCHIVE_DATA_URL для загрузки старых лет.");
+        return;
+      }
+
+      setArchiveStatus("Загружаем архивные данные из облачного источника...");
+      loadArchiveRanking({ baseUrl: archiveBaseUrl, indicatorId: selectedIndicatorId, year: selectedYear })
+        .then((archiveRanking) => {
+          setRanking(archiveRanking);
+          setArchiveStatus("Архивные данные загружены.");
+        })
+        .catch((loadError: Error) => {
+          setRanking([]);
+          setArchiveStatus(loadError.message);
+        });
+      return;
+    }
+
+    setArchiveStatus(null);
     fetchJson<RankingRow[]>(`/api/rankings?indicatorId=${selectedIndicatorId}&year=${selectedYear}`)
       .then(setRanking)
       .catch((loadError: Error) => setError(loadError.message));
@@ -120,13 +146,27 @@ export function App() {
       return;
     }
 
+    if (isArchiveYear(selectedYear)) {
+      setProfile({
+        district: districts.find((district) => district.id === selectedDistrictId) ?? {
+          id: selectedDistrictId,
+          name: selectedDistrictId,
+          type: "district"
+        },
+        year: selectedYear,
+        values: []
+      });
+      return;
+    }
+
     fetchJson<DistrictProfile>(`/api/districts/${selectedDistrictId}/profile?year=${selectedYear}`)
       .then(setProfile)
       .catch((loadError: Error) => setError(loadError.message));
-  }, [selectedDistrictId, selectedYear]);
+  }, [districts, selectedDistrictId, selectedYear]);
 
   useEffect(() => {
-    if (!selectedYear || currentUser?.role !== "region_manager") {
+    if (!selectedYear || currentUser?.role !== "region_manager" || isArchiveYear(selectedYear)) {
+      setExecutiveSummary(null);
       return;
     }
 
@@ -135,10 +175,32 @@ export function App() {
       .catch((loadError: Error) => setError(loadError.message));
   }, [currentUser?.role, selectedYear]);
 
+  useEffect(() => {
+    if (!selectedYear || isArchiveYear(selectedYear)) {
+      return;
+    }
+
+    Promise.all([
+      fetchJson<IndicatorGroup[]>(`/api/indicator-groups?year=${selectedYear}`),
+      fetchJson<Indicator[]>(`/api/indicators?year=${selectedYear}`)
+    ])
+      .then(([nextGroups, nextIndicators]) => {
+        setGroups(nextGroups);
+        setIndicators(nextIndicators);
+      })
+      .catch((loadError: Error) => setError(loadError.message));
+  }, [selectedYear]);
+
   const filteredIndicators = useMemo(
     () => indicators.filter((indicator) => indicator.groupId === selectedGroupId),
     [indicators, selectedGroupId]
   );
+
+  useEffect(() => {
+    if (groups.length > 0 && !groups.some((group) => group.id === selectedGroupId)) {
+      setSelectedGroupId(groups[0].id);
+    }
+  }, [groups, selectedGroupId]);
 
   useEffect(() => {
     if (filteredIndicators.length > 0 && !filteredIndicators.some((indicator) => indicator.id === selectedIndicatorId)) {
@@ -150,6 +212,10 @@ export function App() {
   const selectedDistrict = districts.find((district) => district.id === selectedDistrictId);
   const selectedDistrictRank = ranking.find((row) => row.districtId === selectedDistrictId);
   const isDistrictUser = currentUser?.role === "district_manager";
+  const dashboardYears = useMemo(
+    () => [...new Set([...years, ...ARCHIVE_YEARS])].sort((a, b) => b - a),
+    [years]
+  );
 
   if (!currentUser) {
     return (
@@ -232,14 +298,19 @@ export function App() {
       </section>
 
       {error ? <div className="error">{error}</div> : null}
+      {archiveStatus ? <div className="archive-status">{archiveStatus}</div> : null}
+      <div className="archive-status">
+        Актуальный слой: БД ПМО 2024-2025 (официальный снимок) и оперативные открытые данные {selectedYear}. На
+        GitHub Pages данные обновляются при деплое и по расписанию, а не в реальном времени при каждом открытии страницы.
+      </div>
 
       <section className="filters">
         <label>
           Год
           <select value={selectedYear} onChange={(event) => setSelectedYear(Number(event.target.value))}>
-            {years.map((year) => (
+            {dashboardYears.map((year) => (
               <option key={year} value={year}>
-                {year}
+                {isArchiveYear(year) ? `${year} (архив)` : year}
               </option>
             ))}
           </select>
@@ -389,6 +460,13 @@ export function App() {
             <span>{selectedYear}</span>
           </div>
           <div className="ranking-list">
+            {ranking.length === 0 ? (
+              <p className="empty-state">
+                {isArchiveYear(selectedYear)
+                  ? "Для этого архивного года данные появятся после подключения облачного архива."
+                  : "По выбранному показателю нет значений за этот год."}
+              </p>
+            ) : null}
             {ranking.map((row) => (
               <button
                 className={row.districtId === selectedDistrictId ? "ranking-row active" : "ranking-row"}
@@ -414,6 +492,13 @@ export function App() {
             <span>{profile?.year}</span>
           </div>
           <div className="indicator-cards">
+            {profile?.values.length === 0 ? (
+              <p className="empty-state">
+                {isArchiveYear(selectedYear)
+                  ? "Карточка района по архивным годам будет загружаться из облачного архива по выбранному показателю."
+                  : "Для района нет значений за выбранный год."}
+              </p>
+            ) : null}
             {profile?.values.map((value) => (
               <div className="indicator-card" key={`${value.indicatorId}-${value.source?.id}`}>
                 <span>{value.indicator?.name ?? value.indicatorId}</span>

@@ -99,11 +99,11 @@ def main() -> None:
             zip_path = CACHE / f"data_section{code}_112_v20250918_section_file.zip"
             url = f"{BASE_URL}/data_section{code}_112_v20250918_section_file.zip"
             download(url, zip_path)
-            section_values = process_zip(zip_path, aliases, groups, indicators, values)
+            section_values = process_zip(zip_path, aliases, groups, indicators, values, args.min_year, args.max_year)
             write_section_snapshot(code, groups, indicators, values)
             print(f"section {code}: {section_values} values", flush=True)
 
-    groups, indicators, values = read_section_snapshots()
+    groups, indicators, values = read_section_snapshots(args.min_year, args.max_year)
     write_snapshot(groups, indicators, values)
     print(f"wrote {OUTPUT}", flush=True)
     print(f"groups={len(groups)} indicators={len(indicators)} values={len(values)}", flush=True)
@@ -113,6 +113,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate Bashkortostan BDMO static snapshot")
     parser.add_argument("--sections", nargs="*", type=int, help="BDMO section codes to process")
     parser.add_argument("--combine-only", action="store_true", help="Only combine already processed section snapshots")
+    parser.add_argument("--min-year", type=int, default=2024, help="Minimum year to include in bundled hot snapshot")
+    parser.add_argument("--max-year", type=int, default=2025, help="Maximum year to include in bundled hot snapshot")
     return parser.parse_args()
 
 
@@ -126,7 +128,7 @@ def write_section_snapshot(code: int, groups: dict, indicators: dict, values: di
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
 
-def read_section_snapshots() -> tuple[dict, dict, dict]:
+def read_section_snapshots(min_year: int, max_year: int) -> tuple[dict, dict, dict]:
     groups = {}
     indicators = {}
     values = {}
@@ -138,6 +140,8 @@ def read_section_snapshots() -> tuple[dict, dict, dict]:
         for indicator in payload["indicators"]:
             indicators[indicator["id"]] = indicator
         for value in payload["values"]:
+            if value["year"] < min_year or value["year"] > max_year:
+                continue
             values[(value["districtId"], value["indicatorId"], value["year"])] = value
 
     return groups, indicators, values
@@ -179,7 +183,15 @@ def download(url: str, path: Path) -> None:
         path.write_bytes(response.read())
 
 
-def process_zip(zip_path: Path, aliases: dict[str, str], groups: dict, indicators: dict, values: dict) -> int:
+def process_zip(
+    zip_path: Path,
+    aliases: dict[str, str],
+    groups: dict,
+    indicators: dict,
+    values: dict,
+    min_year: int,
+    max_year: int,
+) -> int:
     value_count = 0
     with zipfile.ZipFile(zip_path) as archive:
         csv_name = next(name for name in archive.namelist() if name.endswith(".csv"))
@@ -189,7 +201,7 @@ def process_zip(zip_path: Path, aliases: dict[str, str], groups: dict, indicator
                 if row.get("region_id") != "80":
                     continue
                 year = parse_year(row.get("year", ""))
-                if year not in YEARS:
+                if year is None or year < min_year or year > max_year:
                     continue
 
                 municipality = row.get("municipality", "").strip()

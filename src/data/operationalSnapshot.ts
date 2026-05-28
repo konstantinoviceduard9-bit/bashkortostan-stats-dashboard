@@ -4,7 +4,7 @@ export const operationalSnapshotGroups: IndicatorGroup[] = [
   {
     "id": "opendata_health_2026",
     "name": "Оперативные данные 2026: здравоохранение",
-    "description": "Официальные открытые данные Республики Башкортостан, опубликовано 28.01.2026"
+    "description": "Официальные открытые данные Республики Башкортостан. Снимок обновлён 2026-05-28 с https://opendata.sf2.simai.ru"
   }
 ];
 
@@ -14,7 +14,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Детские больницы: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 22, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 22, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "22"
@@ -24,7 +24,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Больницы: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 23, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 23, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "23"
@@ -34,7 +34,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Бюро судебно-медицинской экспертизы: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 24, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 24, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "24"
@@ -44,7 +44,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Госпитали: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 25, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 25, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "25"
@@ -54,7 +54,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Диспансеры: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 26, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 26, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "26"
@@ -64,7 +64,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Дома ребенка: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 27, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 27, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "27"
@@ -74,7 +74,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Поликлиники: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 28, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 28, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "28"
@@ -84,7 +84,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Медицинские информационно-аналитические центры: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 29, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 29, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "29"
@@ -94,7 +94,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Амбулатории: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 30, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 30, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "30"
@@ -104,7 +104,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Родильные дома: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 31, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 31, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "31"
@@ -114,7 +114,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Санатории: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 32, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 32, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "32"
@@ -124,7 +124,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Станции переливания крови: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 33, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 33, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "33"
@@ -134,7 +134,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Станции скорой помощи: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 34, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 34, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "34"
@@ -144,7 +144,7 @@ export const operationalSnapshotIndicators: Indicator[] = [
     "groupId": "opendata_health_2026",
     "name": "Стоматологические поликлиники: количество объектов",
     "unit": "ед.",
-    "description": "Открытые данные РБ, набор 35, дата публикации 28.01.2026",
+    "description": "Открытые данные РБ, набор 35, снимок 2026-05-28",
     "rankDirection": "desc",
     "sourceId": "bashkortostan_open_data",
     "sourceIndicatorId": "35"

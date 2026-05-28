@@ -34,12 +34,24 @@ export class DataStore {
     return districts;
   }
 
-  listIndicatorGroups() {
-    return this.groups;
+  listIndicatorGroups(year?: number) {
+    if (!year || Number.isNaN(year)) {
+      return this.groups;
+    }
+
+    const availableIndicatorIds = new Set(this.listAvailableIndicatorIds(year));
+    const availableGroupIds = new Set(
+      this.indicators.filter((indicator) => availableIndicatorIds.has(indicator.id)).map((indicator) => indicator.groupId)
+    );
+    return this.groups.filter((group) => availableGroupIds.has(group.id));
   }
 
-  listIndicators(groupId?: string): Indicator[] {
-    return groupId ? this.indicators.filter((indicator) => indicator.groupId === groupId) : this.indicators;
+  listIndicators(groupId?: string, year?: number): Indicator[] {
+    const availableIndicatorIds = year && !Number.isNaN(year) ? new Set(this.listAvailableIndicatorIds(year)) : null;
+
+    return this.indicators.filter((indicator) => {
+      return (!groupId || indicator.groupId === groupId) && (!availableIndicatorIds || availableIndicatorIds.has(indicator.id));
+    });
   }
 
   listSources(): Source[] {
@@ -58,6 +70,10 @@ export class DataStore {
         (!filters.year || value.year === filters.year)
       );
     });
+  }
+
+  listAvailableIndicatorIds(year: number): string[] {
+    return [...new Set(this.values.filter((value) => value.year === year).map((value) => value.indicatorId))];
   }
 
   getRanking(indicatorId: string, year: number) {

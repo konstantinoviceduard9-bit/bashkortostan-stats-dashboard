@@ -11,6 +11,27 @@ export const staticData = {
   sources,
   years: [...new Set(statValues.map((value) => value.year))].sort((a, b) => b - a),
   quality: validateStatValues({ districts, indicators, values: statValues }),
+  getAvailableIndicatorIds(year: number) {
+    return [...new Set(statValues.filter((value) => value.year === year).map((value) => value.indicatorId))];
+  },
+  getIndicatorGroups(year?: number) {
+    if (!year || Number.isNaN(year)) {
+      return indicatorGroups;
+    }
+
+    const availableIndicatorIds = new Set(this.getAvailableIndicatorIds(year));
+    const availableGroupIds = new Set(
+      indicators.filter((indicator) => availableIndicatorIds.has(indicator.id)).map((indicator) => indicator.groupId)
+    );
+    return indicatorGroups.filter((group) => availableGroupIds.has(group.id));
+  },
+  getIndicators(groupId?: string, year?: number) {
+    const availableIndicatorIds = year && !Number.isNaN(year) ? new Set(this.getAvailableIndicatorIds(year)) : null;
+
+    return indicators.filter((indicator) => {
+      return (!groupId || indicator.groupId === groupId) && (!availableIndicatorIds || availableIndicatorIds.has(indicator.id));
+    });
+  },
   getRanking(indicatorId: string, year: number) {
     const indicator = indicators.find((item) => item.id === indicatorId);
     return indicator ? buildRanking({ districts, indicator, values: statValues, year }) : [];

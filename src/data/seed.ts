@@ -68,12 +68,12 @@ export const statValues: StatValue[] = [...operationalSnapshotValues, ...bdmoSna
 
 export const importRuns: ImportRun[] = [
   {
-    id: "bdmo-snapshot-2023",
+    id: "bdmo-hot-snapshot-2024-2025",
     sourceId: "bdmo_rosstat",
     status: "success",
     startedAt: "2026-05-25T08:00:00.000Z",
     finishedAt: "2026-05-25T08:00:02.000Z",
-    updatedRows: statValues.length,
+    updatedRows: bdmoSnapshotValues.length,
     warnings: [],
     errors: []
   },

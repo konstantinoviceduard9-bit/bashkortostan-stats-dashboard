@@ -1,14 +1,27 @@
 import { describe, expect, it } from "vitest";
 import { staticData } from "../src/client/staticData";
+import { bdmoSnapshotValues } from "../src/data/bdmoSnapshot";
 
 describe("static BDMO data", () => {
-  it("uses official BDMO snapshot values for GitHub Pages rankings", () => {
-    const ranking = staticData.getRanking("bdmo_y48006001", 2023);
-    const abzelilovsky = ranking.find((row) => row.districtId === "abzelilovsky");
+  it("keeps only hot BDMO years in the bundled snapshot", () => {
+    expect(bdmoSnapshotValues.length).toBeGreaterThan(0);
+    expect(bdmoSnapshotValues.every((value) => value.year >= 2024)).toBe(true);
+    expect(staticData.years).toContain(2024);
+    expect(staticData.years).toContain(2025);
+    expect(staticData.years).not.toContain(2023);
+  });
 
-    expect(abzelilovsky).toMatchObject({
-      value: 428891,
-      sourceId: "bdmo_rosstat"
-    });
+  it("lists only indicators that have values for the selected year", () => {
+    const available2026 = (staticData as any).getAvailableIndicatorIds(2026);
+
+    expect(available2026).toContain("opendata_health_23_count");
+    expect(available2026).not.toContain("bdmo_y48006001");
+  });
+
+  it("filters static groups and indicators by selected year", () => {
+    expect((staticData as any).getIndicatorGroups(2026).map((group: { id: string }) => group.id)).toEqual([
+      "opendata_health_2026"
+    ]);
+    expect((staticData as any).getIndicators(undefined, 2026).every((indicator: { id: string }) => indicator.id.startsWith("opendata_health_"))).toBe(true);
   });
 });

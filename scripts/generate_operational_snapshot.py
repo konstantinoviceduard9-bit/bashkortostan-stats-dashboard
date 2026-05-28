@@ -1,7 +1,9 @@
+import argparse
 import csv
 import json
 import re
 import urllib.request
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,13 +29,26 @@ HEALTH_DATASETS = {
 }
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Generate Bashkortostan operational open data snapshot")
+    parser.add_argument("--year", type=int, default=date.today().year, help="Target year for operational indicators")
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
+    year = args.year
+    group_id = f"opendata_health_{year}"
+    fetched_on = date.today().isoformat()
     aliases = build_municipality_aliases()
     groups = [
         {
-            "id": "opendata_health_2026",
-            "name": "Оперативные данные 2026: здравоохранение",
-            "description": "Официальные открытые данные Республики Башкортостан, опубликовано 28.01.2026",
+            "id": group_id,
+            "name": f"Оперативные данные {year}: здравоохранение",
+            "description": (
+                f"Официальные открытые данные Республики Башкортостан. "
+                f"Снимок обновлён {fetched_on} с https://opendata.sf2.simai.ru"
+            ),
         }
     ]
     indicators = []
@@ -54,10 +69,10 @@ def main() -> None:
         indicators.append(
             {
                 "id": indicator_id,
-                "groupId": "opendata_health_2026",
+                "groupId": group_id,
                 "name": f"{dataset_name}: количество объектов",
                 "unit": "ед.",
-                "description": f"Открытые данные РБ, набор {dataset_id}, дата публикации 28.01.2026",
+                "description": f"Открытые данные РБ, набор {dataset_id}, снимок {fetched_on}",
                 "rankDirection": "desc",
                 "sourceId": "bashkortostan_open_data",
                 "sourceIndicatorId": str(dataset_id),
@@ -69,7 +84,7 @@ def main() -> None:
                 {
                     "districtId": district_id,
                     "indicatorId": indicator_id,
-                    "year": 2026,
+                    "year": year,
                     "value": count,
                     "sourceId": "bashkortostan_open_data",
                 }

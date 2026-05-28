@@ -15,12 +15,17 @@ api.get("/districts", (_request, response) => {
   response.json(store.listDistricts());
 });
 
-api.get("/indicator-groups", (_request, response) => {
-  response.json(store.listIndicatorGroups());
+api.get("/indicator-groups", (request, response) => {
+  response.json(store.listIndicatorGroups(request.query.year ? Number(request.query.year) : undefined));
 });
 
 api.get("/indicators", (request, response) => {
-  response.json(store.listIndicators(String(request.query.groupId ?? "") || undefined));
+  response.json(
+    store.listIndicators(
+      String(request.query.groupId ?? "") || undefined,
+      request.query.year ? Number(request.query.year) : undefined
+    )
+  );
 });
 
 api.get("/sources", (_request, response) => {
@@ -29,6 +34,10 @@ api.get("/sources", (_request, response) => {
 
 api.get("/years", (_request, response) => {
   response.json(store.listYears());
+});
+
+api.get("/available-indicators", (request, response) => {
+  response.json(store.listAvailableIndicatorIds(Number(request.query.year)));
 });
 
 api.get("/values", (request, response) => {

@@ -391,13 +391,26 @@ select {
   border-color: #46b7a8;
 }
 
-.error {
+.error,
+.archive-status,
+.empty-state {
   background: #fff1f0;
   border: 1px solid #ffccc7;
   border-radius: 16px;
   color: #a8071a;
   margin-bottom: 20px;
   padding: 14px 18px;
+}
+
+.archive-status,
+.empty-state {
+  background: #fff7e6;
+  border-color: #ffd591;
+  color: #8c4b00;
+}
+
+.empty-state {
+  margin: 0;
 }
 
 @media (max-width: 980px) {
