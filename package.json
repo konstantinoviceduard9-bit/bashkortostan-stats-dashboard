@@ -1,6 +1,6 @@
 {
   "name": "bashkortostan-stats-dashboard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,6 @@
     "@vitejs/plugin-react": "latest",
     "cors": "latest",
     "express": "latest",
-    "fast-xml-parser": "^5.8.0",
     "react": "latest",
     "react-dom": "latest",
     "tsx": "latest",
