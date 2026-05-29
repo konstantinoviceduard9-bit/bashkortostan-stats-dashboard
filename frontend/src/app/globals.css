@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bashkir-blue: #0080c6;
+  --bashkir-green: #006633;
+  --bashkir-gold: #c9a227;
+}
+
+body {
+  @apply min-h-screen bg-slate-50 text-slate-900 font-sans;
+  background-image: url("/ornament.svg");
+  background-size: 320px 320px;
+}
+
+@layer components {
+  .card-bashkir {
+    @apply rounded-xl border-2 border-bashkir-blue/30 bg-white p-6 shadow-md;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-bashkir-blue px-4 py-2 font-medium text-white transition hover:bg-bashkir-blue/90;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-lg border-2 border-bashkir-green px-4 py-2 font-medium text-bashkir-green transition hover:bg-bashkir-green/10;
+  }
+
+  .heading-gold {
+    @apply font-serif text-2xl font-bold text-bashkir-gold;
+  }
+}
