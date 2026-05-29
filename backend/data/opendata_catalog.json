@@ -2,119 +2,119 @@
   {
     "category": "health",
     "datasetId": "22",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨┤╨╡╤В╤Б╨║╨╕╤Е ╨▒╨╛╨╗╤М╨╜╨╕╤Ж",
+    "title": "Список детских больниц",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3773/data/data-20170414T092000-structure-20170414T092000.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "23",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨▒╨╛╨╗╤М╨╜╨╕╤Ж",
+    "title": "Список больниц",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3779/data/data-20170414T092500-structure-20170414T092500.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "24",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨▒╤О╤А╨╛ ╤Б╤Г╨┤╨╡╨▒╨╜╨╛-╨╝╨╡╨┤╨╕╤Ж╨╕╨╜╤Б╨║╨╛╨╣ ╤Н╨║╤Б╨┐╨╡╤А╤В╨╕╨╖╤Л",
+    "title": "Список бюро судебно-медицинской экспертизы",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3803/data/data-20170414T092900-structure-20170414T092900.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "25",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨│╨╛╤Б╨┐╨╕╤В╨░╨╗╨╡╨╣",
+    "title": "Список госпиталей",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3807/data/data-20170414T092500-structure-20170414T092500.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "26",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨┤╨╕╤Б╨┐╨░╨╜╤Б╨╡╤А╨╛╨▓",
+    "title": "Список диспансеров",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3811/data/data-20170414T092500-structure-20170414T092500.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "27",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨┤╨╛╨╝╨╛╨▓ ╤А╨╡╨▒╨╡╨╜╨║╨░",
+    "title": "Список домов ребенка",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3819/data/data-20170414T092500-structure-20170414T092500.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "28",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨║╨╛╨╗╨╗╨╡╨┤╨╢╨╡╨╣",
+    "title": "Список колледжей",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3824/data/data-20160414T105100-structure-20160414T105100.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "29",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨╝╨╡╨┤╨╕╤Ж╨╕╨╜╤Б╨║╨╕╤Е ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╨╛╨╜╨╜╨╛-╨░╨╜╨░╨╗╨╕╤В╨╕╤З╨╡╤Б╨║╨╕╤Е ╤Ж╨╡╨╜╤В╤А╨╛╨▓ (╨Ь╨Ш╨Р╨ж)",
+    "title": "Список медицинских информационно-аналитических центров (МИАЦ)",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3835/data/data-20170414T092500-structure-20170414T092500.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "30",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╨┐╨╛╨╗╨╕╨║╨╗╨╕╨╜╨╕╨║",
+    "title": "Список поликлиник",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3839/data/data-20170414T092500-structure-20170414T092500.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "31",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╤А╨╛╨┤╨╕╨╗╤М╨╜╤Л╤Е ╨┤╨╛╨╝╨╛╨▓",
+    "title": "Список родильных домов",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3846/data/data-20160415T103700-structure-20160415T103700.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "32",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╤Б╨░╨╜╨░╤В╨╛╤А╨╕╨╡╨▓",
+    "title": "Список санаториев",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3850/data/data-20160415T103700-structure-20160415T103700.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "33",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╤Б╤В╨░╨╜╤Ж╨╕╨╣ ╨┐╨╡╤А╨╡╨╗╨╕╨▓╨░╨╜╨╕╤П ╨║╤А╨╛╨▓╨╕",
+    "title": "Список станций переливания крови",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3863/data/data-20160415T103700-structure-20160415T103700.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "34",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╤Б╤В╨░╨╜╤Ж╨╕╨╣ ╤Б╨║╨╛╤А╨╛╨╣ ╨┐╨╛╨╝╨╛╤Й╨╕",
+    "title": "Список станций скорой помощи",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3869/data/data-20170415T103700-structure-20170415T103700.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "health",
     "datasetId": "35",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╤Б╤В╨╛╨╝╨░╤В╨╛╨╗╨╛╨│╨╕╤З╨╡╤Б╨║╨╕╤Е ╨┐╨╛╨╗╨╕╨║╨╗╨╕╨╜╨╕╨║",
+    "title": "Список стоматологических поликлиник",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3873/data/data-20170417T103700-structure-20170417T103700.csv",
     "groupId": "opendata_health_2026"
   },
   {
     "category": "public-services",
     "datasetId": "19",
-    "title": "╨б╨┐╨╕╤Б╨╛╨║ ╤Н╨╗╨╡╨║╤В╤А╨╛╨╜╨╜╤Л╤Е ╨│╨╛╤Б╤Г╨┤╨░╤А╤Б╤В╨▓╨╡╨╜╨╜╤Л╤Е ╨╕ ╨╝╤Г╨╜╨╕╤Ж╨╕╨┐╨░╨╗╤М╨╜╤Л╤Е ╤Г╤Б╨╗╤Г╨│",
+    "title": "Список электронных государственных и муниципальных услуг",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3296/data/data-20150929T114000-structure-20150929T114000.csv",
     "groupId": "opendata_public_services_2026"
   },
   {
     "category": "public-services",
     "datasetId": "20",
-    "title": "╨Я╨╛╨┤╨▓╨╡╨┤╨╛╨╝╤Б╤В╨▓╨╡╨╜╨╜╤Л╨╡ ╨╛╤А╨│╨░╨╜╨╕╨╖╨░╤Ж╨╕╨╕",
+    "title": "Подведомственные организации",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3519/data/data-20150929T115000-structure-20150929T115000.csv",
     "groupId": "opendata_public_services_2026"
   },
   {
     "category": "public-services",
     "datasetId": "21",
-    "title": "╨Ш╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╤П ╨╛╨▒ ╤Г╤З╤А╨╡╨╢╨┤╨╡╨╜╨╕╤П╤Е, ╨┐╤А╨╡╨┤╨┐╤А╨╕╤П╤В╨╕╤П╤Е ╨╕ ╨╕╨╜╤Л╤Е ╨╛╤А╨│╨░╨╜╨╕╨╖╨░╤Ж╨╕╤П╤Е, ╨┐╨╛╨┤╨▓╨╡╨┤╨╛╨╝╤Б╤В╨▓╨╡╨╜╨╜╤Л╤Е ╨У╨╛╤Б╤Г╨┤╨░╤А╤Б╤В╨▓╨╡╨╜╨╜╨╛╨╝╤Г ╨║╨╛╨╝╨╕╤В╨╡╤В╤Г ╨а╨╡╤Б╨┐╤Г╨▒╨╗╨╕╨║╨╕ ╨С╨░╤И╨║╨╛╤А╤В╨╛╤Б╤В╨░╨╜ ╨┐╨╛ ╤Б╤В╤А╨╛╨╕╤В╨╡╨╗╤М╤Б╤В╨▓╤Г ╨╕ ╨░╤А╤Е╨╕╤В╨╡╨║╤В╤Г╤А╨╡",
+    "title": "Информация об учреждениях, предприятиях и иных организациях, подведомственных Госкомитету РБ по строительству и архитектуре",
     "csvUrl": "https://opendata.sf2.simai.ru/scripts/dowhload_file_utf8.php?file=/opendata/csv/3581/data/data-20151222T154900-structure-20151222T154900.csv",
     "groupId": "opendata_public_services_2026"
   }

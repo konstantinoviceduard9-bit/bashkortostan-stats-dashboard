@@ -1,0 +1,25 @@
+# Продакшен: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+services:
+  postgres:
+    restart: unless-stopped
+
+  redis:
+    restart: unless-stopped
+
+  backend:
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+    environment:
+      DEBUG: "false"
+
+  celery_worker:
+    restart: unless-stopped
+
+  celery_beat:
+    restart: unless-stopped
+
+  frontend:
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production

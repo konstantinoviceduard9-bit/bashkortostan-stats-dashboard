@@ -88,12 +88,12 @@ async def upload_gas_data(
     connector = GasManualConnector(file_bytes=content, filename=file.filename)
     target_period = period or date.today().replace(month=1, day=1)
     result = await connector.fetch(target_period)
-    changed = await persist_connector_result(session, result)
+    changed, stats = await persist_connector_result(session, result)
     if changed:
         enqueue_new_data_event({"connector_id": connector.connector_id, "period": target_period.isoformat()})
     await rebuild_rankings(session, target_period)
     await session.commit()
-    return {"status": "success", "rows": len(result.observations), "changed": changed}
+    return {"status": "success", "rows": len(result.observations), "changed": changed, "stats": stats}
 
 
 @router.post("/notify")

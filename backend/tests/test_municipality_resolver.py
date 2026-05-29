@@ -14,3 +14,9 @@ def test_resolver_matches_city_aliases() -> None:
 
 def test_normalize_label() -> None:
     assert normalize_label("  Ёлочка  ") == "елочка"
+
+
+def test_normalize_fixes_latin_homoglyphs_in_russian() -> None:
+    nurimanov = Municipality(id=3, oktmo="80641000", name="Нуримановский район", type="district", slug="nurimanovsky")
+    resolver = MunicipalityResolver([nurimanov])
+    assert resolver.resolve("Нуpимановский район") == nurimanov

@@ -31,3 +31,4 @@ class ConnectorResult:
     observations: list[UnifiedObservation]
     raw_payload_hash: str
     fetched_at: datetime
+    stats: dict | None = None

@@ -1,14 +1,14 @@
 from datetime import date, datetime, timezone
-import io
 import json
 from pathlib import Path
 
 import httpx
-import pandas as pd
 
+from app.application.municipality_resolver import MunicipalityResolver, normalize_label
 from app.config import get_settings
 from app.domain.entities import ConnectorResult, UnifiedObservation
 from app.infrastructure.connectors.base import BaseConnector
+from app.infrastructure.connectors.opendata_csv import load_opendata_frame
 
 CATALOG_PATH = Path(__file__).resolve().parents[3] / "data" / "opendata_catalog.json"
 
@@ -27,6 +27,8 @@ MUNICIPALITY_EXACT_COLUMNS = frozenset(
     }
 )
 
+HEADER_LABELS = frozenset({"municipality", "муниципальное образование"})
+
 
 class OpendataRbConnector(BaseConnector):
     connector_id = "opendata_rb"
@@ -38,7 +40,7 @@ class OpendataRbConnector(BaseConnector):
         return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
 
     @staticmethod
-    def _detect_municipality_column(frame: pd.DataFrame) -> str | None:
+    def _detect_municipality_column(frame) -> str | None:
         for column in frame.columns:
             if str(column).strip().lower() in MUNICIPALITY_EXACT_COLUMNS:
                 return column
@@ -55,9 +57,16 @@ class OpendataRbConnector(BaseConnector):
             return "г. " + text[2:].lstrip()
         return text
 
+    @staticmethod
+    def _is_data_label(label: str) -> bool:
+        key = normalize_label(label)
+        return bool(key) and key not in HEADER_LABELS
+
     async def fetch(self, period: date, municipality_code: str | None = None) -> ConnectorResult:
         settings = get_settings()
         observations: list[UnifiedObservation] = []
+        resolver = MunicipalityResolver()
+        skipped_unresolved = 0
 
         async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
             for dataset in self._load_catalog():
@@ -71,7 +80,11 @@ class OpendataRbConnector(BaseConnector):
                 except httpx.HTTPError:
                     continue
 
-                frame = pd.read_csv(io.StringIO(response.text), sep=None, engine="python", dtype=str)
+                try:
+                    frame = load_opendata_frame(response.text)
+                except Exception:
+                    continue
+
                 municipality_column = self._detect_municipality_column(frame)
                 if not municipality_column:
                     continue
@@ -82,8 +95,12 @@ class OpendataRbConnector(BaseConnector):
 
                 for municipality_name, count in counts.items():
                     label = self._normalize_municipality_label(str(municipality_name))
-                    if not label:
+                    if not self._is_data_label(label):
                         continue
+                    if resolver.resolve(label) is None:
+                        skipped_unresolved += 1
+                        continue
+
                     observations.append(
                         UnifiedObservation(
                             indicator_code=f"opendata_health_{dataset_id}_count",
@@ -108,4 +125,5 @@ class OpendataRbConnector(BaseConnector):
             observations=observations,
             raw_payload_hash=self.hash_observations(observations),
             fetched_at=datetime.now(timezone.utc),
+            stats={"skipped_unresolved_labels": skipped_unresolved},
         )

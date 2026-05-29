@@ -13,8 +13,10 @@ from app.infrastructure.db.models import ConnectorRun, Indicator, IndicatorValue
 from app.infrastructure.notifications.service import NotificationService
 
 
-async def persist_connector_result(session: AsyncSession, result: ConnectorResult) -> bool:
-    """Сохраняет сырые данные и витрину. Возвращает True, если хэш изменился."""
+async def persist_connector_result(session: AsyncSession, result: ConnectorResult) -> tuple[bool, dict[str, int]]:
+    """Сохраняет сырые данные и витрину. Возвращает (hash_changed, stats)."""
+
+    stats = {"saved": 0, "skipped_municipality": 0}
 
     previous = await session.scalar(
         select(RawDataCache)
@@ -61,6 +63,7 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
         observation = map_observation(raw_observation)
         municipality = resolver.resolve(observation.oktmo)
         if municipality is None:
+            stats["skipped_municipality"] += 1
             continue
 
         indicator = await session.scalar(select(Indicator).where(Indicator.code == observation.indicator_code))
@@ -95,8 +98,9 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
                     payload_hash=result.raw_payload_hash,
                 )
             )
+        stats["saved"] += 1
 
-    return changed
+    return changed, stats
 
 
 async def _alert_connector_failures(connector_id: str, failures: int) -> None:
@@ -128,9 +132,15 @@ async def run_connector(
 
     try:
         result = await connector.fetch(period, municipality_code)
-        changed = await persist_connector_result(session, result)
+        changed, stats = await persist_connector_result(session, result)
         run.status = "success"
-        run.message = f"Загружено {len(result.observations)} наблюдений"
+        extra = ""
+        if result.stats:
+            extra = f"; {result.stats}"
+        run.message = (
+            f"Загружено {len(result.observations)} наблюдений, "
+            f"сохранено {stats['saved']}, без МО {stats['skipped_municipality']}{extra}"
+        )
         run.consecutive_failures = 0
         run.finished_at = datetime.now(timezone.utc)
         return changed, run.message

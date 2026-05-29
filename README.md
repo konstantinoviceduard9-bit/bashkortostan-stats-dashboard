@@ -38,6 +38,10 @@ docker compose exec backend python scripts/run_connectors.py --period 2023-01-01
 
 Статус коннекторов (admin JWT): `GET /api/v1/admin/connectors/status`
 
+Аудит сопоставления opendata → 63 МО: `python scripts/audit_opendata.py`
+
+Деплой на VPS: [docs/deploy.md](docs/deploy.md)
+
 ### Демо-учётные записи
 
 | Логин | Пароль | Роль |
@@ -71,7 +75,7 @@ docker-compose.yml
 |----|----------|--------|
 | `bdmo_tochno` | БД ПМО / tochno.st (10 секций, 63 МО верхнего уровня) | Авто (Celery) |
 | `opendata_rb` | opendata.sf2.simai.ru | Авто (ежедневно) |
-| `minfin_rb` | Минфин РБ | Заглушка (Excel URL в конфиге) |
+| `minfin_rb` | Минфин РБ | Excel по `MINFIN_REPORT_URL` (колонки oktmo, value) |
 | `emiss` | Башкортостанстат / ЕМИСС | Заглушка (SDMX/Playwright) |
 | `gas_manual` | ГАС «Управление» | Ручная загрузка CSV/Excel (`POST /admin/gas/upload`) |
 

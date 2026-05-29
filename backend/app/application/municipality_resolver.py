@@ -5,8 +5,33 @@ from app.domain.municipalities_catalog import MUNICIPALITIES_CATALOG
 from app.infrastructure.db.models import Municipality
 
 
+_LATIN_TO_CYRILLIC = str.maketrans(
+    {
+        "p": "р",
+        "P": "Р",
+        "o": "о",
+        "O": "О",
+        "e": "е",
+        "E": "Е",
+        "a": "а",
+        "A": "А",
+        "c": "с",
+        "C": "С",
+        "x": "х",
+        "X": "Х",
+    }
+)
+
+
+def fix_mixed_script_typos(value: str) -> str:
+    """Исправляет латинские homoglyph в русских названиях (opendata: «Нуpимановский»)."""
+    if not re.search(r"[а-яА-ЯёЁ]", value):
+        return value
+    return value.translate(_LATIN_TO_CYRILLIC)
+
+
 def normalize_label(value: str) -> str:
-    text = unicodedata.normalize("NFKC", value).replace("\u00a0", " ")
+    text = fix_mixed_script_typos(unicodedata.normalize("NFKC", value).replace("\u00a0", " "))
     text = text.lower().strip()
     text = text.replace("ё", "е")
     text = re.sub(r"\s+", " ", text)
