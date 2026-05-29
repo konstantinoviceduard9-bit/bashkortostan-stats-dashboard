@@ -1,12 +1,11 @@
 from datetime import date, datetime, timezone
-import io
 
 import httpx
-import pandas as pd
 
 from app.config import get_settings
 from app.domain.entities import ConnectorResult, UnifiedObservation
 from app.infrastructure.connectors.base import BaseConnector
+from app.infrastructure.connectors.bdmo_sections import DEFAULT_SECTIONS, fetch_sections
 
 
 class BdmoTochnoConnector(BaseConnector):
@@ -15,25 +14,35 @@ class BdmoTochnoConnector(BaseConnector):
     connector_id = "bdmo_tochno"
     display_name = "БД ПМО / tochno.st"
 
+    def __init__(self, sections: tuple[int, ...] | None = None) -> None:
+        self.sections = sections or DEFAULT_SECTIONS
+
     async def fetch(self, period: date, municipality_code: str | None = None) -> ConnectorResult:
-        settings = get_settings()
-        url = f"{settings.bdmo_tochno_base_url}/Rosstat/data_bdmo_118_v20250918/by_section/data_section1_112_v20250918_section_file.zip"
         observations: list[UnifiedObservation] = []
+        data_year: str | None = None
 
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            response = await client.get(url)
-            response.raise_for_status()
-            frame = pd.read_csv(io.BytesIO(response.content), sep=";", dtype=str, compression="zip")
+        async with httpx.AsyncClient(timeout=180.0) as client:
+            frame, data_year = await fetch_sections(client, self.sections, period)
 
-        year = str(period.year)
-        region_mask = frame["region_id"].astype(str) == settings.bashkortostan_region_id
-        year_mask = frame["year"].astype(str) == year
-        subset = frame[region_mask & year_mask]
+        if frame.empty:
+            return ConnectorResult(
+                connector_id=self.connector_id,
+                period=period,
+                oktmo=municipality_code,
+                observations=[],
+                raw_payload_hash=self.hash_observations([]),
+                fetched_at=datetime.now(timezone.utc),
+            )
+
+        effective_period = date(int(data_year), 1, 1) if data_year else period
 
         if municipality_code:
-            subset = subset[subset["oktmo"].astype(str) == municipality_code]
+            frame = frame[
+                (frame["oktmo"].astype(str) == municipality_code)
+                | (frame["oktmo_stable"].astype(str).str.startswith(municipality_code[:8]))
+            ]
 
-        for _, row in subset.iterrows():
+        for _, row in frame.iterrows():
             value = row.get("indicator_value")
             if value is None or str(value).strip() == "":
                 continue
@@ -43,23 +52,28 @@ class BdmoTochnoConnector(BaseConnector):
                 continue
 
             municipality = str(row.get("municipality", "")).strip()
-            oktmo_code = str(row.get("oktmo", "")).strip()
+            oktmo_code = str(row.get("oktmo", "")).strip()[:8]
             observations.append(
                 UnifiedObservation(
                     indicator_code=str(row.get("indicator_code", "")).strip(),
                     indicator_name=str(row.get("indicator_name", "")).strip(),
                     value=numeric,
                     unit=str(row.get("indicator_unit", "")).strip() or "ед.",
-                    period=period,
+                    period=effective_period,
                     oktmo=oktmo_code or municipality,
                     source=self.connector_id,
                     category=str(row.get("indicator_section", "")).strip() or None,
+                    metadata={
+                        "data_year": data_year,
+                        "requested_year": str(period.year),
+                        "bashkortostan_region_id": get_settings().bashkortostan_region_id,
+                    },
                 )
             )
 
         return ConnectorResult(
             connector_id=self.connector_id,
-            period=period,
+            period=effective_period,
             oktmo=municipality_code,
             observations=observations,
             raw_payload_hash=self.hash_observations(observations),

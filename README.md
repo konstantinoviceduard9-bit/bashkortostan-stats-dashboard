@@ -29,6 +29,15 @@ docker compose exec backend alembic upgrade head
 docker compose exec backend python scripts/seed_data.py
 ```
 
+### Загрузка реальных данных (ETL)
+
+```bash
+# Период запроса (год); если в БДМО нет 2025/2026 — подставится последний доступный (2023)
+docker compose exec backend python scripts/run_connectors.py --period 2023-01-01
+```
+
+Статус коннекторов (admin JWT): `GET /api/v1/admin/connectors/status`
+
 ### Демо-учётные записи
 
 | Логин | Пароль | Роль |
@@ -60,7 +69,7 @@ docker-compose.yml
 
 | ID | Источник | Режим |
 |----|----------|--------|
-| `bdmo_tochno` | БД ПМО / tochno.st | Авто (Celery) |
+| `bdmo_tochno` | БД ПМО / tochno.st (10 секций, 63 МО верхнего уровня) | Авто (Celery) |
 | `opendata_rb` | opendata.sf2.simai.ru | Авто (ежедневно) |
 | `minfin_rb` | Минфин РБ | Заглушка (Excel URL в конфиге) |
 | `emiss` | Башкортостанстат / ЕМИСС | Заглушка (SDMX/Playwright) |

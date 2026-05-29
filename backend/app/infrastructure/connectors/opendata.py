@@ -19,6 +19,14 @@ MUNICIPALITY_HINTS = (
     "муниципальное образование",
 )
 
+MUNICIPALITY_EXACT_COLUMNS = frozenset(
+    {
+        "municipality",
+        "муниципальное образование, на территории которого располагается объект",
+        "муниципальное образование",
+    }
+)
+
 
 class OpendataRbConnector(BaseConnector):
     connector_id = "opendata_rb"
@@ -32,10 +40,20 @@ class OpendataRbConnector(BaseConnector):
     @staticmethod
     def _detect_municipality_column(frame: pd.DataFrame) -> str | None:
         for column in frame.columns:
+            if str(column).strip().lower() in MUNICIPALITY_EXACT_COLUMNS:
+                return column
+        for column in frame.columns:
             lowered = str(column).lower()
             if any(hint in lowered for hint in MUNICIPALITY_HINTS):
                 return column
         return None
+
+    @staticmethod
+    def _normalize_municipality_label(label: str) -> str:
+        text = label.strip()
+        if text.lower().startswith("г.") and not text.lower().startswith("г. "):
+            return "г. " + text[2:].lstrip()
+        return text
 
     async def fetch(self, period: date, municipality_code: str | None = None) -> ConnectorResult:
         settings = get_settings()
@@ -63,7 +81,7 @@ class OpendataRbConnector(BaseConnector):
                 title = dataset.get("title", dataset_id)
 
                 for municipality_name, count in counts.items():
-                    label = str(municipality_name).strip()
+                    label = self._normalize_municipality_label(str(municipality_name))
                     if not label:
                         continue
                     observations.append(

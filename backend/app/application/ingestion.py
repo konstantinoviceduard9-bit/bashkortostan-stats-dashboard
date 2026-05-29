@@ -4,6 +4,7 @@ from datetime import date, datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.application.indicator_mapping import map_observation
 from app.application.municipality_resolver import MunicipalityResolver
 from app.config import get_settings
 from app.domain.entities import ConnectorResult
@@ -56,7 +57,8 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
     municipalities = (await session.execute(select(Municipality))).scalars().all()
     resolver = MunicipalityResolver(municipalities)
 
-    for observation in result.observations:
+    for raw_observation in result.observations:
+        observation = map_observation(raw_observation)
         municipality = resolver.resolve(observation.oktmo)
         if municipality is None:
             continue

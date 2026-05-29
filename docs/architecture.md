@@ -2,7 +2,7 @@
 
 ## Слои
 
-1. **Connectors** — загрузка из БД ПМО, opendata, Минфин, ЕМИСС, ручной ГАС.
+1. **Connectors** — загрузка из БД ПМО (10 секций tochno.st, 63 МО верхнего уровня), opendata, Минфин, ЕМИСС, ручной ГАС.
 2. **PostgreSQL** — сырой кеш + витрина (`indicator_values`, `ranking_snapshots`).
 3. **Redis** — очередь `new_data_detected`, Celery broker.
 4. **FastAPI** — JWT, RLS по `municipality_id`.

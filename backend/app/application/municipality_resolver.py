@@ -11,6 +11,7 @@ def normalize_label(value: str) -> str:
     text = text.replace("ё", "е")
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"[«»\"'`]", "", text)
+    text = re.sub(r"г\.\s*", "г. ", text)
     return text
 
 
@@ -28,6 +29,7 @@ def _aliases_for(name: str, slug: str, mtype: str) -> set[str]:
         if base.lower().endswith(suffix):
             base = base[: -len(suffix)].strip()
     aliases.add(normalize_label(base))
+    aliases.add(normalize_label(name.replace("г. ", "г.")))
     short_city = re.sub(r"^г\.?\s*", "", name, flags=re.IGNORECASE).strip()
     if short_city and short_city != name:
         aliases.add(normalize_label(short_city))

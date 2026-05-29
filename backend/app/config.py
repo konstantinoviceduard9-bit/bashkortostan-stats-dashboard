@@ -26,8 +26,19 @@ class Settings(BaseSettings):
     connector_failure_alert_threshold: int = 3
 
     bdmo_tochno_base_url: str = "https://storage.yandexcloud.net/tochno-st-catalog"
+    bdmo_sections: str = "1,2,3,5,6,7,8,9,12,13"
     opendata_base_url: str = "https://opendata.sf2.simai.ru"
     bashkortostan_region_id: str = "80"
+    minfin_report_url: str = ""
+
+    @property
+    def bdmo_section_list(self) -> tuple[int, ...]:
+        values: list[int] = []
+        for part in self.bdmo_sections.split(","):
+            part = part.strip()
+            if part.isdigit():
+                values.append(int(part))
+        return tuple(values) if values else (1, 2, 3, 5, 6, 7, 8, 9, 12, 13)
 
     @property
     def cors_origin_list(self) -> list[str]:
