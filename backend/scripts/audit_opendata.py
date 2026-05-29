@@ -17,7 +17,7 @@ from app.application.municipality_resolver import MunicipalityResolver, normaliz
 from app.infrastructure.connectors.opendata import CATALOG_PATH, OpendataRbConnector
 from app.infrastructure.connectors.opendata_csv import load_opendata_frame
 
-MAX_DATASETS = 3
+MAX_DATASETS: int | None = None  # None = весь каталог
 UNMATCHED_SAMPLE_LIMIT = 20
 
 
@@ -79,7 +79,7 @@ def audit_dataset(client: httpx.Client, dataset: dict, resolver: MunicipalityRes
 
 def main() -> int:
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
-    datasets = catalog[:MAX_DATASETS]
+    datasets = catalog if MAX_DATASETS is None else catalog[:MAX_DATASETS]
     resolver = MunicipalityResolver()
 
     grand_unique: set[str] = set()
@@ -123,7 +123,7 @@ def main() -> int:
                     grand_unmatched_counter[label] += 1
 
     print("\n" + "=" * 72)
-    print("AGGREGATE (first 3 datasets)")
+    print(f"AGGREGATE ({len(datasets)} datasets)")
     total = len(grand_unique)
     matched = len(grand_matched)
     rate = (matched / total * 100.0) if total else 100.0

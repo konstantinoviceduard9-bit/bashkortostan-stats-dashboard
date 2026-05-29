@@ -5,8 +5,17 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import CurrentUser, get_current_user
-from app.api.schemas import DashboardSummary, IndicatorRow, KpiCard, RatingRow, RatingView, UserProfile
+from app.api.schemas import (
+    DashboardSummary,
+    DataSourceInfo,
+    IndicatorRow,
+    KpiCard,
+    RatingRow,
+    RatingView,
+    UserProfile,
+)
 from app.application.dashboard_metrics import load_sparkline, percent_change
+from app.application.data_freshness import kpi_source_notes, latest_connector_runs
 from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality, RankingSnapshot, UserRoleEnum
 from app.infrastructure.db.session import get_db
 
@@ -108,6 +117,18 @@ async def summary(
 
     total_municipalities = await session.scalar(select(func.count()).select_from(Municipality))
 
+    sources = [
+        DataSourceInfo(
+            connector_id=row["connector_id"],
+            display_name=row["display_name"],
+            last_success_at=row["last_success_at"],
+            period=row["period"],
+            message=row["message"],
+        )
+        for row in await latest_connector_runs(session)
+    ]
+    notes = await kpi_source_notes(session, municipality.id, latest_period)
+
     return DashboardSummary(
         municipality_name=municipality.name,
         rank=rank_row.rank if rank_row else None,
@@ -115,6 +136,8 @@ async def summary(
         rank_delta=rank_row.rank_delta if rank_row else None,
         period=latest_period,
         kpis=kpis,
+        data_sources=sources,
+        source_notes=notes,
     )
 
 

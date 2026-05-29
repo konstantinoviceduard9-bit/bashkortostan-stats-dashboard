@@ -1,6 +1,14 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, Field
+
+
+class DataSourceInfo(BaseModel):
+    connector_id: str
+    display_name: str
+    last_success_at: datetime | None
+    period: date | None
+    message: str | None = None
 
 
 class LoginRequest(BaseModel):
@@ -36,6 +44,8 @@ class DashboardSummary(BaseModel):
     rank_delta: int | None
     period: date
     kpis: list[KpiCard]
+    data_sources: list[DataSourceInfo] = []
+    source_notes: list[str] = []
 
 
 class IndicatorRow(BaseModel):

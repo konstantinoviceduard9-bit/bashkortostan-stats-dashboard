@@ -76,7 +76,7 @@ docker-compose.yml
 | `bdmo_tochno` | БД ПМО / tochno.st (10 секций, 63 МО верхнего уровня) | Авто (Celery) |
 | `opendata_rb` | opendata.sf2.simai.ru | Авто (ежедневно) |
 | `minfin_rb` | Минфин РБ | Excel по `MINFIN_REPORT_URL` (колонки oktmo, value) |
-| `emiss` | Башкортостанстат / ЕМИСС | Заглушка (SDMX/Playwright) |
+| `emiss` | Башкортостанстат / ЕМИСС | SDMX/XML по `EMISS_SDMX_URL` |
 | `gas_manual` | ГАС «Управление» | Ручная загрузка CSV/Excel (`POST /admin/gas/upload`) |
 
 Единый контракт: `fetch(period, municipality_code) -> ConnectorResult`.
@@ -154,7 +154,11 @@ GitHub Actions: `.github/workflows/ci.yml` — lint/build backend и frontend.
 
 ## Дальнейшие шаги
 
-- [ ] Полный справочник 63 МО с ОКТМО  
-- [ ] Playwright для ЕМИСС / парсер Минфина  
-- [ ] Materialized views для рейтингов  
-- [ ] Официальный SVG герба РБ (заменить заглушку «РБ»)  
+- [x] Healthcheck Docker, `scripts/bootstrap.sh`, расширенный `/health`
+- [x] Источники данных на дашборде, админ-страница ETL
+- [x] Аудит opendata на весь каталог, шаблон ГАС, EMISS по URL
+- [ ] Синхронизация ОКТМО: `python scripts/sync_oktmo_from_bdmo.py` после seed
+- [ ] Прогон ETL на сервере (`run_connectors.py --period 2023-01-01`)
+- [ ] KPI зарплаты/безработицы из ЕМИСС или ручного маппинга БДМО
+- [ ] Materialized views для рейтингов
+- [ ] Официальный SVG герба РБ (заменить заглушку «РБ»)

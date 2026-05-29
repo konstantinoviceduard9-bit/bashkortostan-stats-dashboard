@@ -13,6 +13,14 @@ interface KpiCard {
   sparkline: number[];
 }
 
+interface DataSourceInfo {
+  connector_id: string;
+  display_name: string;
+  last_success_at: string | null;
+  period: string | null;
+  message: string | null;
+}
+
 interface DashboardSummary {
   municipality_name: string;
   rank: number | null;
@@ -20,6 +28,8 @@ interface DashboardSummary {
   rank_delta: number | null;
   period: string;
   kpis: KpiCard[];
+  data_sources: DataSourceInfo[];
+  source_notes: string[];
 }
 
 export default function DashboardPage() {
@@ -39,8 +49,34 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <section>
         <h2 className="heading-gold">Добро пожаловать, {summary.municipality_name}</h2>
-        <p className="text-slate-600">Официальная статистика по вашему муниципальному образованию</p>
+        <p className="text-slate-600">
+          Период данных: <strong>{summary.period}</strong>
+        </p>
+        {summary.source_notes.length > 0 ? (
+          <ul className="mt-2 list-inside list-disc text-sm text-amber-800">
+            {summary.source_notes.map((note) => (
+              <li key={note}>{note}</li>
+            ))}
+          </ul>
+        ) : null}
       </section>
+
+      {summary.data_sources.some((s) => s.last_success_at) ? (
+        <section className="card-bashkir text-sm">
+          <h3 className="font-semibold text-bashkir-blue">Источники данных</h3>
+          <ul className="mt-2 space-y-1 text-slate-600">
+            {summary.data_sources
+              .filter((s) => s.last_success_at)
+              .map((s) => (
+                <li key={s.connector_id}>
+                  {s.display_name}
+                  {s.period ? ` · период ${s.period}` : ""}
+                  {s.last_success_at ? ` · обновлено ${new Date(s.last_success_at).toLocaleString("ru-RU")}` : ""}
+                </li>
+              ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="card-bashkir border-bashkir-gold/50">
         <h3 className="text-lg font-semibold text-bashkir-blue">Место в рейтинге</h3>

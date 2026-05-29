@@ -30,9 +30,17 @@ MAX_BOT_TOKEN=...
 ## 2. Запуск
 
 ```bash
+chmod +x scripts/bootstrap.sh
+./scripts/bootstrap.sh
+```
+
+Или вручную:
+
+```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 docker compose exec backend alembic upgrade head
 docker compose exec backend python scripts/seed_data.py
+docker compose exec backend python scripts/sync_oktmo_from_bdmo.py
 ```
 
 Загрузка БДМО (долго, ~10 мин):

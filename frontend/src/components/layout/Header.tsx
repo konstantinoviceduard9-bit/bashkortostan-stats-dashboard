@@ -28,6 +28,9 @@ export function Header() {
           <Link href="/profile" className="text-bashkir-blue hover:underline">
             Профиль
           </Link>
+          <Link href="/dashboard/admin" className="text-bashkir-blue hover:underline">
+            Админ
+          </Link>
         </nav>
       </div>
     </header>

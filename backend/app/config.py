@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     opendata_base_url: str = "https://opendata.sf2.simai.ru"
     bashkortostan_region_id: str = "80"
     minfin_report_url: str = ""
+    emiss_sdmx_url: str = ""
 
     @property
     def bdmo_section_list(self) -> tuple[int, ...]:
