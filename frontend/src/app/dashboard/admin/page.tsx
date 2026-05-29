@@ -92,7 +92,7 @@ export default function AdminPage() {
         <Button onClick={runEtl} disabled={busy}>
           {busy ? "Выполняется…" : "Запустить все коннекторы"}
         </Button>
-        <Button type="button" className="bg-slate-200 text-bashkir-blue hover:bg-slate-300" onClick={load} disabled={busy}>
+        <Button type="button" className="btn-secondary" onClick={load} disabled={busy}>
           Обновить статус
         </Button>
       </div>

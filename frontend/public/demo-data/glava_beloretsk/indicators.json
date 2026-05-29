@@ -3,60 +3,80 @@
     "code": "budget_security",
     "name": "Бюджетная обеспеченность",
     "category": "Бюджет",
-    "value": 105.02,
+    "value": null,
     "unit": "%",
     "change_percent": null,
-    "republic_average": 97.6615873015873,
+    "republic_average": null,
     "source": "demo"
   },
   {
     "code": "housing_commissioned",
     "name": "Ввод жилья",
     "category": "ЖКХ",
-    "value": 18595.2,
+    "value": null,
     "unit": "кв. м",
     "change_percent": null,
-    "republic_average": 17254.259523809524,
+    "republic_average": null,
     "source": "demo"
   },
   {
     "code": "doctors_per_capita",
     "name": "Обеспеченность врачами",
     "category": "Здравоохранение",
-    "value": 32.38,
+    "value": null,
     "unit": "врач/10 тыс.",
     "change_percent": null,
-    "republic_average": 32.300158730158735,
+    "republic_average": null,
     "source": "demo"
   },
   {
     "code": "natural_growth",
     "name": "Естественный прирост",
     "category": "Население",
-    "value": -147.76,
+    "value": null,
     "unit": "чел.",
     "change_percent": null,
-    "republic_average": -138.71031746031747,
+    "republic_average": null,
     "source": "demo"
+  },
+  {
+    "code": "Y48401006",
+    "name": "Оборот общественного питания (без субъектов малого предпринимательства)",
+    "category": "Розничная торговля и общественное питание",
+    "value": 54416.6,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 174221.63157894736,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48401003",
+    "name": "Оборот розничной торговли (без субъектов малого предпринимательства)",
+    "category": "Розничная торговля и общественное питание",
+    "value": 136504.3,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 1027264.9882352941,
+    "source": "bdmo_tochno"
   },
   {
     "code": "unemployment",
     "name": "Безработица",
     "category": "Экономика",
-    "value": 5.44,
+    "value": null,
     "unit": "%",
     "change_percent": null,
-    "republic_average": 5.186190476190476,
+    "republic_average": null,
     "source": "demo"
   },
   {
     "code": "average_salary",
     "name": "Средняя зарплата",
     "category": "Экономика",
-    "value": 68248.96,
+    "value": null,
     "unit": "руб.",
     "change_percent": null,
-    "republic_average": 60324.358095238094,
+    "republic_average": null,
     "source": "demo"
   }
 ]

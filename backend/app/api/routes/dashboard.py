@@ -60,7 +60,18 @@ async def summary(
     if municipality is None:
         raise HTTPException(status_code=404, detail="Муниципалитет не найден")
 
-    latest_period = period or await session.scalar(select(func.max(IndicatorValue.period)))
+    latest_period = period or await session.scalar(
+        select(func.max(IndicatorValue.period)).where(
+            IndicatorValue.municipality_id == municipality.id,
+            IndicatorValue.payload_hash != "demo",
+        )
+    )
+    if latest_period is None:
+        latest_period = await session.scalar(
+            select(func.max(IndicatorValue.period)).where(IndicatorValue.municipality_id == municipality.id)
+        )
+    if latest_period is None:
+        latest_period = await session.scalar(select(func.max(IndicatorValue.period)))
     if latest_period is None:
         latest_period = date.today().replace(month=1, day=1)
 
@@ -155,7 +166,13 @@ async def indicators(
         query = query.where(Indicator.category == category)
     indicator_rows = (await session.execute(query.order_by(Indicator.category, Indicator.name))).scalars().all()
 
-    latest_period = await session.scalar(select(func.max(IndicatorValue.period))) or date.today()
+    latest_period = await session.scalar(
+        select(func.max(IndicatorValue.period)).where(IndicatorValue.payload_hash != "demo")
+    )
+    if latest_period is None:
+        latest_period = await session.scalar(select(func.max(IndicatorValue.period)))
+    if latest_period is None:
+        latest_period = date.today()
     result: list[IndicatorRow] = []
 
     for indicator in indicator_rows:

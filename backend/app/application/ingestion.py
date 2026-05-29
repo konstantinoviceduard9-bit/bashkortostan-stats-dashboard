@@ -1,4 +1,5 @@
 import json
+import math
 from datetime import date, datetime, timezone
 
 from sqlalchemy import select
@@ -61,6 +62,8 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
 
     for raw_observation in result.observations:
         observation = map_observation(raw_observation)
+        if not math.isfinite(observation.value):
+            continue
         municipality = resolver.resolve(observation.oktmo)
         if municipality is None:
             stats["skipped_municipality"] += 1

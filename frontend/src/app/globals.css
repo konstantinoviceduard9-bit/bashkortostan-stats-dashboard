@@ -9,25 +9,46 @@
 }
 
 body {
-  @apply min-h-screen bg-slate-50 text-slate-900 font-sans;
-  background-image: url("/ornament.svg");
-  background-size: 320px 320px;
+  @apply min-h-screen bg-slate-50 text-slate-900 font-sans antialiased;
+}
+
+body.login-page {
+  background-color: #f8fafc;
+  background-image: linear-gradient(135deg, rgba(0, 128, 198, 0.06), rgba(0, 102, 51, 0.06)),
+    url("/ornament.svg");
+  background-size: auto, 280px 280px;
 }
 
 @layer components {
   .card-bashkir {
-    @apply rounded-xl border-2 border-bashkir-blue/30 bg-white p-6 shadow-md;
+    @apply rounded-xl border border-bashkir-blue/25 bg-white p-6 shadow-sm;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-bashkir-blue px-4 py-2 font-medium text-white transition hover:bg-bashkir-blue/90;
+    @apply inline-flex items-center justify-center rounded-lg bg-bashkir-blue px-4 py-2 font-medium text-white transition hover:bg-bashkir-blue/90 disabled:opacity-60;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center rounded-lg border-2 border-bashkir-green px-4 py-2 font-medium text-bashkir-green transition hover:bg-bashkir-green/10;
+    @apply inline-flex items-center justify-center rounded-lg border-2 border-bashkir-green px-4 py-2 font-medium text-bashkir-green transition hover:bg-bashkir-green/10 disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg bg-slate-100 px-4 py-2 font-medium text-bashkir-blue transition hover:bg-slate-200 disabled:opacity-60;
+  }
+
+  .input-bashkir {
+    @apply mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none transition focus:border-bashkir-blue focus:ring-2 focus:ring-bashkir-blue/25;
   }
 
   .heading-gold {
     @apply font-serif text-2xl font-bold text-bashkir-gold;
+  }
+
+  .page-intro {
+    @apply text-slate-600;
+  }
+
+  .kpi-value {
+    @apply mt-2 text-3xl font-bold tracking-tight text-slate-900;
   }
 }

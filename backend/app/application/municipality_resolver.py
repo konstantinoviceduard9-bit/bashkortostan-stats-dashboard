@@ -98,11 +98,16 @@ class MunicipalityResolver:
             return self.by_oktmo[key]
         if key in self.by_slug:
             return self.by_slug[key]
-        # catalog-only mode during connector dry-run
+        digits = re.sub(r"\D", "", label)
+        if len(digits) >= 5:
+            for oktmo_key, municipality in self.by_oktmo.items():
+                oktmo_digits = re.sub(r"\D", "", oktmo_key)
+                if oktmo_digits.startswith(digits[:8]) or digits.startswith(oktmo_digits[:8]):
+                    return municipality
         for item in MUNICIPALITIES_CATALOG:
             aliases = _aliases_for(item["name"], item["slug"], item["type"])
             if key in aliases or key == normalize_label(item["oktmo"]):
-                return None  # caller uses DB rows in ingestion
+                return None
         return self.by_alias.get(key) if isinstance(self.by_alias.get(key), Municipality) else None
 
     def resolve_id(self, municipalities: list[Municipality], label: str) -> Municipality | None:

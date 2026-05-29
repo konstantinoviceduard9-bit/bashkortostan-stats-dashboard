@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+import math
 
 import httpx
 
@@ -50,9 +51,11 @@ class BdmoTochnoConnector(BaseConnector):
                 numeric = float(str(value).replace(",", ".").replace(" ", ""))
             except ValueError:
                 continue
+            if not math.isfinite(numeric):
+                continue
 
             municipality = str(row.get("municipality", "")).strip()
-            oktmo_code = str(row.get("oktmo", "")).strip()[:8]
+            oktmo_code = str(row.get("oktmo_stable") or row.get("oktmo") or "").strip()[:8]
             observations.append(
                 UnifiedObservation(
                     indicator_code=str(row.get("indicator_code", "")).strip(),

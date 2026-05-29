@@ -1,14 +1,16 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { apiFetch, setToken } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
+import { ErrorBanner } from "@/components/ui/LoadingState";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [login, setLogin] = useState("glava_ufa");
-  const [password, setPassword] = useState("district12345");
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,40 +33,44 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <div className="card-bashkir w-full max-w-md border-bashkir-green/40">
+    <main className="login-page flex min-h-screen items-center justify-center p-4">
+      <div className="card-bashkir w-full max-w-md border-bashkir-green/30 shadow-lg">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-full border-4 border-bashkir-gold bg-white text-2xl font-bold text-bashkir-green">
-            РБ
-          </div>
+          <Image src="/emblem-rb.svg" alt="Герб Республики Башкортостан" width={80} height={80} className="mx-auto mb-3" priority />
           <h1 className="heading-gold">Вход в дашборд</h1>
-          <p className="mt-2 text-sm text-slate-600">Республика Башкортостан</p>
+          <p className="mt-2 text-sm text-slate-600">Республика Башкортостан · 63 муниципалитета</p>
         </div>
         <form className="space-y-4" onSubmit={onSubmit}>
-          <label className="block text-sm font-medium">
+          <label className="block text-sm font-medium text-slate-700">
             Логин
             <input
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="input-bashkir"
               value={login}
               onChange={(event) => setLogin(event.target.value)}
               autoComplete="username"
+              placeholder="glava_ufa"
+              required
             />
           </label>
-          <label className="block text-sm font-medium">
+          <label className="block text-sm font-medium text-slate-700">
             Пароль
             <input
               type="password"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="input-bashkir"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               autoComplete="current-password"
+              required
             />
           </label>
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          {error ? <ErrorBanner message={error} /> : null}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Вход…" : "Войти"}
           </Button>
         </form>
+        <p className="mt-4 text-center text-xs text-slate-500">
+          Демо: <code className="rounded bg-slate-100 px-1">glava_ufa</code> / <code className="rounded bg-slate-100 px-1">district12345</code>
+        </p>
       </div>
     </main>
   );

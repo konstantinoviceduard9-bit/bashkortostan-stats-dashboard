@@ -10,6 +10,7 @@ import httpx
 
 BACKEND = Path(__file__).resolve().parents[1] / "backend"
 OUT = BACKEND.parent / "frontend" / "public" / "demo-data"
+NATIVE_DB = BACKEND / "data" / "native_demo.db"
 DB = BACKEND / "data" / "static_export.db"
 
 USERS = [
@@ -28,17 +29,22 @@ ENDPOINTS = [
 
 
 async def prepare_db() -> None:
-    os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{DB.as_posix()}"
+    db_path = NATIVE_DB if NATIVE_DB.exists() else DB
+    os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{db_path.as_posix()}"
     os.environ.setdefault("DEMO_MODE", "true")
     os.environ.setdefault("JWT_SECRET", "static-export-secret")
-
-    if DB.exists():
-        DB.unlink()
 
     sys.path.insert(0, str(BACKEND))
     from app.config import get_settings
 
     get_settings.cache_clear()
+
+    if NATIVE_DB.exists():
+        print(f"Using live DB: {NATIVE_DB}")
+        return
+
+    if DB.exists():
+        DB.unlink()
 
     from app.infrastructure.db.base import Base
     from app.infrastructure.db.session import engine
