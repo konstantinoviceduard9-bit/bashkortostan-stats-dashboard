@@ -6,7 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import CurrentUser, get_current_user
 from app.api.schemas import DashboardSummary, IndicatorRow, KpiCard, RatingRow, RatingView, UserProfile
-from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality, RankingSnapshot, User, UserRoleEnum
+from app.application.dashboard_metrics import load_sparkline, percent_change
+from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality, RankingSnapshot, UserRoleEnum
 from app.infrastructure.db.session import get_db
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
@@ -19,6 +20,8 @@ KPI_CODES = [
     "doctors_per_capita",
     "housing_commissioned",
 ]
+
+RANKING_INDICATOR_CODE = "average_salary"
 
 
 @router.get("/me", response_model=UserProfile)
@@ -52,16 +55,16 @@ async def summary(
     if latest_period is None:
         latest_period = date.today().replace(month=1, day=1)
 
-    rank_row = await session.scalar(
-        select(RankingSnapshot)
-        .join(Indicator, Indicator.id == RankingSnapshot.indicator_id)
-        .where(
-            RankingSnapshot.municipality_id == municipality.id,
-            RankingSnapshot.period == latest_period,
+    rank_indicator = await session.scalar(select(Indicator).where(Indicator.code == RANKING_INDICATOR_CODE))
+    rank_row = None
+    if rank_indicator:
+        rank_row = await session.scalar(
+            select(RankingSnapshot).where(
+                RankingSnapshot.indicator_id == rank_indicator.id,
+                RankingSnapshot.municipality_id == municipality.id,
+                RankingSnapshot.period == latest_period,
+            )
         )
-        .order_by(RankingSnapshot.rank.asc())
-        .limit(1)
-    )
 
     kpis: list[KpiCard] = []
     for code in KPI_CODES:
@@ -69,6 +72,7 @@ async def summary(
         if indicator is None:
             kpis.append(KpiCard(code=code, name=code, value=None, unit="—", change_percent=None, sparkline=[]))
             continue
+
         value_row = await session.scalar(
             select(IndicatorValue).where(
                 IndicatorValue.indicator_id == indicator.id,
@@ -76,21 +80,38 @@ async def summary(
                 IndicatorValue.period == latest_period,
             )
         )
+        previous_period = date(latest_period.year - 1, latest_period.month, 1) if latest_period.month == 1 else date(
+            latest_period.year, latest_period.month - 1, 1
+        )
+        previous_row = await session.scalar(
+            select(IndicatorValue).where(
+                IndicatorValue.indicator_id == indicator.id,
+                IndicatorValue.municipality_id == municipality.id,
+                IndicatorValue.period == previous_period,
+            )
+        )
+        sparkline = await load_sparkline(session, indicator.id, municipality.id, latest_period)
+
         kpis.append(
             KpiCard(
                 code=indicator.code,
                 name=indicator.name,
                 value=value_row.value if value_row else None,
                 unit=indicator.unit,
-                change_percent=None,
-                sparkline=[],
+                change_percent=percent_change(
+                    value_row.value if value_row else None,
+                    previous_row.value if previous_row else None,
+                ),
+                sparkline=sparkline,
             )
         )
+
+    total_municipalities = await session.scalar(select(func.count()).select_from(Municipality))
 
     return DashboardSummary(
         municipality_name=municipality.name,
         rank=rank_row.rank if rank_row else None,
-        total=rank_row.total if rank_row else 63,
+        total=rank_row.total if rank_row else (total_municipalities or 63),
         rank_delta=rank_row.rank_delta if rank_row else None,
         period=latest_period,
         kpis=kpis,
@@ -152,7 +173,9 @@ async def rating(
     if latest_period is None:
         return RatingView(self_rank=None, self_total=63, top=[], bottom=[])
 
-    base_indicator = await session.scalar(select(Indicator).limit(1))
+    base_indicator = await session.scalar(select(Indicator).where(Indicator.code == RANKING_INDICATOR_CODE))
+    if base_indicator is None:
+        base_indicator = await session.scalar(select(Indicator).limit(1))
     if base_indicator is None:
         return RatingView(self_rank=None, self_total=63, top=[], bottom=[])
 

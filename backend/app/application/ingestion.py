@@ -4,9 +4,12 @@ from datetime import date, datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.application.municipality_resolver import MunicipalityResolver
+from app.config import get_settings
 from app.domain.entities import ConnectorResult
 from app.infrastructure.connectors.base import BaseConnector
 from app.infrastructure.db.models import ConnectorRun, Indicator, IndicatorValue, Municipality, RawDataCache
+from app.infrastructure.notifications.service import NotificationService
 
 
 async def persist_connector_result(session: AsyncSession, result: ConnectorResult) -> bool:
@@ -50,13 +53,11 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
         )
     )
 
-    municipalities = {
-        row.oktmo: row
-        for row in (await session.execute(select(Municipality))).scalars().all()
-    }
+    municipalities = (await session.execute(select(Municipality))).scalars().all()
+    resolver = MunicipalityResolver(municipalities)
 
     for observation in result.observations:
-        municipality = municipalities.get(observation.oktmo)
+        municipality = resolver.resolve(observation.oktmo)
         if municipality is None:
             continue
 
@@ -96,6 +97,17 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
     return changed
 
 
+async def _alert_connector_failures(connector_id: str, failures: int) -> None:
+    settings = get_settings()
+    if failures < settings.connector_failure_alert_threshold:
+        return
+    service = NotificationService()
+    await service.send(
+        "admin-max-id",
+        f"Коннектор {connector_id}: {failures} сбоев подряд. Проверьте ETL.",
+    )
+
+
 async def run_connector(
     session: AsyncSession,
     connector: BaseConnector,
@@ -133,4 +145,5 @@ async def run_connector(
         run.message = str(error)
         run.consecutive_failures = failures
         run.finished_at = datetime.now(timezone.utc)
+        await _alert_connector_failures(connector.connector_id, failures)
         raise

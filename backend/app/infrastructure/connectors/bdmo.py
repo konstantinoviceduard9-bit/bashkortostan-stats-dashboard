@@ -42,6 +42,8 @@ class BdmoTochnoConnector(BaseConnector):
             except ValueError:
                 continue
 
+            municipality = str(row.get("municipality", "")).strip()
+            oktmo_code = str(row.get("oktmo", "")).strip()
             observations.append(
                 UnifiedObservation(
                     indicator_code=str(row.get("indicator_code", "")).strip(),
@@ -49,7 +51,7 @@ class BdmoTochnoConnector(BaseConnector):
                     value=numeric,
                     unit=str(row.get("indicator_unit", "")).strip() or "ед.",
                     period=period,
-                    oktmo=str(row.get("oktmo", "")).strip(),
+                    oktmo=oktmo_code or municipality,
                     source=self.connector_id,
                     category=str(row.get("indicator_section", "")).strip() or None,
                 )

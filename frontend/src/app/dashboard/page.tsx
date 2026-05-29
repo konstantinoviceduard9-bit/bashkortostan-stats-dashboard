@@ -62,6 +62,11 @@ export default function DashboardPage() {
             <p className="mt-2 text-2xl font-bold">
               {kpi.value ?? "—"} <span className="text-sm font-normal">{kpi.unit}</span>
             </p>
+            {kpi.change_percent !== null ? (
+              <p className={`text-sm ${kpi.change_percent >= 0 ? "text-bashkir-green" : "text-red-600"}`}>
+                {kpi.change_percent >= 0 ? "▲" : "▼"} {Math.abs(kpi.change_percent)}% к прошлому месяцу
+              </p>
+            ) : null}
             {kpi.sparkline.length > 0 ? (
               <div className="mt-4 h-16">
                 <ResponsiveContainer width="100%" height="100%">
