@@ -7,6 +7,8 @@ __pycache__/
 .env
 .cache/
 *.log
+docker-install.log
+docker-finish.log
 .DS_Store
 frontend/.next/
 backend/.pytest_cache/

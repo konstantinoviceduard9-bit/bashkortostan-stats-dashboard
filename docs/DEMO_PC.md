@@ -10,14 +10,27 @@
 
 ## 1. Запуск на этом ПК (Windows)
 
-1. Установите [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-2. В корне репозитория:
+### Установка Docker (один раз)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install-docker.ps1
+```
+
+Скрипт включает WSL2, ставит Docker Desktop и предложит перезагрузку. На диске **C:** нужно ≥4 GB свободного места.
+
+Если после перезагрузки WSL пишет про **виртуализацию** — включите **Intel VT-x** / **AMD-V** в BIOS ([инструкция](https://aka.ms/enablevirtualization)), сохраните и перезагрузитесь снова.
+
+После перезагрузки (автозапуск через RunOnce или вручную):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\finish-docker-setup.ps1
+```
+
+### Запуск демо
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\start-demo.ps1
 ```
-
-3. Откройте **http://localhost:8080**
 
 Учётные записи: `admin` / `admin12345`, `glava_ufa` / `district12345`.
 
