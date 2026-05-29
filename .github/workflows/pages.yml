@@ -1,12 +1,8 @@
-name: GitHub Pages (витрина)
+name: GitHub Pages (демо)
 
 on:
   push:
     branches: [main]
-    paths:
-      - "docs/index.html"
-      - "docs/DEMO_PC.md"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -26,9 +22,35 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Export static demo data
+        run: |
+          pip install -r backend/requirements.txt
+          python scripts/export_static_demo.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build static frontend
+        working-directory: frontend
+        env:
+          STATIC_GITHUB_PAGES: "true"
+        run: |
+          npm ci
+          npm run build
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: frontend/out
+
       - id: deployment
         uses: actions/deploy-pages@v4

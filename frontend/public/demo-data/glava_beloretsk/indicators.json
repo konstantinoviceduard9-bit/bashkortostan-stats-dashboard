@@ -1,0 +1,62 @@
+[
+  {
+    "code": "budget_security",
+    "name": "Бюджетная обеспеченность",
+    "category": "Бюджет",
+    "value": 105.02,
+    "unit": "%",
+    "change_percent": null,
+    "republic_average": 97.6615873015873,
+    "source": "demo"
+  },
+  {
+    "code": "housing_commissioned",
+    "name": "Ввод жилья",
+    "category": "ЖКХ",
+    "value": 18595.2,
+    "unit": "кв. м",
+    "change_percent": null,
+    "republic_average": 17254.259523809524,
+    "source": "demo"
+  },
+  {
+    "code": "doctors_per_capita",
+    "name": "Обеспеченность врачами",
+    "category": "Здравоохранение",
+    "value": 32.38,
+    "unit": "врач/10 тыс.",
+    "change_percent": null,
+    "republic_average": 32.300158730158735,
+    "source": "demo"
+  },
+  {
+    "code": "natural_growth",
+    "name": "Естественный прирост",
+    "category": "Население",
+    "value": -147.76,
+    "unit": "чел.",
+    "change_percent": null,
+    "republic_average": -138.71031746031747,
+    "source": "demo"
+  },
+  {
+    "code": "unemployment",
+    "name": "Безработица",
+    "category": "Экономика",
+    "value": 5.44,
+    "unit": "%",
+    "change_percent": null,
+    "republic_average": 5.186190476190476,
+    "source": "demo"
+  },
+  {
+    "code": "average_salary",
+    "name": "Средняя зарплата",
+    "category": "Экономика",
+    "value": 68248.96,
+    "unit": "руб.",
+    "change_percent": null,
+    "republic_average": 60324.358095238094,
+    "source": "demo"
+  }
+]

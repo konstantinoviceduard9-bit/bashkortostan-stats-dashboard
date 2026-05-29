@@ -1,0 +1,180 @@
+{
+  "municipality_name": "г. Уфа",
+  "rank": 53,
+  "total": 63,
+  "rank_delta": -8,
+  "period": "2024-12-01",
+  "kpis": [
+    {
+      "code": "budget_security",
+      "name": "Бюджетная обеспеченность",
+      "value": 88.18,
+      "unit": "%",
+      "change_percent": -4.9,
+      "sparkline": [
+        84.16,
+        82.92,
+        74.57,
+        74.8,
+        76.73,
+        83.15,
+        79.83,
+        79.05,
+        88.95,
+        85.16,
+        92.74,
+        88.18
+      ]
+    },
+    {
+      "code": "unemployment",
+      "name": "Безработица",
+      "value": 5.01,
+      "unit": "%",
+      "change_percent": 5.3,
+      "sparkline": [
+        4.28,
+        4.29,
+        4.23,
+        4.42,
+        4.25,
+        4.3,
+        4.29,
+        4.71,
+        4.2,
+        4.41,
+        4.76,
+        5.01
+      ]
+    },
+    {
+      "code": "average_salary",
+      "name": "Средняя зарплата",
+      "value": 53566.24,
+      "unit": "руб.",
+      "change_percent": -4.5,
+      "sparkline": [
+        50490.44,
+        45663.8,
+        46326.28,
+        45947.72,
+        50585.08,
+        48739.6,
+        47414.64,
+        49591.36,
+        51862.72,
+        51673.44,
+        56074.2,
+        53566.24
+      ]
+    },
+    {
+      "code": "natural_growth",
+      "name": "Естественный прирост",
+      "value": -119.57,
+      "unit": "чел.",
+      "change_percent": -3.1,
+      "sparkline": [
+        -102.1,
+        -118.05,
+        -108.11,
+        -115.42,
+        -112.04,
+        -127.65,
+        -118.59,
+        -129.29,
+        -125.47,
+        -132.24,
+        -115.97,
+        -119.57
+      ]
+    },
+    {
+      "code": "doctors_per_capita",
+      "name": "Обеспеченность врачами",
+      "value": 27.16,
+      "unit": "врач/10 тыс.",
+      "change_percent": -6.3,
+      "sparkline": [
+        26.78,
+        23.59,
+        26.22,
+        29.05,
+        27.59,
+        28.77,
+        30.02,
+        27.01,
+        26.52,
+        29.91,
+        29.0,
+        27.16
+      ]
+    },
+    {
+      "code": "housing_commissioned",
+      "name": "Ввод жилья",
+      "value": 16311.75,
+      "unit": "кв. м",
+      "change_percent": 11.2,
+      "sparkline": [
+        12489.75,
+        12926.55,
+        13226.85,
+        13609.05,
+        15096.9,
+        15847.65,
+        15301.65,
+        14987.7,
+        16284.45,
+        14223.3,
+        14673.75,
+        16311.75
+      ]
+    }
+  ],
+  "data_sources": [
+    {
+      "connector_id": "bdmo_tochno",
+      "display_name": "БД ПМО / tochno.st",
+      "last_success_at": null,
+      "period": null,
+      "message": null
+    },
+    {
+      "connector_id": "opendata_rb",
+      "display_name": "Портал открытых данных РБ",
+      "last_success_at": null,
+      "period": null,
+      "message": null
+    },
+    {
+      "connector_id": "minfin_rb",
+      "display_name": "Минфин РБ",
+      "last_success_at": null,
+      "period": null,
+      "message": null
+    },
+    {
+      "connector_id": "emiss",
+      "display_name": "Башкортостанстат / ЕМИСС",
+      "last_success_at": null,
+      "period": null,
+      "message": null
+    },
+    {
+      "connector_id": "gas_manual",
+      "display_name": "ГАС «Управление»",
+      "last_success_at": null,
+      "period": null,
+      "message": null
+    }
+  ],
+  "source_notes": [
+    "Бюджетная обеспеченность: демонстрационные данные (сид)",
+    "Безработица: демонстрационные данные (сид)",
+    "Средняя зарплата: демонстрационные данные (сид)",
+    "Естественный прирост: демонстрационные данные (сид)",
+    "Обеспеченность врачами: демонстрационные данные (сид)",
+    "Ввод жилья: демонстрационные данные (сид)"
+  ]
+}

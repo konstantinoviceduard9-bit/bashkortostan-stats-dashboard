@@ -1,4 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -15,6 +16,20 @@ export function clearToken() {
 
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = getToken();
+
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true") {
+    const { staticApiFetch } = await import("./staticDemo");
+    try {
+      return await staticApiFetch<T>(path, init, token);
+    } catch (error) {
+      if (error instanceof Error && error.message === "Требуется авторизация") {
+        clearToken();
+        if (typeof window !== "undefined") window.location.href = `${BASE_PATH}/login/`;
+      }
+      throw error;
+    }
+  }
+
   const headers = new Headers(init.headers);
   headers.set("Content-Type", "application/json");
   if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -22,7 +37,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   const response = await fetch(`${API_URL}${path}`, { ...init, headers });
   if (response.status === 401) {
     clearToken();
-    if (typeof window !== "undefined") window.location.href = "/login";
+    if (typeof window !== "undefined") window.location.href = `${BASE_PATH}/login/`;
     throw new Error("Требуется авторизация");
   }
   if (!response.ok) {

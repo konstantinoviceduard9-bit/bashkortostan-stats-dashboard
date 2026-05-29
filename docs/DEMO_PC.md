@@ -5,8 +5,8 @@
 | Что | Где |
 |-----|-----|
 | Исходный код | [GitHub](https://github.com/konstantinoviceduard9-bit/bashkortostan-stats-dashboard) |
-| Работающее демо | **Этот ПК** (Docker) + опционально публичный URL через туннель |
-| Витрина-ссылка | GitHub Pages (`docs/index.html`) |
+| Работающее демо | **GitHub Pages** — статическое демо без ПК и туннеля |
+| Витрина-ссылка | GitHub Pages — полный дашборд (статика + JSON) |
 
 ## 1. Запуск на этом ПК (Windows)
 
@@ -46,13 +46,21 @@ powershell -ExecutionPolicy Bypass -File scripts\start-tunnel.ps1
 
 Добавьте URL в README репозитория (блок «Демо») или в **About → Website** на GitHub.
 
-## 3. GitHub Pages (витрина)
+## 3. GitHub Pages (демо без ПК)
 
-В репозитории: **Settings → Pages → Build from branch → main → /docs**.
+**https://konstantinoviceduard9-bit.github.io/bashkortostan-stats-dashboard/**
 
-Откроется страница `https://<user>.github.io/bashkortostan-stats-dashboard/` со ссылкой на живое демо (URL туннеля пропишите в `docs/index.html`).
+При push в `main` workflow `.github/workflows/pages.yml` экспортирует демо-данные, собирает Next.js как статику и публикует на Pages. Туннель и локальный сервер не нужны.
 
-Workflow `.github/workflows/pages.yml` публикует `docs/` автоматически при push в `main`.
+Логины: `glava_ufa` / `district12345`, `admin` / `admin12345`.
+
+Локальный пересбор для Pages:
+
+```powershell
+python scripts/export_static_demo.py
+cd frontend
+$env:STATIC_GITHUB_PAGES='true'; npm run build
+```
 
 ## 4. ETL (опционально, долго)
 
