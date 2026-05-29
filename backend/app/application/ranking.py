@@ -1,9 +1,11 @@
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality, RankingSnapshot
+
+MATERIALIZED_VIEW = "mv_ranking_current"
 
 
 async def rebuild_rankings(session: AsyncSession, period: date, indicator_id: int | None = None) -> None:
@@ -70,3 +72,15 @@ async def rebuild_rankings(session: AsyncSession, period: date, indicator_id: in
                         rank_delta=rank_delta,
                     )
                 )
+
+    await refresh_ranking_materialized_view(session)
+
+
+async def refresh_ranking_materialized_view(session: AsyncSession) -> None:
+    try:
+        await session.execute(text(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {MATERIALIZED_VIEW}"))
+    except Exception:
+        try:
+            await session.execute(text(f"REFRESH MATERIALIZED VIEW {MATERIALIZED_VIEW}"))
+        except Exception:
+            return

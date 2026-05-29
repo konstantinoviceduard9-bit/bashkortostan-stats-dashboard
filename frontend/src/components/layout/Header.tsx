@@ -1,12 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Header() {
   return (
     <header className="border-b-4 border-bashkir-green bg-gradient-to-r from-bashkir-blue via-white to-bashkir-green/80 bg-[length:100%_4px] bg-bottom bg-no-repeat shadow-sm">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-bashkir-gold bg-white text-xs font-bold text-bashkir-green">
-          РБ
-        </div>
+        <Image src="/emblem-rb.svg" alt="Герб Республики Башкортостан (стилизованный)" width={56} height={56} priority />
         <div className="flex flex-1 flex-col items-center gap-1">
           <div className="flex h-3 w-32 overflow-hidden rounded-sm border border-slate-300">
             <span className="flex-1 bg-bashkir-blue" />

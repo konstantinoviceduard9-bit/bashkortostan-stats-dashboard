@@ -181,6 +181,7 @@ async def indicators(
                 unit=indicator.unit,
                 change_percent=None,
                 republic_average=float(republic_avg) if republic_avg is not None else None,
+                source=indicator.source,
             )
         )
 

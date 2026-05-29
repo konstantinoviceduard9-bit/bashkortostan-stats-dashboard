@@ -20,6 +20,8 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m compileall app
       - run: pytest tests/ -q
+        env:
+          DATABASE_URL: postgresql+asyncpg://dashboard:dashboard@localhost:5432/dashboard
 
   frontend:
     runs-on: ubuntu-latest

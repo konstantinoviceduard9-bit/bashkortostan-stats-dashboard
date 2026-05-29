@@ -8,6 +8,7 @@ class Settings(BaseSettings):
 
     app_name: str = "Башкортостан — муниципальный дашборд"
     debug: bool = False
+    demo_mode: bool = False
     api_prefix: str = "/api/v1"
 
     database_url: str = "postgresql+asyncpg://dashboard:dashboard@postgres:5432/dashboard"
@@ -43,6 +44,8 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> list[str]:
+        if self.demo_mode:
+            return ["*"]
         return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
 
 

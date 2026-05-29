@@ -11,6 +11,17 @@
 | Очереди | Celery + Redis |
 | БД | PostgreSQL 15 |
 
+## Демо (GitHub + этот ПК как сервер)
+
+| | |
+|--|--|
+| **Код** | https://github.com/konstantinoviceduard9-bit/bashkortostan-stats-dashboard |
+| **Запуск на ПК** | `powershell -ExecutionPolicy Bypass -File scripts\start-demo.ps1` → http://localhost:8080 |
+| **Публичная ссылка** | `scripts\start-tunnel.ps1` (Cloudflare Tunnel) |
+| **Витрина GitHub Pages** | папка `docs/` — см. [docs/DEMO_PC.md](docs/DEMO_PC.md) |
+
+Логины: `admin` / `admin12345`, `glava_ufa` / `district12345`.
+
 ## Быстрый старт (Docker)
 
 ```bash
@@ -39,6 +50,12 @@ docker compose exec backend python scripts/run_connectors.py --period 2023-01-01
 Статус коннекторов (admin JWT): `GET /api/v1/admin/connectors/status`
 
 Аудит сопоставления opendata → 63 МО: `python scripts/audit_opendata.py`
+
+Ручной импорт KPI (зарплата и др.):
+
+```bash
+docker compose exec backend python scripts/import_kpi_csv.py data/kpi_import_template.csv --period 2023-01-01
+```
 
 Деплой на VPS: [docs/deploy.md](docs/deploy.md)
 
@@ -157,8 +174,10 @@ GitHub Actions: `.github/workflows/ci.yml` — lint/build backend и frontend.
 - [x] Healthcheck Docker, `scripts/bootstrap.sh`, расширенный `/health`
 - [x] Источники данных на дашборде, админ-страница ETL
 - [x] Аудит opendata на весь каталог, шаблон ГАС, EMISS по URL
-- [ ] Синхронизация ОКТМО: `python scripts/sync_oktmo_from_bdmo.py` после seed
+- [x] Materialized view `mv_ranking_current` (миграция 002)
+- [x] Импорт KPI CSV: `python scripts/import_kpi_csv.py data/kpi_import_template.csv`
+- [x] Загрузка ГАС в админ-UI, источник в таблице показателей
+- [x] Стилизованный герб `frontend/public/emblem-rb.svg`
 - [ ] Прогон ETL на сервере (`run_connectors.py --period 2023-01-01`)
-- [ ] KPI зарплаты/безработицы из ЕМИСС или ручного маппинга БДМО
-- [ ] Materialized views для рейтингов
-- [ ] Официальный SVG герба РБ (заменить заглушку «РБ»)
+- [ ] KPI зарплаты/безработицы из ЕМИСС (нужен рабочий `EMISS_SDMX_URL`) или заполнить `kpi_import_template.csv`
+- [ ] Заменить SVG на официальный герб (при наличии прав на использование)

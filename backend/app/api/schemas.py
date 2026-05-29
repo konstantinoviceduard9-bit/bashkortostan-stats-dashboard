@@ -56,6 +56,7 @@ class IndicatorRow(BaseModel):
     unit: str
     change_percent: float | None
     republic_average: float | None
+    source: str
 
 
 class RatingRow(BaseModel):

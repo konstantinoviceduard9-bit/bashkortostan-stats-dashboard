@@ -26,8 +26,8 @@ class GasManualConnector(BaseConnector):
                 frame = pd.read_excel(io.BytesIO(self.file_bytes), dtype=str)
 
             for _, row in frame.iterrows():
-                oktmo = str(row.get("oktmo", "")).strip()
-                code = str(row.get("indicator_code", "")).strip()
+                oktmo = str(row.get("oktmo", "") or row.get("municipality", "")).strip()
+                code = str(row.get("indicator_code", "") or row.get("code", "")).strip()
                 value = row.get("value")
                 if not oktmo or not code or value is None:
                     continue
@@ -38,7 +38,7 @@ class GasManualConnector(BaseConnector):
                 observations.append(
                     UnifiedObservation(
                         indicator_code=code,
-                        indicator_name=str(row.get("indicator_name", code)).strip(),
+                        indicator_name=str(row.get("indicator_name", "") or row.get("name", code)).strip(),
                         value=numeric,
                         unit=str(row.get("unit", "ед.")).strip(),
                         period=period,

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Дашборд муниципальной статистики — Республика Башкортостан</title>
+    <style>
+      :root {
+        --blue: #0080c6;
+        --green: #009b3a;
+        --gold: #c9a227;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 42rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+        color: #1e293b;
+      }
+      h1 {
+        color: var(--blue);
+        font-size: 1.5rem;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--blue), var(--green));
+        color: #fff;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+      }
+      a.demo {
+        display: inline-block;
+        margin: 1rem 0;
+        padding: 0.75rem 1.25rem;
+        background: var(--green);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+      }
+      a.demo:hover {
+        filter: brightness(1.05);
+      }
+      code {
+        background: #f1f5f9;
+        padding: 0.1rem 0.35rem;
+        border-radius: 0.25rem;
+        font-size: 0.9em;
+      }
+      .note {
+        border-left: 4px solid var(--gold);
+        padding-left: 1rem;
+        color: #64748b;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <span class="badge">Республика Башкортостан</span>
+    <h1>Дашборд муниципальной статистики</h1>
+    <p>
+      Репозиторий:
+      <a href="https://github.com/konstantinoviceduard9-bit/bashkortostan-stats-dashboard">GitHub</a>
+    </p>
+
+  <!-- Замените href на ваш URL из cloudflared (scripts/start-tunnel.ps1) -->
+    <p><a class="demo" id="demo-link" href="http://localhost:8080">Открыть живое демо</a></p>
+
+    <div class="note">
+      <p>
+        Демо работает на сервере разработчика (Docker на ПК). Публичная ссылка создаётся через
+        <code>scripts/start-tunnel.ps1</code> — вставьте полученный HTTPS-URL в атрибут
+        <code>href</code> кнопки выше.
+      </p>
+      <p>Локально на машине с Docker: <code>http://localhost:8080</code></p>
+      <p>Демо-логины: <code>glava_ufa</code> / <code>district12345</code></p>
+    </div>
+  </body>
+</html>

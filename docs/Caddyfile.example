@@ -1,0 +1,21 @@
+# Пример для Caddy 2: скопируйте в /etc/caddy/Caddyfile и замените домен
+
+your-domain.example {
+	encode gzip
+
+	handle /api/* {
+		reverse_proxy backend:8000
+	}
+
+	handle /health {
+		reverse_proxy backend:8000
+	}
+
+	handle /docs* {
+		reverse_proxy backend:8000
+	}
+
+	handle {
+		reverse_proxy frontend:3000
+	}
+}

@@ -49,14 +49,9 @@ docker compose exec backend python scripts/sync_oktmo_from_bdmo.py
 docker compose exec backend python scripts/run_connectors.py --period 2023-01-01
 ```
 
-## 3. Reverse proxy (Caddy пример)
+## 3. Reverse proxy (Caddy)
 
-```caddy
-your-domain.example {
-  reverse_proxy /api/* backend:8000
-  reverse_proxy /* frontend:3000
-}
-```
+См. [Caddyfile.example](Caddyfile.example) — полный пример с `/health` и `/docs`.
 
 API health: `GET /health`  
 Swagger: `/docs`

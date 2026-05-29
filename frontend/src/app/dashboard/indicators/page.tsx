@@ -11,7 +11,18 @@ interface IndicatorRow {
   unit: string;
   change_percent: number | null;
   republic_average: number | null;
+  source: string;
 }
+
+const SOURCE_LABELS: Record<string, string> = {
+  demo: "Демо",
+  bdmo_tochno: "БД ПМО",
+  opendata_rb: "Opendata",
+  manual_csv: "CSV",
+  gas_manual: "ГАС",
+  minfin_rb: "Минфин",
+  emiss: "ЕМИСС",
+};
 
 export default function IndicatorsPage() {
   const [rows, setRows] = useState<IndicatorRow[]>([]);
@@ -44,6 +55,7 @@ export default function IndicatorsPage() {
               <th className="px-4 py-3">Показатель</th>
               <th className="px-4 py-3">Значение</th>
               <th className="px-4 py-3">Среднее по РБ</th>
+              <th className="px-4 py-3">Источник</th>
             </tr>
           </thead>
           <tbody>
@@ -57,6 +69,7 @@ export default function IndicatorsPage() {
                   {row.value ?? "—"} {row.unit}
                 </td>
                 <td className="px-4 py-3">{row.republic_average?.toFixed(2) ?? "—"}</td>
+                <td className="px-4 py-3 text-slate-500">{SOURCE_LABELS[row.source] ?? row.source}</td>
               </tr>
             ))}
           </tbody>

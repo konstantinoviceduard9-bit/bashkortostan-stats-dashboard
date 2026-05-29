@@ -10,3 +10,4 @@ __pycache__/
 .DS_Store
 frontend/.next/
 backend/.pytest_cache/
+backend/data/bdmo_kpi_candidates.txt

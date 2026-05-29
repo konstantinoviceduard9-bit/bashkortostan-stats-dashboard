@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
+import { apiUpload } from "@/lib/apiUpload";
 import { Button } from "@/components/ui/Button";
 
 interface ConnectorStatus {
@@ -23,6 +24,7 @@ export default function AdminPage() {
   const [status, setStatus] = useState<ConnectorStatus[]>([]);
   const [log, setLog] = useState<string>("");
   const [busy, setBusy] = useState(false);
+  const [gasFile, setGasFile] = useState<File | null>(null);
 
   const load = () => {
     apiFetch<{ recent: ConnectorStatus[] }>("/admin/connectors/status")
@@ -38,6 +40,22 @@ export default function AdminPage() {
       })
       .catch((error) => setLog(error instanceof Error ? error.message : "Ошибка"));
   }, []);
+
+  const uploadGas = async () => {
+    if (!gasFile) return;
+    setBusy(true);
+    setLog("Загрузка ГАС…");
+    try {
+      const form = new FormData();
+      form.append("file", gasFile);
+      const result = await apiUpload<{ rows: number; changed: boolean }>("/admin/gas/upload", form);
+      setLog(`ГАС: загружено ${result.rows} строк, changed=${result.changed}`);
+    } catch (error) {
+      setLog(error instanceof Error ? error.message : "Ошибка загрузки");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const runEtl = async () => {
     setBusy(true);
@@ -78,6 +96,22 @@ export default function AdminPage() {
           Обновить статус
         </Button>
       </div>
+
+      <section className="card-bashkir space-y-3">
+        <h3 className="font-semibold text-bashkir-blue">Загрузка ГАС (CSV/Excel)</h3>
+        <p className="text-sm text-slate-600">
+          Шаблон: <code className="text-xs">backend/data/gas_upload_template.csv</code>
+        </p>
+        <input
+          type="file"
+          accept=".csv,.xlsx,.xls"
+          onChange={(event) => setGasFile(event.target.files?.[0] ?? null)}
+          className="block text-sm"
+        />
+        <Button type="button" onClick={uploadGas} disabled={busy || !gasFile}>
+          Загрузить файл
+        </Button>
+      </section>
 
       {log ? (
         <pre className="card-bashkir overflow-x-auto whitespace-pre-wrap text-sm text-slate-700">{log}</pre>
