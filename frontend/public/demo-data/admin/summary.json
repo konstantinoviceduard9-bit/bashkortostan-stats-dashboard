@@ -1,165 +1,105 @@
 {
   "municipality_name": "г. Уфа",
-  "rank": 50,
+  "rank": null,
   "total": 63,
-  "rank_delta": -33,
-  "period": "2024-12-01",
+  "rank_delta": null,
+  "period": "2026-01-01",
   "kpis": [
     {
       "code": "budget_security",
       "name": "Бюджетная обеспеченность",
-      "value": 94.96,
+      "value": null,
       "unit": "%",
-      "change_percent": -4.9,
-      "sparkline": [
-        90.63,
-        89.3,
-        80.3,
-        80.55,
-        82.63,
-        89.55,
-        85.97,
-        85.13,
-        95.8,
-        91.71,
-        99.88,
-        94.96
-      ]
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "unemployment",
       "name": "Безработица",
-      "value": 5.4,
+      "value": null,
       "unit": "%",
-      "change_percent": 5.3,
-      "sparkline": [
-        4.61,
-        4.62,
-        4.56,
-        4.76,
-        4.58,
-        4.63,
-        4.62,
-        5.07,
-        4.52,
-        4.75,
-        5.13,
-        5.4
-      ]
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "average_salary",
       "name": "Средняя зарплата",
-      "value": 57686.72,
+      "value": null,
       "unit": "руб.",
-      "change_percent": -4.5,
-      "sparkline": [
-        54374.32,
-        49176.4,
-        49889.84,
-        49482.16,
-        54476.24,
-        52488.8,
-        51061.92,
-        53406.08,
-        55852.16,
-        55648.32,
-        60387.6,
-        57686.72
-      ]
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "natural_growth",
       "name": "Естественный прирост",
-      "value": -128.77,
+      "value": null,
       "unit": "чел.",
-      "change_percent": -3.1,
-      "sparkline": [
-        -109.96,
-        -127.13,
-        -116.42,
-        -124.3,
-        -120.66,
-        -137.47,
-        -127.71,
-        -139.24,
-        -135.12,
-        -142.41,
-        -124.89,
-        -128.77
-      ]
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "doctors_per_capita",
       "name": "Обеспеченность врачами",
-      "value": 29.25,
+      "value": null,
       "unit": "врач/10 тыс.",
-      "change_percent": -6.3,
-      "sparkline": [
-        28.84,
-        25.41,
-        28.24,
-        31.28,
-        29.72,
-        30.98,
-        32.32,
-        29.09,
-        28.57,
-        32.21,
-        31.23,
-        29.25
-      ]
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "housing_commissioned",
       "name": "Ввод жилья",
-      "value": 17566.5,
+      "value": null,
       "unit": "кв. м",
-      "change_percent": 11.2,
-      "sparkline": [
-        13450.5,
-        13920.9,
-        14244.3,
-        14655.9,
-        16258.2,
-        17066.7,
-        16478.7,
-        16140.6,
-        17537.1,
-        15317.4,
-        15802.5,
-        17566.5
-      ]
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     }
   ],
   "data_sources": [
     {
       "connector_id": "bdmo_tochno",
       "display_name": "БД ПМО / tochno.st",
-      "last_success_at": "2026-05-29T17:08:51.060021",
-      "period": "2026-01-01",
-      "message": "Загружено 317 наблюдений, сохранено 249, без МО 68"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "opendata_rb",
       "display_name": "Портал открытых данных РБ",
-      "last_success_at": "2026-05-29T17:08:52.364231",
-      "period": "2026-01-01",
-      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped_unresolved_labels': 34}"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "minfin_rb",
       "display_name": "Минфин РБ",
-      "last_success_at": "2026-05-29T17:08:52.381845",
-      "period": "2026-01-01",
-      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'MINFIN_REPORT_URL not set'}"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "emiss",
       "display_name": "Башкортостанстат / ЕМИСС",
-      "last_success_at": "2026-05-29T17:08:52.400280",
-      "period": "2026-01-01",
-      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'EMISS_SDMX_URL not set'}"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "gas_manual",
@@ -169,12 +109,5 @@
       "message": null
     }
   ],
-  "source_notes": [
-    "Бюджетная обеспеченность: демонстрационные данные (сид)",
-    "Безработица: демонстрационные данные (сид)",
-    "Средняя зарплата: демонстрационные данные (сид)",
-    "Естественный прирост: демонстрационные данные (сид)",
-    "Обеспеченность врачами: демонстрационные данные (сид)",
-    "Ввод жилья: демонстрационные данные (сид)"
-  ]
+  "source_notes": []
 }

@@ -90,18 +90,38 @@ async def summary(
     for code in KPI_CODES:
         indicator = await session.scalar(select(Indicator).where(Indicator.code == code))
         if indicator is None:
-            kpis.append(KpiCard(code=code, name=code, value=None, unit="—", change_percent=None, sparkline=[]))
+            kpis.append(
+                KpiCard(code=code, name=code, value=None, unit="—", change_percent=None, sparkline=[], is_live=False)
+            )
             continue
 
         value_row = await session.scalar(
-            select(IndicatorValue).where(
+            select(IndicatorValue)
+            .where(
                 IndicatorValue.indicator_id == indicator.id,
                 IndicatorValue.municipality_id == municipality.id,
-                IndicatorValue.period == latest_period,
+                IndicatorValue.payload_hash != "demo",
             )
+            .order_by(IndicatorValue.period.desc())
+            .limit(1)
         )
-        previous_period = date(latest_period.year - 1, latest_period.month, 1) if latest_period.month == 1 else date(
-            latest_period.year, latest_period.month - 1, 1
+        is_live = value_row is not None
+        if value_row is None:
+            value_row = await session.scalar(
+                select(IndicatorValue)
+                .where(
+                    IndicatorValue.indicator_id == indicator.id,
+                    IndicatorValue.municipality_id == municipality.id,
+                )
+                .order_by(IndicatorValue.period.desc())
+                .limit(1)
+            )
+
+        kpi_period = value_row.period if value_row else latest_period
+        previous_period = (
+            date(kpi_period.year - 1, kpi_period.month, 1)
+            if kpi_period.month == 1
+            else date(kpi_period.year, kpi_period.month - 1, 1)
         )
         previous_row = await session.scalar(
             select(IndicatorValue).where(
@@ -110,7 +130,7 @@ async def summary(
                 IndicatorValue.period == previous_period,
             )
         )
-        sparkline = await load_sparkline(session, indicator.id, municipality.id, latest_period)
+        sparkline = await load_sparkline(session, indicator.id, municipality.id, kpi_period)
 
         kpis.append(
             KpiCard(
@@ -123,6 +143,9 @@ async def summary(
                     previous_row.value if previous_row else None,
                 ),
                 sparkline=sparkline,
+                source=indicator.source if is_live else ("demo" if value_row else None),
+                is_live=is_live,
+                data_period=kpi_period if value_row else None,
             )
         )
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { apiUpload } from "@/lib/apiUpload";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
 
 interface ConnectorStatus {
@@ -83,10 +84,7 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <section>
-        <h2 className="heading-gold">Администрирование ETL</h2>
-        <p className="text-slate-600">Запуск коннекторов и статус последних загрузок</p>
-      </section>
+      <PageHeader title="Администрирование ETL" subtitle="Запуск коннекторов, загрузка ГАС и мониторинг статусов." />
 
       <div className="flex flex-wrap gap-3">
         <Button onClick={runEtl} disabled={busy}>

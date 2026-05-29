@@ -35,6 +35,9 @@ class KpiCard(BaseModel):
     unit: str
     change_percent: float | None
     sparkline: list[float]
+    source: str | None = None
+    is_live: bool = False
+    data_period: date | None = None
 
 
 class DashboardSummary(BaseModel):

@@ -65,6 +65,9 @@ def _aliases_for(name: str, slug: str, mtype: str) -> set[str]:
         aliases.add(normalize_label(f"город {base}"))
         aliases.add(normalize_label(f"г. {base}"))
         aliases.add(normalize_label(f"городской округ {base}"))
+        if short_city and short_city != base:
+            aliases.add(normalize_label(f"город {short_city}"))
+            aliases.add(normalize_label(f"городской округ {short_city}"))
     return aliases
 
 
@@ -109,6 +112,19 @@ class MunicipalityResolver:
             if key in aliases or key == normalize_label(item["oktmo"]):
                 return None
         return self.by_alias.get(key) if isinstance(self.by_alias.get(key), Municipality) else None
+
+    def matches(self, label: str) -> bool:
+        if self.resolve(label) is not None:
+            return True
+        key = normalize_label(label)
+        if not key:
+            return False
+        for item in MUNICIPALITIES_CATALOG:
+            if key == normalize_label(item["oktmo"]):
+                return True
+            if key in _aliases_for(item["name"], item["slug"], item["type"]):
+                return True
+        return False
 
     def resolve_id(self, municipalities: list[Municipality], label: str) -> Municipality | None:
         resolver = MunicipalityResolver(municipalities)

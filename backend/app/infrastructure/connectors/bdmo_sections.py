@@ -23,6 +23,23 @@ def section_zip_url(section: int, *, version: str = "v20250918") -> str:
     )
 
 
+def _cyrillic_score(text: str) -> int:
+    return sum(1 for char in text if "\u0400" <= char <= "\u04FF")
+
+
+def _decode_csv_bytes(raw: bytes) -> str:
+    candidates: list[tuple[int, str]] = []
+    for encoding in ("utf-8-sig", "cp1251", "utf-8", "latin-1"):
+        try:
+            decoded = raw.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+        candidates.append((_cyrillic_score(decoded), decoded))
+    if candidates:
+        return max(candidates, key=lambda item: item[0])[1]
+    return raw.decode("utf-8", errors="ignore")
+
+
 def read_section_frame(content: bytes) -> pd.DataFrame:
     with zipfile.ZipFile(io.BytesIO(content)) as archive:
         csv_name = next(
@@ -30,7 +47,8 @@ def read_section_frame(content: bytes) -> pd.DataFrame:
             for name in archive.namelist()
             if name.endswith(".csv") and not name.startswith("__MACOSX")
         )
-        return pd.read_csv(archive.open(csv_name), sep=";", dtype=str, encoding="utf-8")
+        csv_text = _decode_csv_bytes(archive.read(csv_name))
+        return pd.read_csv(io.StringIO(csv_text), sep=";", dtype=str)
 
 
 def filter_bashkortostan_top_level(frame: pd.DataFrame, *, year: str) -> pd.DataFrame:

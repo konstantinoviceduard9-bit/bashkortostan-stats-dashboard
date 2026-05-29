@@ -16,6 +16,12 @@ def test_normalize_label() -> None:
     assert normalize_label("  Ёлочка  ") == "елочка"
 
 
+def test_resolver_matches_bdmo_city_label() -> None:
+    ufa = Municipality(id=1, oktmo="80709000", name="г. Уфа", type="city", slug="ufa")
+    resolver = MunicipalityResolver([ufa])
+    assert resolver.resolve("город Уфа") == ufa
+
+
 def test_normalize_fixes_latin_homoglyphs_in_russian() -> None:
     nurimanov = Municipality(id=3, oktmo="80641000", name="Нуримановский район", type="district", slug="nurimanovsky")
     resolver = MunicipalityResolver([nurimanov])

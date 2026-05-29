@@ -1,38 +1,6 @@
 {
-  "self_rank": 50,
+  "self_rank": null,
   "self_total": 63,
-  "top": [
-    {
-      "rank": 1,
-      "label": "Район #1",
-      "is_self": false
-    },
-    {
-      "rank": 2,
-      "label": "Район #2",
-      "is_self": false
-    },
-    {
-      "rank": 3,
-      "label": "Район #3",
-      "is_self": false
-    }
-  ],
-  "bottom": [
-    {
-      "rank": 61,
-      "label": "Район #61",
-      "is_self": false
-    },
-    {
-      "rank": 62,
-      "label": "Район #62",
-      "is_self": false
-    },
-    {
-      "rank": 63,
-      "label": "Район #63",
-      "is_self": false
-    }
-  ]
+  "top": [],
+  "bottom": []
 }

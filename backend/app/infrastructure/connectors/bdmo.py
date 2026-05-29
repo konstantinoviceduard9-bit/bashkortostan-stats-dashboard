@@ -70,6 +70,7 @@ class BdmoTochnoConnector(BaseConnector):
                         "data_year": data_year,
                         "requested_year": str(period.year),
                         "bashkortostan_region_id": get_settings().bashkortostan_region_id,
+                        "municipality_label": municipality,
                     },
                 )
             )

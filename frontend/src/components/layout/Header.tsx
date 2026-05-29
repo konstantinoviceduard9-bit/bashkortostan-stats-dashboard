@@ -4,13 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Building2, ChartNoAxesCombined, LayoutDashboard, Menu, UserRound, X } from "lucide-react";
 import { apiFetch, clearToken } from "@/lib/api";
+import { SourceBadge } from "@/components/ui/LoadingState";
 
 const NAV = [
-  { href: "/dashboard", label: "Главная" },
-  { href: "/dashboard/indicators", label: "Показатели" },
-  { href: "/dashboard/rating", label: "Рейтинг" },
-  { href: "/dashboard/profile", label: "Профиль" },
+  { href: "/dashboard", label: "Главная", icon: LayoutDashboard },
+  { href: "/dashboard/indicators", label: "Показатели", icon: ChartNoAxesCombined },
+  { href: "/dashboard/rating", label: "Рейтинг", icon: Building2 },
+  { href: "/dashboard/profile", label: "Профиль", icon: UserRound },
 ];
 
 export function Header() {
@@ -18,6 +20,7 @@ export function Header() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState<string | null>(null);
+  const isStaticDemo = process.env.NEXT_PUBLIC_STATIC_DEMO === "true";
 
   useEffect(() => {
     apiFetch<{ role: string }>("/dashboard/me")
@@ -33,40 +36,46 @@ export function Header() {
   function navClass(href: string) {
     const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
     return active
-      ? "rounded-lg bg-bashkir-blue/10 px-3 py-2 font-medium text-bashkir-blue"
+      ? "rounded-lg bg-bashkir-blue/10 px-3 py-2 font-medium text-bashkir-blue shadow-sm"
       : "rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-100";
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b-4 border-bashkir-green bg-white shadow-sm">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-        <Image src="/emblem-rb.svg" alt="Герб РБ" width={48} height={48} priority className="shrink-0" />
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex h-2 w-28 overflow-hidden rounded-sm border border-slate-200">
-            <span className="flex-1 bg-bashkir-blue" />
-            <span className="flex-1 bg-white" />
-            <span className="flex-1 bg-bashkir-green" />
+    <header className="sticky top-0 z-40 border-b border-bashkir-blue/15 bg-white/95 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
+        <Link href="/dashboard" className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-1 py-1">
+          <Image src="/emblem-rb.svg" alt="Герб РБ" width={48} height={48} priority className="shrink-0" />
+          <div className="min-w-0">
+            <div className="mb-1 flex h-2 w-28 overflow-hidden rounded-sm border border-slate-200">
+              <span className="flex-1 bg-bashkir-blue" />
+              <span className="flex-1 bg-white" />
+              <span className="flex-1 bg-bashkir-green" />
+            </div>
+            <h1 className="truncate font-serif text-sm font-bold text-bashkir-gold md:text-base">
+              Муниципальная статистика РБ
+            </h1>
           </div>
-          <h1 className="truncate font-serif text-base font-bold text-bashkir-gold md:text-lg">
-            Дашборд муниципальной статистики
-          </h1>
-        </div>
+        </Link>
+        <div className="hidden lg:block">{isStaticDemo ? <SourceBadge mode="demo" /> : <SourceBadge mode="live" />}</div>
         <button
           type="button"
-          className="rounded-lg border border-slate-200 px-3 py-2 text-sm md:hidden"
+          className="rounded-lg border border-slate-200 p-2 text-sm md:hidden"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
+          aria-label="Переключить меню"
         >
-          Меню
+          {open ? <X size={18} /> : <Menu size={18} />}
         </button>
         <nav className="hidden items-center gap-1 text-sm md:flex">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className={navClass(item.href)}>
+            <Link key={item.href} href={item.href} className={`${navClass(item.href)} inline-flex items-center gap-2`}>
+              <item.icon size={16} />
               {item.label}
             </Link>
           ))}
           {role === "admin" ? (
-            <Link href="/dashboard/admin" className={navClass("/dashboard/admin")}>
+            <Link href="/dashboard/admin" className={`${navClass("/dashboard/admin")} inline-flex items-center gap-2`}>
+              <Building2 size={16} />
               Админ
             </Link>
           ) : null}
@@ -76,7 +85,8 @@ export function Header() {
         </nav>
       </div>
       {open ? (
-        <nav className="border-t border-slate-100 px-4 py-3 md:hidden">
+        <nav className="border-t border-slate-100 bg-white px-4 py-3 md:hidden">
+          <div className="mb-3">{isStaticDemo ? <SourceBadge mode="demo" /> : <SourceBadge mode="live" />}</div>
           <ul className="space-y-1 text-sm">
             {NAV.map((item) => (
               <li key={item.href}>

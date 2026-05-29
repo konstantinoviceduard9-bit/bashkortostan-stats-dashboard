@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { LoadingState } from "@/components/ui/LoadingState";
 
@@ -37,13 +38,10 @@ export default function ProfilePage() {
   if (!profile) return <LoadingState label="Загрузка профиля…" />;
 
   return (
-    <div className="mx-auto max-w-lg space-y-6">
-      <h2 className="heading-gold">Профиль</h2>
+    <div className="mx-auto max-w-xl space-y-6">
+      <PageHeader title="Профиль" subtitle={`${profile.login} · ${profile.municipality_name ?? "—"} · ${profile.role}`} />
       <div className="card-bashkir">
-        <p className="text-sm text-slate-600">
-          {profile.login} · {profile.municipality_name ?? "—"} · {profile.role}
-        </p>
-        <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+        <form className="space-y-4" onSubmit={onSubmit}>
           <label className="block text-sm font-medium text-slate-700">
             Идентификатор в мессенджере «Макс»
             <input className="input-bashkir" value={maxUserId} onChange={(event) => setMaxUserId(event.target.value)} />

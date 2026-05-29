@@ -9,20 +9,40 @@ import re
 import pandas as pd
 
 
-def load_opendata_frame(csv_text: str) -> pd.DataFrame:
+def _cyrillic_score(text: str) -> int:
+    return sum(1 for char in text if "\u0400" <= char <= "\u04FF")
+
+
+def _decode_text(raw: str | bytes) -> str:
+    if isinstance(raw, str):
+        return raw
+    candidates: list[tuple[int, str]] = []
+    for encoding in ("utf-8-sig", "cp1251", "utf-8", "latin-1"):
+        try:
+            decoded = raw.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+        candidates.append((_cyrillic_score(decoded), decoded))
+    if candidates:
+        return max(candidates, key=lambda item: item[0])[1]
+    return raw.decode("utf-8", errors="ignore")
+
+
+def load_opendata_frame(csv_text: str | bytes) -> pd.DataFrame:
+    decoded = _decode_text(csv_text)
     attempts: list[dict] = [
         {"sep": None, "engine": "python", "dtype": str},
         {"sep": None, "engine": "python", "dtype": str, "skiprows": [1]},
     ]
     for options in attempts:
         try:
-            frame = pd.read_csv(io.StringIO(csv_text), **options)
+            frame = pd.read_csv(io.StringIO(decoded), **options)
             if len(frame.columns) > 1:
                 return frame
         except pd.errors.ParserError:
             continue
 
-    lines = [line for line in csv_text.splitlines() if line.strip()]
+    lines = [line for line in decoded.splitlines() if line.strip()]
     if len(lines) < 2:
         return pd.DataFrame()
 

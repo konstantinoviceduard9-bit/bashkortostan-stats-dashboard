@@ -3,16 +3,8 @@
     "kpi": "housing_commissioned",
     "name": "Общая площадь жилых помещений"
   },
-  "Y49010004": {
-    "kpi": "housing_commissioned",
-    "name": "Жилой фонд с инженерными сетями"
-  },
   "Y48009001": {
     "kpi": "budget_security",
     "name": "Инвестиции в основной капитал (местные бюджеты)"
-  },
-  "Y48012002": {
-    "kpi": "housing_commissioned",
-    "name": "Субсидии на ЖКУ (начислено)"
   }
 }

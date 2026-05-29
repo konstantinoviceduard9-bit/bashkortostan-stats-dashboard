@@ -81,7 +81,7 @@ class OpendataRbConnector(BaseConnector):
                     continue
 
                 try:
-                    frame = load_opendata_frame(response.text)
+                    frame = load_opendata_frame(response.content)
                 except Exception:
                     continue
 
@@ -97,7 +97,7 @@ class OpendataRbConnector(BaseConnector):
                     label = self._normalize_municipality_label(str(municipality_name))
                     if not self._is_data_label(label):
                         continue
-                    if resolver.resolve(label) is None:
+                    if not resolver.matches(label):
                         skipped_unresolved += 1
                         continue
 

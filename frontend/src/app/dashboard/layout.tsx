@@ -1,10 +1,12 @@
-import { Header } from "@/components/layout/Header";
+import { Sidebar } from "@/components/layout/Sidebar";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <Header />
-      <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
-    </>
+    <div className="app-shell">
+      <Sidebar />
+      <main className="app-main">
+        <div className="app-content">{children}</div>
+      </main>
+    </div>
   );
 }

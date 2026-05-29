@@ -3,7 +3,7 @@
   "rank": null,
   "total": 63,
   "rank_delta": null,
-  "period": "2025-01-01",
+  "period": "2026-01-01",
   "kpis": [
     {
       "code": "budget_security",
@@ -11,20 +11,10 @@
       "value": null,
       "unit": "%",
       "change_percent": null,
-      "sparkline": [
-        74.18,
-        80.99,
-        77.66,
-        77.27,
-        80.75,
-        77.04,
-        84.23,
-        85.63,
-        86.86,
-        83.85,
-        83.92,
-        91.89
-      ]
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "unemployment",
@@ -32,20 +22,10 @@
       "value": null,
       "unit": "%",
       "change_percent": null,
-      "sparkline": [
-        4.21,
-        4.09,
-        4.35,
-        4.06,
-        4.3,
-        4.62,
-        4.21,
-        4.35,
-        4.88,
-        4.86,
-        4.43,
-        4.76
-      ]
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "average_salary",
@@ -53,20 +33,10 @@
       "value": null,
       "unit": "руб.",
       "change_percent": null,
-      "sparkline": [
-        44196.88,
-        44717.4,
-        46231.64,
-        51910.04,
-        46515.56,
-        52052.0,
-        54370.68,
-        56452.76,
-        54843.88,
-        52903.76,
-        55127.8,
-        59717.84
-      ]
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "natural_growth",
@@ -74,20 +44,10 @@
       "value": null,
       "unit": "чел.",
       "change_percent": null,
-      "sparkline": [
-        -108.54,
-        -116.95,
-        -113.57,
-        -116.08,
-        -117.06,
-        -126.67,
-        -127.11,
-        -128.53,
-        -121.65,
-        -125.03,
-        -133.22,
-        -129.29
-      ]
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "doctors_per_capita",
@@ -95,20 +55,10 @@
       "value": null,
       "unit": "врач/10 тыс.",
       "change_percent": null,
-      "sparkline": [
-        27.67,
-        23.87,
-        26.12,
-        26.42,
-        25.58,
-        28.72,
-        29.07,
-        26.98,
-        27.65,
-        28.54,
-        31.29,
-        28.33
-      ]
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     },
     {
       "code": "housing_commissioned",
@@ -116,50 +66,40 @@
       "value": null,
       "unit": "кв. м",
       "change_percent": null,
-      "sparkline": [
-        13745.55,
-        13936.65,
-        13527.15,
-        13854.75,
-        14796.6,
-        14564.55,
-        16107.0,
-        15055.95,
-        16093.35,
-        15601.95,
-        16407.3,
-        16270.8
-      ]
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
     }
   ],
   "data_sources": [
     {
       "connector_id": "bdmo_tochno",
       "display_name": "БД ПМО / tochno.st",
-      "last_success_at": "2026-05-29T17:08:51.060021",
-      "period": "2026-01-01",
-      "message": "Загружено 317 наблюдений, сохранено 249, без МО 68"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "opendata_rb",
       "display_name": "Портал открытых данных РБ",
-      "last_success_at": "2026-05-29T17:08:52.364231",
-      "period": "2026-01-01",
-      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped_unresolved_labels': 34}"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "minfin_rb",
       "display_name": "Минфин РБ",
-      "last_success_at": "2026-05-29T17:08:52.381845",
-      "period": "2026-01-01",
-      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'MINFIN_REPORT_URL not set'}"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "emiss",
       "display_name": "Башкортостанстат / ЕМИСС",
-      "last_success_at": "2026-05-29T17:08:52.400280",
-      "period": "2026-01-01",
-      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'EMISS_SDMX_URL not set'}"
+      "last_success_at": null,
+      "period": null,
+      "message": null
     },
     {
       "connector_id": "gas_manual",

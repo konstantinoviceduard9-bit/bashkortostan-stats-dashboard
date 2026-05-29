@@ -7,7 +7,7 @@
     "unit": "%",
     "change_percent": null,
     "republic_average": null,
-    "source": "demo"
+    "source": "catalog"
   },
   {
     "code": "housing_commissioned",
@@ -17,7 +17,7 @@
     "unit": "кв. м",
     "change_percent": null,
     "republic_average": null,
-    "source": "demo"
+    "source": "catalog"
   },
   {
     "code": "doctors_per_capita",
@@ -27,7 +27,7 @@
     "unit": "врач/10 тыс.",
     "change_percent": null,
     "republic_average": null,
-    "source": "demo"
+    "source": "catalog"
   },
   {
     "code": "natural_growth",
@@ -37,27 +37,7 @@
     "unit": "чел.",
     "change_percent": null,
     "republic_average": null,
-    "source": "demo"
-  },
-  {
-    "code": "Y48401006",
-    "name": "Оборот общественного питания (без субъектов малого предпринимательства)",
-    "category": "Розничная торговля и общественное питание",
-    "value": null,
-    "unit": "Тысяча рублей",
-    "change_percent": null,
-    "republic_average": 174221.63157894736,
-    "source": "bdmo_tochno"
-  },
-  {
-    "code": "Y48401003",
-    "name": "Оборот розничной торговли (без субъектов малого предпринимательства)",
-    "category": "Розничная торговля и общественное питание",
-    "value": null,
-    "unit": "Тысяча рублей",
-    "change_percent": null,
-    "republic_average": 1027264.9882352941,
-    "source": "bdmo_tochno"
+    "source": "catalog"
   },
   {
     "code": "unemployment",
@@ -67,7 +47,7 @@
     "unit": "%",
     "change_percent": null,
     "republic_average": null,
-    "source": "demo"
+    "source": "catalog"
   },
   {
     "code": "average_salary",
@@ -77,6 +57,6 @@
     "unit": "руб.",
     "change_percent": null,
     "republic_average": null,
-    "source": "demo"
+    "source": "catalog"
   }
 ]

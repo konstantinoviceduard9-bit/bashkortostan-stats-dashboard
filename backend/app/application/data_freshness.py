@@ -64,5 +64,7 @@ async def kpi_source_notes(session: AsyncSession, municipality_id: int, period: 
         elif indicator.source == "manual_csv":
             notes.append(f"{indicator.name}: ручной импорт CSV")
         elif indicator.source == "bdmo_tochno":
-            notes.append(f"{indicator.name}: БД ПМО")
+            notes.append(f"{indicator.name}: БД ПМО (официальная муниципальная статистика)")
+        elif indicator.source == "opendata_rb":
+            notes.append(f"{indicator.name}: портал открытых данных РБ")
     return notes

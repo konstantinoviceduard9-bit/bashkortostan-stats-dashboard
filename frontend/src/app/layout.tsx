@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, PT_Serif } from "next/font/google";
+import { Cormorant_Garamond, Onest } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
-const ptSerif = PT_Serif({ subsets: ["latin", "cyrillic"], weight: ["400", "700"], variable: "--font-pt-serif" });
+const onest = Onest({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-onest",
+  weight: ["400", "500", "600", "700"],
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-cormorant",
+  weight: ["600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Дашборд муниципальной статистики — Республика Башкортостан",
@@ -13,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
-      <body className={`${inter.variable} ${ptSerif.variable} font-sans`}>{children}</body>
+      <body className={`${onest.variable} ${cormorant.variable} font-sans`}>{children}</body>
     </html>
   );
 }

@@ -1,6 +1,8 @@
 import json
 import math
 from datetime import date, datetime, timezone
+from functools import lru_cache
+from pathlib import Path
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,6 +14,45 @@ from app.domain.entities import ConnectorResult
 from app.infrastructure.connectors.base import BaseConnector
 from app.infrastructure.db.models import ConnectorRun, Indicator, IndicatorValue, Municipality, RawDataCache
 from app.infrastructure.notifications.service import NotificationService
+
+OKTMO_OVERRIDE_PATH = Path(__file__).resolve().parents[2] / "data" / "bdmo_oktmo_overrides.json"
+
+
+@lru_cache
+def _load_bdmo_oktmo_overrides() -> dict[str, str]:
+    if not OKTMO_OVERRIDE_PATH.exists():
+        return {}
+    payload = json.loads(OKTMO_OVERRIDE_PATH.read_text(encoding="utf-8"))
+    return {str(oktmo): str(slug) for oktmo, slug in payload.items()}
+
+
+def resolve_observation_municipality(
+    municipalities: list[Municipality],
+    observation,
+) -> Municipality | None:
+    resolver = MunicipalityResolver(municipalities)
+    by_slug = {row.slug: row for row in municipalities}
+    oktmo_digits = "".join(ch for ch in str(observation.oktmo) if ch.isdigit())[:8]
+
+    if observation.source == "bdmo_tochno":
+        override_slug = _load_bdmo_oktmo_overrides().get(oktmo_digits)
+        if override_slug and override_slug in by_slug:
+            return by_slug[override_slug]
+
+    municipality = resolver.resolve(observation.oktmo)
+    if observation.source != "bdmo_tochno":
+        return municipality
+
+    label = str((observation.metadata or {}).get("municipality_label", "")).strip()
+    if not label:
+        return municipality
+    label_match = resolver.resolve(label)
+    if label_match is None:
+        return municipality
+
+    if municipality is None or municipality.id != label_match.id:
+        return label_match
+    return municipality
 
 
 async def persist_connector_result(session: AsyncSession, result: ConnectorResult) -> tuple[bool, dict[str, int]]:
@@ -58,13 +99,11 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
     )
 
     municipalities = (await session.execute(select(Municipality))).scalars().all()
-    resolver = MunicipalityResolver(municipalities)
-
     for raw_observation in result.observations:
         observation = map_observation(raw_observation)
         if not math.isfinite(observation.value):
             continue
-        municipality = resolver.resolve(observation.oktmo)
+        municipality = resolve_observation_municipality(municipalities, observation)
         if municipality is None:
             stats["skipped_municipality"] += 1
             continue
@@ -80,6 +119,8 @@ async def persist_connector_result(session: AsyncSession, result: ConnectorResul
             )
             session.add(indicator)
             await session.flush()
+        elif indicator.source in {"demo", "catalog"} and observation.source not in {"demo", "catalog"}:
+            indicator.source = observation.source
 
         existing = await session.scalar(
             select(IndicatorValue).where(

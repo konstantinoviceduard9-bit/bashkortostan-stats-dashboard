@@ -7,9 +7,10 @@ from pathlib import Path
 import httpx
 import pandas as pd
 
-SECTIONS = (1, 2, 3, 5, 6, 7, 8, 9, 12, 13)
+SECTIONS = tuple(range(1, 14))
 PHRASES = (
     "зарплат",
+    "заработ",
     "безработ",
     "бюджет",
     "врач",
@@ -22,6 +23,9 @@ PHRASES = (
     "доход",
     "расход",
     "занятост",
+    "инвестиц",
+    "населен",
+    "смерт",
 )
 BASE = "https://storage.yandexcloud.net/tochno-st-catalog/Rosstat/data_bdmo_118_v20250918/by_section"
 OUT = Path(__file__).resolve().parents[1] / "data" / "bdmo_kpi_candidates.txt"
