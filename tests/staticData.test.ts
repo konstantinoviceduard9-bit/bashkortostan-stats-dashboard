@@ -19,9 +19,13 @@ describe("static BDMO data", () => {
   });
 
   it("filters static groups and indicators by selected year", () => {
-    expect((staticData as any).getIndicatorGroups(2026).map((group: { id: string }) => group.id)).toEqual([
-      "opendata_health_2026"
-    ]);
-    expect((staticData as any).getIndicators(undefined, 2026).every((indicator: { id: string }) => indicator.id.startsWith("opendata_health_"))).toBe(true);
+    const groups2026 = (staticData as any).getIndicatorGroups(2026).map((group: { id: string }) => group.id);
+    const indicators2026 = (staticData as any).getIndicators(undefined, 2026);
+
+    expect(groups2026).toContain("opendata_health_2026");
+    expect(groups2026.every((groupId: string) => groupId.startsWith("opendata_"))).toBe(true);
+    expect(indicators2026.length).toBeGreaterThanOrEqual(9);
+    expect(indicators2026.some((indicator: { id: string }) => indicator.id === "opendata_health_23_count")).toBe(true);
+    expect(indicators2026.some((indicator: { id: string }) => indicator.id === "opendata_health_24_count")).toBe(false);
   });
 });

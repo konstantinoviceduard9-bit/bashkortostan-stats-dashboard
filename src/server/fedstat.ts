@@ -51,7 +51,7 @@ export function parseFedstatSdmx(sdmx: string, spec: FedstatSdmxParseSpec): CsvP
     removeNSPrefix: true
   });
   const document = parser.parse(sdmx) as Record<string, unknown>;
-  const seriesList = collectNodes(document, "Series");
+  const seriesList = collectSdmxNodes(document, "Series");
   const values: StatValue[] = [];
   const warnings: SdmxWarning[] = [];
 
@@ -110,9 +110,9 @@ export function createFedstatSdmxAdapter(spec: FedstatImportSpec): OfficialSourc
   };
 }
 
-function extractSeriesDimensions(series: unknown): Record<string, string> {
+export function extractSeriesDimensions(series: unknown): Record<string, string> {
   const dimensions: Record<string, string> = {};
-  const values = collectNodes(series, "Value");
+  const values = collectSdmxNodes(series, "Value");
 
   for (const value of values) {
     if (isRecord(value) && typeof value.id === "string" && typeof value.value === "string") {
@@ -124,7 +124,7 @@ function extractSeriesDimensions(series: unknown): Record<string, string> {
 }
 
 function extractObsValue(series: unknown): string {
-  const obsValues = collectNodes(series, "ObsValue");
+  const obsValues = collectSdmxNodes(series, "ObsValue");
   const first = obsValues[0];
 
   if (isRecord(first) && typeof first.value === "string") {
@@ -134,9 +134,9 @@ function extractObsValue(series: unknown): string {
   return "";
 }
 
-function collectNodes(node: unknown, targetKey: string): unknown[] {
+export function collectSdmxNodes(node: unknown, targetKey: string): unknown[] {
   if (Array.isArray(node)) {
-    return node.flatMap((item) => collectNodes(item, targetKey));
+    return node.flatMap((item) => collectSdmxNodes(item, targetKey));
   }
 
   if (!isRecord(node)) {
@@ -145,7 +145,7 @@ function collectNodes(node: unknown, targetKey: string): unknown[] {
 
   return Object.entries(node).flatMap(([key, value]) => {
     const ownNodes = key === targetKey ? (Array.isArray(value) ? value : [value]) : [];
-    return [...ownNodes, ...collectNodes(value, targetKey)];
+    return [...ownNodes, ...collectSdmxNodes(value, targetKey)];
   });
 }
 

@@ -3,7 +3,11 @@ import { districtAliases } from "../shared/districts";
 import { createFedstatSdmxAdapter, type FedstatImportSpec } from "./fedstat";
 import { createCsvUrlAdapter, runImport } from "./importer";
 import { createConfiguredOfficialAdapter, listOfficialImportSources } from "./officialSources";
+import { getFedstatCatalogEntry, fedstatCatalog } from "../data/fedstatCatalog";
+import { liveCatalogMeta, liveIndicatorGroups, liveIndicators } from "../data/liveCatalog";
 import { store } from "./dataStore";
+import { fetchFedstatLive } from "./fedstatLive";
+import { fetchOpendataLive } from "./opendataLive";
 
 export const api = Router();
 
@@ -113,6 +117,61 @@ api.post("/imports/csv-url", async (request, response) => {
   const result = await runImport(createCsvUrlAdapter(sourceId, url, districtAliases));
   store.addImportedValues(result.values, result.run, result);
   response.status(result.run.status === "failed" ? 422 : 201).json(result);
+});
+
+api.get("/live/status", (_request, response) => {
+  response.json({
+    enabled: true,
+    fedstatIndicators: fedstatCatalog.length,
+    opendataIndicators: liveCatalogMeta.filter((entry) => entry.source === "opendata").length,
+    cacheTtlSeconds: 300
+  });
+});
+
+api.get("/live/catalog", (_request, response) => {
+  response.json({
+    enabled: true,
+    groups: liveIndicatorGroups,
+    indicators: liveIndicators
+  });
+});
+
+api.get("/live/ranking", async (request, response) => {
+  const catalogId = String(request.query.catalogId ?? "");
+  const year = Number(request.query.year);
+  const refresh = String(request.query.refresh ?? "") === "true";
+
+  if (!catalogId || !Number.isInteger(year)) {
+    response.status(400).json({ error: "Нужны параметры catalogId и year" });
+    return;
+  }
+
+  const meta = liveCatalogMeta.find((entry) => entry.catalogId === catalogId);
+  if (!meta) {
+    response.status(404).json({ error: `Live-показатель не найден: ${catalogId}` });
+    return;
+  }
+
+  try {
+    if (meta.source === "opendata") {
+      const payload = await fetchOpendataLive(catalogId, year, refresh);
+      response.json({ ...payload, source: "opendata", warnings: [] });
+      return;
+    }
+
+    const entry = getFedstatCatalogEntry(catalogId);
+    if (!entry) {
+      response.status(404).json({ error: `Fedstat spec не найден: ${catalogId}` });
+      return;
+    }
+
+    const payload = await fetchFedstatLive(entry, year);
+    response.json({ ...payload, source: "fedstat" });
+  } catch (error) {
+    response.status(502).json({
+      error: error instanceof Error ? error.message : "Ошибка live-загрузки"
+    });
+  }
 });
 
 api.post("/imports/fedstat", async (request, response) => {

@@ -19,6 +19,10 @@ export function isArchiveYear(year: number): boolean {
   return year < HOT_DATA_START_YEAR;
 }
 
+export function isHotYear(year: number): boolean {
+  return year >= HOT_DATA_START_YEAR;
+}
+
 export function buildArchiveDataUrl({ baseUrl, indicatorId, year }: ArchiveDataRequest): string {
   const normalizedBaseUrl = baseUrl.replace(/\/+$/, "");
   return `${normalizedBaseUrl}/${year}/${encodeURIComponent(indicatorId)}.json`;

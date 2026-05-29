@@ -1,5 +1,6 @@
 import { districts, indicatorGroups, indicators, sources, statValues } from "../data/seed";
 import { buildExecutiveSummary } from "../shared/executive";
+import { indicatorIdsWithNonZeroValues } from "../shared/opendata";
 import { validateStatValues } from "../shared/quality";
 import { buildRanking } from "../shared/ranking";
 import type { ExecutiveSummary } from "../shared/types";
@@ -12,7 +13,7 @@ export const staticData = {
   years: [...new Set(statValues.map((value) => value.year))].sort((a, b) => b - a),
   quality: validateStatValues({ districts, indicators, values: statValues }),
   getAvailableIndicatorIds(year: number) {
-    return [...new Set(statValues.filter((value) => value.year === year).map((value) => value.indicatorId))];
+    return indicatorIdsWithNonZeroValues(statValues, year);
   },
   getIndicatorGroups(year?: number) {
     if (!year || Number.isNaN(year)) {

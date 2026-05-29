@@ -7,6 +7,9 @@ describe("2026 operational open data", () => {
     expect(staticData.years).toContain(2026);
     expect(sources.some((source) => source.id === "bashkortostan_open_data")).toBe(true);
 
+    const operationalGroups = staticData.indicatorGroups.filter((group) => group.id.startsWith("opendata_"));
+    expect(operationalGroups.length).toBeGreaterThanOrEqual(1);
+
     const ranking = staticData.getRanking("opendata_health_26_count", 2026);
     const ufa = ranking.find((row) => row.districtId === "ufa");
 

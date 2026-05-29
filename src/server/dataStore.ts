@@ -8,6 +8,7 @@ import {
 } from "../data/seed";
 import { buildRanking } from "../shared/ranking";
 import { buildExecutiveSummary } from "../shared/executive";
+import { indicatorIdsWithNonZeroValues } from "../shared/opendata";
 import type { District, ImportRun, Indicator, IndicatorGroup, Source, StatValue } from "../shared/types";
 import { validateStatValues } from "../shared/quality";
 import type { CsvParseResult } from "./importer";
@@ -73,7 +74,7 @@ export class DataStore {
   }
 
   listAvailableIndicatorIds(year: number): string[] {
-    return [...new Set(this.values.filter((value) => value.year === year).map((value) => value.indicatorId))];
+    return indicatorIdsWithNonZeroValues(this.values, year);
   }
 
   getRanking(indicatorId: string, year: number) {

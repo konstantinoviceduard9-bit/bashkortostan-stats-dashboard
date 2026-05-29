@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ARCHIVE_YEARS, getArchiveBaseUrl, isArchiveYear, loadArchiveRanking } from "./archiveData";
+import { ARCHIVE_YEARS, getArchiveBaseUrl, isArchiveYear, isHotYear, loadArchiveRanking } from "./archiveData";
 import { staticData } from "./staticData";
+import { getOperationalYearFromGroupId } from "../shared/opendata";
 import type { DemoUser, District, ExecutiveSummary, Indicator, IndicatorGroup, RankingRow, Source } from "../shared/types";
 
 interface QualityResponse {
@@ -82,12 +83,12 @@ export function App() {
   const [quality, setQuality] = useState<QualityResponse | null>(null);
   const [selectedYear, setSelectedYear] = useState(2026);
   const [selectedDistrictId, setSelectedDistrictId] = useState("ufa");
-  const [selectedGroupId, setSelectedGroupId] = useState("opendata_health_2026");
-  const [selectedIndicatorId, setSelectedIndicatorId] = useState("opendata_health_23_count");
+  const [selectedGroupId, setSelectedGroupId] = useState("");
+  const [selectedIndicatorId, setSelectedIndicatorId] = useState("");
   const [ranking, setRanking] = useState<RankingRow[]>([]);
   const [profile, setProfile] = useState<DistrictProfile | null>(null);
   const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummary | null>(null);
-  const [archiveStatus, setArchiveStatus] = useState<string | null>(null);
+  const [layerStatus, setLayerStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -118,24 +119,30 @@ export function App() {
 
       if (!archiveBaseUrl) {
         setRanking([]);
-        setArchiveStatus("Архивный источник пока не подключен. Укажите VITE_ARCHIVE_DATA_URL для загрузки старых лет.");
+        setLayerStatus(
+          "Архивный год: задайте VITE_ARCHIVE_DATA_URL и выложите JSON по схеме <база>/<год>/<показатель>.json."
+        );
         return;
       }
 
-      setArchiveStatus("Загружаем архивные данные из облачного источника...");
+      setLayerStatus("Загружаем архив из облачного хранилища...");
       loadArchiveRanking({ baseUrl: archiveBaseUrl, indicatorId: selectedIndicatorId, year: selectedYear })
         .then((archiveRanking) => {
           setRanking(archiveRanking);
-          setArchiveStatus("Архивные данные загружены.");
+          setLayerStatus(`Архив ${selectedYear}: данные загружены из облака.`);
         })
         .catch((loadError: Error) => {
           setRanking([]);
-          setArchiveStatus(loadError.message);
+          setLayerStatus(loadError.message);
         });
       return;
     }
 
-    setArchiveStatus(null);
+    if (!isHotYear(selectedYear)) {
+      return;
+    }
+
+    setLayerStatus(null);
     fetchJson<RankingRow[]>(`/api/rankings?indicatorId=${selectedIndicatorId}&year=${selectedYear}`)
       .then(setRanking)
       .catch((loadError: Error) => setError(loadError.message));
@@ -176,31 +183,74 @@ export function App() {
   }, [currentUser?.role, selectedYear]);
 
   useEffect(() => {
-    if (!selectedYear || isArchiveYear(selectedYear)) {
+    if (!selectedYear) {
       return;
     }
 
-    Promise.all([
-      fetchJson<IndicatorGroup[]>(`/api/indicator-groups?year=${selectedYear}`),
-      fetchJson<Indicator[]>(`/api/indicators?year=${selectedYear}`)
-    ])
-      .then(([nextGroups, nextIndicators]) => {
-        setGroups(nextGroups);
-        setIndicators(nextIndicators);
-      })
-      .catch((loadError: Error) => setError(loadError.message));
-  }, [selectedYear]);
+    if (isArchiveYear(selectedYear)) {
+      setLayerStatus(
+        "Архивный год: выберите показатель. Данные подгрузятся из облака после настройки VITE_ARCHIVE_DATA_URL."
+      );
+      fetchJson<IndicatorGroup[]>("/api/indicator-groups")
+        .then(setGroups)
+        .catch((loadError: Error) => setError(loadError.message));
+      return;
+    }
 
-  const filteredIndicators = useMemo(
-    () => indicators.filter((indicator) => indicator.groupId === selectedGroupId),
-    [indicators, selectedGroupId]
-  );
+    const latestHotYear = years[0] ?? selectedYear;
+    setLayerStatus(
+      `Актуальный слой (2024–${latestHotYear}): снимок БД ПМО и открытые данные РБ. Обновление при деплое и по расписанию CI.`
+    );
+    fetchJson<IndicatorGroup[]>(`/api/indicator-groups?year=${selectedYear}`)
+      .then(setGroups)
+      .catch((loadError: Error) => setError(loadError.message));
+  }, [selectedYear, years]);
 
   useEffect(() => {
-    if (groups.length > 0 && !groups.some((group) => group.id === selectedGroupId)) {
-      setSelectedGroupId(groups[0].id);
+    if (!selectedYear || !selectedGroupId) {
+      return;
+    }
+
+    const indicatorsUrl = isArchiveYear(selectedYear)
+      ? `/api/indicators?groupId=${encodeURIComponent(selectedGroupId)}`
+      : `/api/indicators?year=${selectedYear}&groupId=${encodeURIComponent(selectedGroupId)}`;
+
+    fetchJson<Indicator[]>(indicatorsUrl)
+      .then(setIndicators)
+      .catch((loadError: Error) => setError(loadError.message));
+  }, [selectedYear, selectedGroupId]);
+
+  useEffect(() => {
+    const groupYear = getOperationalYearFromGroupId(selectedGroupId);
+    if (groupYear && !isArchiveYear(selectedYear) && groupYear !== selectedYear) {
+      setSelectedYear(groupYear);
+    }
+  }, [selectedGroupId, selectedYear]);
+
+  const filteredIndicators = useMemo(() => indicators, [indicators]);
+
+  useEffect(() => {
+    if (groups.length === 0) {
+      return;
+    }
+
+    if (!groups.some((group) => group.id === selectedGroupId)) {
+      const preferred = groups.find((group) => group.id.startsWith("bdmo_")) ?? groups[0];
+      setSelectedGroupId(preferred.id);
     }
   }, [groups, selectedGroupId]);
+
+  useEffect(() => {
+    if (isArchiveYear(selectedYear) || groups.length === 0) {
+      return;
+    }
+
+    const groupYear = getOperationalYearFromGroupId(selectedGroupId);
+    if (groupYear && groupYear !== selectedYear) {
+      const replacement = groups.find((group) => getOperationalYearFromGroupId(group.id) === selectedYear);
+      setSelectedGroupId(replacement?.id ?? groups[0].id);
+    }
+  }, [groups, selectedGroupId, selectedYear]);
 
   useEffect(() => {
     if (filteredIndicators.length > 0 && !filteredIndicators.some((indicator) => indicator.id === selectedIndicatorId)) {
@@ -298,11 +348,7 @@ export function App() {
       </section>
 
       {error ? <div className="error">{error}</div> : null}
-      {archiveStatus ? <div className="archive-status">{archiveStatus}</div> : null}
-      <div className="archive-status">
-        Актуальный слой: БД ПМО 2024-2025 (официальный снимок) и оперативные открытые данные {selectedYear}. На
-        GitHub Pages данные обновляются при деплое и по расписанию, а не в реальном времени при каждом открытии страницы.
-      </div>
+      {layerStatus ? <div className="archive-status">{layerStatus}</div> : null}
 
       <section className="filters">
         <label>
@@ -464,7 +510,9 @@ export function App() {
               <p className="empty-state">
                 {isArchiveYear(selectedYear)
                   ? "Для этого архивного года данные появятся после подключения облачного архива."
-                  : "По выбранному показателю нет значений за этот год."}
+                  : filteredIndicators.length === 0
+                    ? `За ${selectedYear} год в этой группе нет показателей с ненулевыми значениями. Для оперативных данных здравоохранения выберите 2026 год.`
+                    : "По выбранному показателю нет значений за этот год. Выберите другой показатель или год."}
               </p>
             ) : null}
             {ranking.map((row) => (
