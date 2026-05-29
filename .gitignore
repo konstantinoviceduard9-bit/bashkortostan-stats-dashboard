@@ -11,3 +11,6 @@ __pycache__/
 frontend/.next/
 backend/.pytest_cache/
 backend/data/bdmo_kpi_candidates.txt
+backend/data/native_demo.db
+tools/
+DEMO_URL.txt
