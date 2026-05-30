@@ -144,7 +144,6 @@ export default function RatingPage() {
               {view.rows.map((row) => (
                 <li key={row.rank} className={row.is_self ? "rating-row rating-row--self" : "rating-row"}>
                   <span className="font-bold text-bashkir-muted">#{row.rank}</span>
-                  <span className="min-w-0 flex-1 truncate font-medium">{row.label}</span>
                   <span className="shrink-0 tabular-nums text-sm font-semibold text-bashkir-ink">
                     {formatValue(row.value, view.unit !== "—" && view.unit !== "%" ? view.unit : undefined)}
                   </span>
@@ -157,7 +156,6 @@ export default function RatingPage() {
                 <thead className="table-head">
                   <tr>
                     <th className="px-4 py-3">{t.rating.colPlace}</th>
-                    <th className="px-4 py-3">{t.rating.colMunicipality}</th>
                     <th className="px-4 py-3">{t.common.value}</th>
                   </tr>
                 </thead>
@@ -165,7 +163,6 @@ export default function RatingPage() {
                   {view.rows.map((row) => (
                     <tr key={row.rank} className={row.is_self ? "bg-bashkir-blue/5" : undefined}>
                       <td className="px-4 py-3 font-bold tabular-nums text-bashkir-muted">#{row.rank}</td>
-                      <td className="px-4 py-3 font-medium text-bashkir-ink">{row.label}</td>
                       <td className="px-4 py-3 font-semibold tabular-nums text-bashkir-ink">
                         {formatValue(row.value, view.unit !== "—" && view.unit !== "%" ? view.unit : undefined)}
                       </td>
