@@ -1,42 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Medal, TrendingUp, TriangleAlert } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { BarChart3, TrendingUp } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CoverageRing } from "@/components/dashboard/CoverageRing";
 import { EmptyState, ErrorBanner, TableSkeleton } from "@/components/ui/LoadingState";
+import { formatValue } from "@/lib/format";
 import { useI18n } from "@/lib/i18n/LocaleProvider";
 
 interface RatingRow {
   rank: number;
   label: string;
+  value: number | null;
   is_self: boolean;
+}
+
+interface RatingIndicatorOption {
+  code: string;
+  name: string;
+  unit: string;
 }
 
 interface RatingView {
   self_rank: number | null;
   self_total: number;
-  top: RatingRow[];
-  bottom: RatingRow[];
+  indicator_code: string;
+  indicator_name: string;
+  unit: string;
+  rows: RatingRow[];
+  available_indicators: RatingIndicatorOption[];
 }
-
-const PODIUM = ["🥇", "🥈", "🥉"];
 
 export default function RatingPage() {
   const { t, fmt } = useI18n();
   const [view, setView] = useState<RatingView | null>(null);
+  const [selected, setSelected] = useState("");
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const loadRating = useCallback(
+    (indicator?: string) => {
+      setLoading(true);
+      setError(null);
+      const query = indicator ? `?indicator=${encodeURIComponent(indicator)}` : "";
+      apiFetch<RatingView>(`/dashboard/rating${query}`)
+        .then((data) => {
+          setView(data);
+          setSelected(data.indicator_code);
+        })
+        .catch((loadError) => setError(loadError instanceof Error ? loadError.message : t.rating.loadError))
+        .finally(() => setLoading(false));
+    },
+    [t.rating.loadError],
+  );
+
   useEffect(() => {
-    apiFetch<RatingView>("/dashboard/rating")
-      .then(setView)
-      .catch((loadError) => setError(loadError instanceof Error ? loadError.message : t.rating.loadError));
-  }, []);
+    loadRating();
+  }, [loadRating]);
 
   if (error) return <ErrorBanner message={error} />;
-  if (!view) return <TableSkeleton rows={6} />;
-  if (view.top.length === 0 && view.bottom.length === 0) {
+  if (!view && loading) return <TableSkeleton rows={8} />;
+  if (!view || view.rows.length === 0) {
     return (
       <EmptyState
         title={t.rating.unavailable}
@@ -59,6 +84,7 @@ export default function RatingPage() {
       <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
         <article className="stat-card">
           <p className="stat-label">{t.rating.yourPlace}</p>
+          <p className="text-sm font-medium text-bashkir-muted">{view.indicator_name}</p>
           <p className="kpi-value text-bashkir-green">
             {view.self_rank ?? t.common.noData}{" "}
             <span className="text-lg font-normal text-bashkir-muted">
@@ -84,45 +110,73 @@ export default function RatingPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <section className="card-bashkir border-emerald-200/50 bg-gradient-to-br from-white to-emerald-50/20">
-          <h3 className="heading-section inline-flex items-center gap-2 text-bashkir-green">
-            <Medal size={18} />
-            {t.rating.top3}
-          </h3>
-          <ul className="mt-4 space-y-2">
-            {view.top.map((row, i) => (
-              <li
-                key={row.rank}
-                className={
-                  row.is_self
-                    ? "rating-row rating-row--self"
-                    : "rating-row"
-                }
-              >
-                <span className="text-lg">{PODIUM[i] ?? `#${row.rank}`}</span>
-                <span className="flex-1 font-medium">{row.label}</span>
-                <span className="text-sm font-bold text-bashkir-muted">#{row.rank}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+      <section className="card-bashkir space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h3 className="heading-section inline-flex items-center gap-2">
+              <BarChart3 size={18} className="text-bashkir-blue" />
+              {t.rating.byIndicator}
+            </h3>
+            <p className="mt-1 text-sm text-bashkir-muted">{t.rating.byIndicatorHint}</p>
+          </div>
+          <label className="block min-w-[14rem] flex-1 text-sm font-semibold text-bashkir-ink sm:max-w-xs">
+            {t.rating.selectIndicator}
+            <select
+              className="input-bashkir mt-1"
+              value={selected}
+              onChange={(e) => loadRating(e.target.value)}
+              disabled={loading}
+            >
+              {view.available_indicators.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
-        <section className="card-bashkir border-red-200/50 bg-gradient-to-br from-white to-red-50/20">
-          <h3 className="heading-section inline-flex items-center gap-2 text-red-700">
-            <TriangleAlert size={18} />
-            {t.rating.bottom3}
-          </h3>
-          <ul className="mt-4 space-y-2">
-            {view.bottom.map((row) => (
-              <li key={row.rank} className={row.is_self ? "rating-row rating-row--self" : "rating-row"}>
-                <span className="font-bold text-red-600">#{row.rank}</span>
-                <span className="flex-1 font-medium">{row.label}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
+        {loading ? (
+          <TableSkeleton rows={8} />
+        ) : (
+          <>
+            <ul className="space-y-2 lg:hidden">
+              {view.rows.map((row) => (
+                <li key={row.rank} className={row.is_self ? "rating-row rating-row--self" : "rating-row"}>
+                  <span className="font-bold text-bashkir-muted">#{row.rank}</span>
+                  <span className="min-w-0 flex-1 truncate font-medium">{row.label}</span>
+                  <span className="shrink-0 tabular-nums text-sm font-semibold text-bashkir-ink">
+                    {formatValue(row.value, view.unit !== "—" && view.unit !== "%" ? view.unit : undefined)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="data-table min-w-full text-left text-sm">
+                <thead className="table-head">
+                  <tr>
+                    <th className="px-4 py-3">{t.rating.colPlace}</th>
+                    <th className="px-4 py-3">{t.rating.colMunicipality}</th>
+                    <th className="px-4 py-3">{t.common.value}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {view.rows.map((row) => (
+                    <tr key={row.rank} className={row.is_self ? "bg-bashkir-blue/5" : undefined}>
+                      <td className="px-4 py-3 font-bold tabular-nums text-bashkir-muted">#{row.rank}</td>
+                      <td className="px-4 py-3 font-medium text-bashkir-ink">{row.label}</td>
+                      <td className="px-4 py-3 font-semibold tabular-nums text-bashkir-ink">
+                        {formatValue(row.value, view.unit !== "—" && view.unit !== "%" ? view.unit : undefined)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </section>
     </div>
   );
 }

@@ -133,6 +133,56 @@ export async function staticApiFetch<T>(
     return enriched as T;
   }
 
+  if (basePath === "/dashboard/rating") {
+    const params = new URLSearchParams(path.includes("?") ? path.split("?")[1] : "");
+    const indicatorCode = params.get("indicator") ?? "composite_index";
+    type SharedRow = { rank: number; login: string; value: number | null };
+    type SharedRating = {
+      indicator_code: string;
+      indicator_name: string;
+      unit: string;
+      rows: SharedRow[];
+    };
+    type ManifestItem = { code: string; name: string; unit: string };
+
+    const [manifest, me] = await Promise.all([
+      loadJson<ManifestItem[]>(`${DEMO_ROOT}/rankings/manifest.json`).catch(() => [] as ManifestItem[]),
+      loadJson<{ role?: string }>(`${DEMO_ROOT}/${login}/me.json`),
+    ]);
+
+    const shared = await loadJson<SharedRating>(`${DEMO_ROOT}/rankings/${indicatorCode}.json`).catch(
+      () => loadJson<SharedRating>(`${DEMO_ROOT}/rankings/composite_index.json`),
+    );
+
+    const showNames = me.role === "admin";
+    let selfRank: number | null = null;
+    let selfTotal = shared.rows.length || 62;
+
+    const rows = shared.rows.map((row) => {
+      const isSelf = row.login === login;
+      if (isSelf) {
+        selfRank = row.rank;
+        selfTotal = shared.rows.length;
+      }
+      return {
+        rank: row.rank,
+        label: showNames ? row.login.replace("glava_", "") : `Район #${row.rank}`,
+        value: row.value,
+        is_self: isSelf,
+      };
+    });
+
+    return {
+      self_rank: selfRank,
+      self_total: selfTotal,
+      indicator_code: shared.indicator_code,
+      indicator_name: shared.indicator_name,
+      unit: shared.unit,
+      rows,
+      available_indicators: manifest,
+    } as T;
+  }
+
   if (path.includes("?")) {
     const data = await loadJson<Record<string, unknown>[]>(file);
     const params = new URLSearchParams(path.split("?")[1]);

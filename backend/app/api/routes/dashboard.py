@@ -10,12 +10,14 @@ from app.api.schemas import (
     DataSourceInfo,
     IndicatorRow,
     KpiCard,
+    RatingIndicatorOption,
     RatingRow,
     RatingView,
     UserProfile,
 )
 from app.application.dashboard_metrics import load_sparkline, percent_change
 from app.application.data_freshness import kpi_source_notes, latest_connector_runs
+from app.application.ranking import COMPOSITE_KPI_CODES
 from app.application.triggers import build_triggers
 from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality, RankingSnapshot, UserRoleEnum
 from app.infrastructure.db.session import get_db
@@ -32,6 +34,17 @@ KPI_CODES = [
 ]
 
 RANKING_INDICATOR_CODE = "composite_index"
+RATING_INDICATOR_ORDER = [RANKING_INDICATOR_CODE, *[code for code, _ in COMPOSITE_KPI_CODES]]
+
+
+async def _list_rating_indicators(session: AsyncSession) -> list[RatingIndicatorOption]:
+    options: list[RatingIndicatorOption] = []
+    for code in RATING_INDICATOR_ORDER:
+        indicator = await session.scalar(select(Indicator).where(Indicator.code == code))
+        if indicator is None:
+            continue
+        options.append(RatingIndicatorOption(code=indicator.code, name=indicator.name, unit=indicator.unit))
+    return options
 
 
 @router.get("/me", response_model=UserProfile)
@@ -251,16 +264,49 @@ async def indicators(
 async def rating(
     user: CurrentUser = Depends(get_current_user),
     session: AsyncSession = Depends(get_db),
+    indicator: str | None = Query(default=None, description="Код показателя для рейтинга"),
 ) -> RatingView:
-    latest_period = await session.scalar(select(func.max(RankingSnapshot.period)))
-    if latest_period is None:
-        return RatingView(self_rank=None, self_total=63, top=[], bottom=[])
+    available = await _list_rating_indicators(session)
+    if not available:
+        return RatingView(
+            self_rank=None,
+            self_total=63,
+            indicator_code=RANKING_INDICATOR_CODE,
+            indicator_name="Сводный индекс",
+            unit="балл",
+            rows=[],
+            available_indicators=[],
+        )
 
-    base_indicator = await session.scalar(select(Indicator).where(Indicator.code == RANKING_INDICATOR_CODE))
+    indicator_code = indicator or RANKING_INDICATOR_CODE
+    if not any(item.code == indicator_code for item in available):
+        indicator_code = available[0].code
+
+    base_indicator = await session.scalar(select(Indicator).where(Indicator.code == indicator_code))
     if base_indicator is None:
-        base_indicator = await session.scalar(select(Indicator).limit(1))
-    if base_indicator is None:
-        return RatingView(self_rank=None, self_total=63, top=[], bottom=[])
+        return RatingView(
+            self_rank=None,
+            self_total=63,
+            indicator_code=indicator_code,
+            indicator_name=indicator_code,
+            unit="—",
+            rows=[],
+            available_indicators=available,
+        )
+
+    latest_period = await session.scalar(
+        select(func.max(RankingSnapshot.period)).where(RankingSnapshot.indicator_id == base_indicator.id)
+    )
+    if latest_period is None:
+        return RatingView(
+            self_rank=None,
+            self_total=63,
+            indicator_code=base_indicator.code,
+            indicator_name=base_indicator.name,
+            unit=base_indicator.unit,
+            rows=[],
+            available_indicators=available,
+        )
 
     rows = (
         await session.execute(
@@ -276,29 +322,30 @@ async def rating(
 
     self_rank = None
     self_total = len(rows) or 63
+    show_names = user.role == UserRoleEnum.admin
+
+    rating_rows: list[RatingRow] = []
     for snapshot, municipality in rows:
-        if user.municipality_id == municipality.id:
+        is_self = user.municipality_id == municipality.id
+        if is_self:
             self_rank = snapshot.rank
             self_total = snapshot.total
-            break
-
-    if user.role == UserRoleEnum.admin:
-        return RatingView(
-            self_rank=self_rank,
-            self_total=self_total,
-            top=[
-                RatingRow(rank=snapshot.rank, label=municipality.name, is_self=user.municipality_id == municipality.id)
-                for snapshot, municipality in rows
-            ],
-            bottom=[],
+        label = municipality.name if show_names else f"Район #{snapshot.rank}"
+        rating_rows.append(
+            RatingRow(
+                rank=snapshot.rank,
+                label=label,
+                value=snapshot.value,
+                is_self=is_self,
+            )
         )
 
-    top = [
-        RatingRow(rank=snapshot.rank, label=f"Район #{snapshot.rank}", is_self=user.municipality_id == municipality.id)
-        for snapshot, municipality in rows[:3]
-    ]
-    bottom = [
-        RatingRow(rank=snapshot.rank, label=f"Район #{snapshot.rank}", is_self=user.municipality_id == municipality.id)
-        for snapshot, municipality in rows[-3:]
-    ]
-    return RatingView(self_rank=self_rank, self_total=self_total, top=top, bottom=bottom)
+    return RatingView(
+        self_rank=self_rank,
+        self_total=self_total,
+        indicator_code=base_indicator.code,
+        indicator_name=base_indicator.name,
+        unit=base_indicator.unit,
+        rows=rating_rows,
+        available_indicators=available,
+    )

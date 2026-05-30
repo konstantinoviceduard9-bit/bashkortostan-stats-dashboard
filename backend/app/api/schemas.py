@@ -83,14 +83,24 @@ class IndicatorRow(BaseModel):
 class RatingRow(BaseModel):
     rank: int
     label: str
+    value: float | None = None
     is_self: bool = False
+
+
+class RatingIndicatorOption(BaseModel):
+    code: str
+    name: str
+    unit: str
 
 
 class RatingView(BaseModel):
     self_rank: int | None
     self_total: int
-    top: list[RatingRow]
-    bottom: list[RatingRow]
+    indicator_code: str
+    indicator_name: str
+    unit: str
+    rows: list[RatingRow]
+    available_indicators: list[RatingIndicatorOption] = []
 
 
 class ProfileUpdate(BaseModel):

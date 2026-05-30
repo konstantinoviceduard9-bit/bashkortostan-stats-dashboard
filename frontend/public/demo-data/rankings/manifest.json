@@ -1,0 +1,17 @@
+[
+  {
+    "code": "composite_index",
+    "name": "Сводный индекс эффективности",
+    "unit": "балл"
+  },
+  {
+    "code": "budget_security",
+    "name": "Бюджетная обеспеченность",
+    "unit": "%"
+  },
+  {
+    "code": "housing_commissioned",
+    "name": "Ввод жилья",
+    "unit": "кв. м"
+  }
+]

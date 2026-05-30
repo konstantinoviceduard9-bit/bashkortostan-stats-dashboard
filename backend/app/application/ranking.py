@@ -156,6 +156,12 @@ async def rebuild_rankings(
         if indicator.code == COMPOSITE_INDICATOR_CODE:
             continue
 
+        higher_is_better = True
+        for code, direction in COMPOSITE_KPI_CODES:
+            if code == indicator.code:
+                higher_is_better = direction
+                break
+
         values = (
             await session.execute(
                 select(IndicatorValue).where(
@@ -170,7 +176,11 @@ async def rebuild_rankings(
         if len(values) < MIN_MUNICIPALITIES:
             continue
 
-        ranked = sorted(((row.municipality_id, row.value) for row in values), key=lambda item: item[1], reverse=True)
+        ranked = sorted(
+            ((row.municipality_id, row.value) for row in values),
+            key=lambda item: item[1],
+            reverse=higher_is_better,
+        )
         await _save_ranking_rows(
             session,
             indicator_id=indicator.id,

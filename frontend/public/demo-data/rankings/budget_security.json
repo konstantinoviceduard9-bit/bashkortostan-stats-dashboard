@@ -1,0 +1,317 @@
+{
+  "indicator_code": "budget_security",
+  "indicator_name": "Бюджетная обеспеченность",
+  "unit": "%",
+  "rows": [
+    {
+      "rank": 1,
+      "login": "glava_ufa",
+      "value": 2006384.0
+    },
+    {
+      "rank": 2,
+      "login": "glava_ufimsky",
+      "value": 320356.0
+    },
+    {
+      "rank": 3,
+      "login": "glava_tuymazy",
+      "value": 260443.0
+    },
+    {
+      "rank": 4,
+      "login": "glava_sterlitamak",
+      "value": 228621.0
+    },
+    {
+      "rank": 5,
+      "login": "glava_blagoveshchensky",
+      "value": 227588.0
+    },
+    {
+      "rank": 6,
+      "login": "glava_oktyabrsky",
+      "value": 90490.0
+    },
+    {
+      "rank": 7,
+      "login": "glava_belebeyevsky",
+      "value": 79893.0
+    },
+    {
+      "rank": 8,
+      "login": "glava_meleuz",
+      "value": 79624.0
+    },
+    {
+      "rank": 9,
+      "login": "glava_zianchurinsky",
+      "value": 70794.0
+    },
+    {
+      "rank": 10,
+      "login": "glava_iglinsky",
+      "value": 70064.0
+    },
+    {
+      "rank": 11,
+      "login": "glava_ishimbay",
+      "value": 59639.0
+    },
+    {
+      "rank": 12,
+      "login": "glava_khaibullinsky",
+      "value": 59114.0
+    },
+    {
+      "rank": 13,
+      "login": "glava_abzelilovsky",
+      "value": 56432.0
+    },
+    {
+      "rank": 14,
+      "login": "glava_beloretsk",
+      "value": 54164.0
+    },
+    {
+      "rank": 15,
+      "login": "glava_dyurtyulinsky",
+      "value": 54021.0
+    },
+    {
+      "rank": 16,
+      "login": "glava_davlekanovsky",
+      "value": 53986.0
+    },
+    {
+      "rank": 17,
+      "login": "glava_kugarchinsky",
+      "value": 51836.0
+    },
+    {
+      "rank": 18,
+      "login": "glava_krasnokamsky",
+      "value": 48236.0
+    },
+    {
+      "rank": 19,
+      "login": "glava_uchaly_district",
+      "value": 45240.0
+    },
+    {
+      "rank": 20,
+      "login": "glava_kaltasinsky",
+      "value": 44376.0
+    },
+    {
+      "rank": 21,
+      "login": "glava_zilairsky",
+      "value": 39177.0
+    },
+    {
+      "rank": 22,
+      "login": "glava_salavat",
+      "value": 36970.0
+    },
+    {
+      "rank": 23,
+      "login": "glava_neftekamsk",
+      "value": 36675.0
+    },
+    {
+      "rank": 24,
+      "login": "glava_aurgazinsky",
+      "value": 36210.0
+    },
+    {
+      "rank": 25,
+      "login": "glava_ilishevsky",
+      "value": 32742.0
+    },
+    {
+      "rank": 26,
+      "login": "glava_karmaskalinsky",
+      "value": 32031.0
+    },
+    {
+      "rank": 27,
+      "login": "glava_buraevsky",
+      "value": 30149.0
+    },
+    {
+      "rank": 28,
+      "login": "glava_baymaksky",
+      "value": 29661.0
+    },
+    {
+      "rank": 29,
+      "login": "glava_bakalinsky",
+      "value": 28600.0
+    },
+    {
+      "rank": 30,
+      "login": "glava_kushnarenkovsky",
+      "value": 27953.0
+    },
+    {
+      "rank": 31,
+      "login": "glava_tatyshlinsky",
+      "value": 27829.0
+    },
+    {
+      "rank": 32,
+      "login": "glava_duvansky",
+      "value": 27254.0
+    },
+    {
+      "rank": 33,
+      "login": "glava_gafuriysky",
+      "value": 26055.0
+    },
+    {
+      "rank": 34,
+      "login": "glava_askinsky",
+      "value": 24958.0
+    },
+    {
+      "rank": 35,
+      "login": "glava_sterlibashevsky",
+      "value": 23090.0
+    },
+    {
+      "rank": 36,
+      "login": "glava_sharansky",
+      "value": 22360.0
+    },
+    {
+      "rank": 37,
+      "login": "glava_sibay",
+      "value": 20218.0
+    },
+    {
+      "rank": 38,
+      "login": "glava_sterlitamaksky",
+      "value": 19619.0
+    },
+    {
+      "rank": 39,
+      "login": "glava_agidel",
+      "value": 19027.0
+    },
+    {
+      "rank": 40,
+      "login": "glava_kiginsky",
+      "value": 17325.0
+    },
+    {
+      "rank": 41,
+      "login": "glava_mechetlinsky",
+      "value": 16151.0
+    },
+    {
+      "rank": 42,
+      "login": "glava_chekmagushevsky",
+      "value": 15783.0
+    },
+    {
+      "rank": 43,
+      "login": "glava_nurimanovsky",
+      "value": 15455.0
+    },
+    {
+      "rank": 44,
+      "login": "glava_chishminsky",
+      "value": 14443.0
+    },
+    {
+      "rank": 45,
+      "login": "glava_alsheevsky",
+      "value": 13643.0
+    },
+    {
+      "rank": 46,
+      "login": "glava_belokataysky",
+      "value": 13350.0
+    },
+    {
+      "rank": 47,
+      "login": "glava_fedorovsky",
+      "value": 12854.0
+    },
+    {
+      "rank": 48,
+      "login": "glava_yanaulsky",
+      "value": 12669.0
+    },
+    {
+      "rank": 49,
+      "login": "glava_burzyansky",
+      "value": 12255.0
+    },
+    {
+      "rank": 50,
+      "login": "glava_karaidelsky",
+      "value": 11198.0
+    },
+    {
+      "rank": 51,
+      "login": "glava_birsk",
+      "value": 10612.0
+    },
+    {
+      "rank": 52,
+      "login": "glava_kumertau",
+      "value": 9499.0
+    },
+    {
+      "rank": 53,
+      "login": "glava_miyakinsky",
+      "value": 8074.0
+    },
+    {
+      "rank": 54,
+      "login": "glava_buzdyaksky",
+      "value": 7678.0
+    },
+    {
+      "rank": 55,
+      "login": "glava_blagovarsky",
+      "value": 6465.0
+    },
+    {
+      "rank": 56,
+      "login": "glava_mishkinsky",
+      "value": 5473.0
+    },
+    {
+      "rank": 57,
+      "login": "glava_bizhbulyaksky",
+      "value": 5114.0
+    },
+    {
+      "rank": 58,
+      "login": "glava_kuyurgazinsky",
+      "value": 5105.0
+    },
+    {
+      "rank": 59,
+      "login": "glava_salavatsky",
+      "value": 4864.0
+    },
+    {
+      "rank": 60,
+      "login": "glava_arkhangelsky",
+      "value": 4229.0
+    },
+    {
+      "rank": 61,
+      "login": "glava_ermekeyevsky",
+      "value": 3765.0
+    },
+    {
+      "rank": 62,
+      "login": "glava_baltachevsky",
+      "value": 2996.0
+    }
+  ]
+}
