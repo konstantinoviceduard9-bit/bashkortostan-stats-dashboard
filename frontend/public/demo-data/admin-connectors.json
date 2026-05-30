@@ -1,3 +1,40 @@
 {
-  "recent": []
+  "recent": [
+    {
+      "connector_id": "emiss",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'EMISS_SDMX_URL not set'}",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-29T19:56:35.262821",
+      "finished_at": "2026-05-29T19:56:35.262821"
+    },
+    {
+      "connector_id": "minfin_rb",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'MINFIN_REPORT_URL not set'}",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-29T19:56:35.249384",
+      "finished_at": "2026-05-29T19:56:35.257678"
+    },
+    {
+      "connector_id": "opendata_rb",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 26 наблюдений, сохранено 26, без МО 0; {'skipped_unresolved_labels': 0}",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-29T19:56:33.837524",
+      "finished_at": "2026-05-29T19:56:35.231073"
+    },
+    {
+      "connector_id": "bdmo_tochno",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 24708 наблюдений, сохранено 24537, без МО 171",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-29T19:30:39.880075",
+      "finished_at": "2026-05-29T19:56:33.756424"
+    }
+  ]
 }

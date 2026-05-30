@@ -29,7 +29,14 @@ ENDPOINTS = [
 
 
 async def prepare_db() -> None:
-    db_path = NATIVE_DB if NATIVE_DB.exists() else DB
+    """Pick DB for export: native demo → snapshot → fresh seed."""
+    if NATIVE_DB.exists():
+        db_path = NATIVE_DB
+    elif DB.exists():
+        db_path = DB
+    else:
+        db_path = DB
+
     os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{db_path.as_posix()}"
     os.environ.setdefault("DEMO_MODE", "true")
     os.environ.setdefault("JWT_SECRET", "static-export-secret")
@@ -42,9 +49,9 @@ async def prepare_db() -> None:
     if NATIVE_DB.exists():
         print(f"Using live DB: {NATIVE_DB}")
         return
-
     if DB.exists():
-        DB.unlink()
+        print(f"Using snapshot DB: {DB}")
+        return
 
     from app.infrastructure.db.base import Base
     from app.infrastructure.db.session import engine
@@ -53,6 +60,7 @@ async def prepare_db() -> None:
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
     await seed()
+    print("Created empty seed DB (no live data — commit demo-data JSON or static_export.db)")
 
 
 async def export_user(client: httpx.AsyncClient, login: str, password: str) -> None:
