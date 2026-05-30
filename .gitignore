@@ -15,6 +15,7 @@ frontend/out/
 backend/.pytest_cache/
 backend/data/bdmo_kpi_candidates.txt
 backend/data/native_demo.db
+backend/data/native_demo_unlocked.db
 backend/data/static_export.db
 tools/
 DEMO_URL.txt

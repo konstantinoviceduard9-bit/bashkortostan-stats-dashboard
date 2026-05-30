@@ -13,6 +13,7 @@ from app.config import get_settings
 from app.domain.entities import ConnectorResult
 from app.infrastructure.connectors.base import BaseConnector
 from app.infrastructure.db.models import ConnectorRun, Indicator, IndicatorValue, Municipality, RawDataCache
+from app.application.connector_messages import format_connector_message
 from app.infrastructure.notifications.service import NotificationService
 
 OKTMO_OVERRIDE_PATH = Path(__file__).resolve().parents[2] / "data" / "bdmo_oktmo_overrides.json"
@@ -177,14 +178,14 @@ async def run_connector(
     try:
         result = await connector.fetch(period, municipality_code)
         changed, stats = await persist_connector_result(session, result)
-        run.status = "success"
-        extra = ""
-        if result.stats:
-            extra = f"; {result.stats}"
-        run.message = (
-            f"Загружено {len(result.observations)} наблюдений, "
-            f"сохранено {stats['saved']}, без МО {stats['skipped_municipality']}{extra}"
+        status, message = format_connector_message(
+            loaded=len(result.observations),
+            saved=stats["saved"],
+            skipped_municipality=stats["skipped_municipality"],
+            stats=result.stats,
         )
+        run.status = status
+        run.message = message
         run.consecutive_failures = 0
         run.finished_at = datetime.now(timezone.utc)
         return changed, run.message

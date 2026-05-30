@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import CurrentUser, require_admin
 from app.api.schemas import AdminNotifyRequest
-from app.application.ingestion import persist_connector_result, run_connector
+from app.application.agents.dashboard_orchestrator import DashboardOrchestrator
+from app.application.ingestion import persist_connector_result
 from app.application.ranking import rebuild_rankings
 from app.infrastructure.connectors.gas_manual import GasManualConnector
-from app.infrastructure.connectors.registry import get_scheduled_connectors
-from app.infrastructure.db.models import ConnectorRun, Indicator, Municipality, User
+from app.infrastructure.db.models import ConnectorRun, Municipality, User
 from app.infrastructure.db.session import get_db
 from app.infrastructure.notifications.service import NotificationService
 from app.workers.events import enqueue_new_data_event
@@ -25,30 +25,28 @@ async def run_all_connectors(
     period: date | None = None,
 ) -> dict:
     target_period = period or date.today().replace(month=1, day=1)
-    results: list[dict] = []
+    orchestrator = DashboardOrchestrator()
+    report = await orchestrator.refresh(session, target_period)
 
-    for connector in get_scheduled_connectors():
-        try:
-            changed, message = await run_connector(session, connector, target_period)
-            if changed:
-                enqueue_new_data_event(
-                    {
-                        "connector_id": connector.connector_id,
-                        "period": target_period.isoformat(),
-                    }
-                )
-            results.append({"connector": connector.connector_id, "status": "success", "message": message, "changed": changed})
-        except Exception as error:  # noqa: BLE001
-            results.append({"connector": connector.connector_id, "status": "failed", "message": str(error)})
+    results = [
+        {
+            "connector": agent.agent_id,
+            "status": agent.status,
+            "message": agent.message,
+            "changed": agent.changed,
+        }
+        for agent in report.agents
+    ]
+    for item in results:
+        if item["changed"]:
+            enqueue_new_data_event(
+                {
+                    "connector_id": item["connector"],
+                    "period": target_period.isoformat(),
+                }
+            )
 
-    salary_indicator = await session.scalar(select(Indicator).where(Indicator.code == "average_salary"))
-    await rebuild_rankings(
-        session,
-        target_period,
-        indicator_id=salary_indicator.id if salary_indicator else None,
-    )
-    await session.commit()
-    return {"period": target_period.isoformat(), "results": results}
+    return {"period": target_period.isoformat(), "results": results, "ranking_period": report.ranking_period.isoformat()}
 
 
 @router.get("/connectors/status")

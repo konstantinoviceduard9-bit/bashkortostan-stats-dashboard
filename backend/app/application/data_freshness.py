@@ -8,6 +8,7 @@ from app.infrastructure.db.models import ConnectorRun, Indicator, IndicatorValue
 CONNECTOR_LABELS = {
     "bdmo_tochno": "БД ПМО / tochno.st",
     "opendata_rb": "Портал открытых данных РБ",
+    "rosstat_bdpmo": "Росстат БД ПМО",
     "minfin_rb": "Минфин РБ",
     "emiss": "Башкортостанстат / ЕМИСС",
     "gas_manual": "ГАС «Управление»",
@@ -23,12 +24,36 @@ DEMO_KPI_CODES = (
 )
 
 
+def derive_source_status(connector_id: str, run: ConnectorRun | None) -> str:
+    """Статус для UI: live | skipped | empty | failed | manual | not_run."""
+
+    if connector_id == "gas_manual" and run is None:
+        return "manual"
+    if run is None:
+        return "not_run"
+    if run.connector_id == "gas_manual":
+        return "manual"
+    if run.status == "failed":
+        return "failed"
+    if run.status == "skipped":
+        return "skipped"
+    if run.status == "error":
+        return "failed"
+    if run.connector_id == "gas_manual":
+        return "manual"
+    if run.status == "empty":
+        return "empty"
+    if run.status == "success" and run.message and "сохранено 0" in run.message:
+        return "empty"
+    return "live"
+
+
 async def latest_connector_runs(session: AsyncSession) -> list[dict]:
     rows: list[dict] = []
     for connector_id, label in CONNECTOR_LABELS.items():
         run = await session.scalar(
             select(ConnectorRun)
-            .where(ConnectorRun.connector_id == connector_id, ConnectorRun.status == "success")
+            .where(ConnectorRun.connector_id == connector_id)
             .order_by(ConnectorRun.finished_at.desc())
             .limit(1)
         )
@@ -36,7 +61,9 @@ async def latest_connector_runs(session: AsyncSession) -> list[dict]:
             {
                 "connector_id": connector_id,
                 "display_name": label,
-                "last_success_at": run.finished_at if run else None,
+                "status": derive_source_status(connector_id, run),
+                "last_success_at": run.finished_at if run and run.status == "success" else None,
+                "last_run_at": run.finished_at if run else None,
                 "period": run.period if run else None,
                 "message": run.message if run else None,
             }
@@ -65,6 +92,8 @@ async def kpi_source_notes(session: AsyncSession, municipality_id: int, period: 
             notes.append(f"{indicator.name}: ручной импорт CSV")
         elif indicator.source == "bdmo_tochno":
             notes.append(f"{indicator.name}: БД ПМО (официальная муниципальная статистика)")
+        elif indicator.source == "rosstat_bdpmo":
+            notes.append(f"{indicator.name}: Росстат БД ПМО")
         elif indicator.source == "opendata_rb":
             notes.append(f"{indicator.name}: портал открытых данных РБ")
     return notes

@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     bashkortostan_region_id: str = "80"
     minfin_report_url: str = ""
     emiss_sdmx_url: str = ""
+    rosstat_bdpmo_enabled: bool = True
 
     @property
     def bdmo_section_list(self) -> tuple[int, ...]:

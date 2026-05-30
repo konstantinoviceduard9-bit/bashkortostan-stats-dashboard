@@ -4,6 +4,8 @@ from pathlib import Path
 
 import httpx
 
+import pandas as pd
+
 from app.application.municipality_resolver import MunicipalityResolver, normalize_label
 from app.config import get_settings
 from app.domain.entities import ConnectorResult, UnifiedObservation
@@ -62,11 +64,30 @@ class OpendataRbConnector(BaseConnector):
         key = normalize_label(label)
         return bool(key) and key not in HEADER_LABELS
 
+    @staticmethod
+    def _numeric_columns(frame) -> list[str]:
+        numeric: list[str] = []
+        for column in frame.columns:
+            if str(column).strip().lower() in MUNICIPALITY_EXACT_COLUMNS:
+                continue
+            lowered = str(column).lower()
+            if any(hint in lowered for hint in MUNICIPALITY_HINTS):
+                continue
+            series = pd.to_numeric(
+                frame[column].astype(str).str.replace(",", ".", regex=False).str.replace(" ", "", regex=False),
+                errors="coerce",
+            )
+            if series.notna().sum() >= max(3, len(frame) // 10):
+                numeric.append(str(column))
+        return numeric
+
     async def fetch(self, period: date, municipality_code: str | None = None) -> ConnectorResult:
         settings = get_settings()
         observations: list[UnifiedObservation] = []
         resolver = MunicipalityResolver()
         skipped_unresolved = 0
+        datasets_processed = 0
+        numeric_columns_total = 0
 
         async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
             for dataset in self._load_catalog():
@@ -89,6 +110,7 @@ class OpendataRbConnector(BaseConnector):
                 if not municipality_column:
                     continue
 
+                datasets_processed += 1
                 counts = frame.groupby(municipality_column).size()
                 dataset_id = dataset.get("datasetId", "unknown")
                 title = dataset.get("title", dataset_id)
@@ -115,6 +137,44 @@ class OpendataRbConnector(BaseConnector):
                         )
                     )
 
+                for column in self._numeric_columns(frame):
+                    numeric_columns_total += 1
+                    grouped = (
+                        frame.assign(
+                            _value=pd.to_numeric(
+                                frame[column]
+                                .astype(str)
+                                .str.replace(",", ".", regex=False)
+                                .str.replace(" ", "", regex=False),
+                                errors="coerce",
+                            )
+                        )
+                        .dropna(subset=["_value"])
+                        .groupby(municipality_column)["_value"]
+                        .sum()
+                    )
+                    safe_column = normalize_label(str(column)) or "value"
+                    for municipality_name, total in grouped.items():
+                        label = self._normalize_municipality_label(str(municipality_name))
+                        if not self._is_data_label(label):
+                            continue
+                        if not resolver.matches(label):
+                            skipped_unresolved += 1
+                            continue
+                        observations.append(
+                            UnifiedObservation(
+                                indicator_code=f"opendata_{dataset_id}_{safe_column}",
+                                indicator_name=f"{title}: {column}",
+                                value=float(total),
+                                unit="ед.",
+                                period=period,
+                                oktmo=label,
+                                source=self.connector_id,
+                                category="Открытые данные",
+                                metadata={"portal": settings.opendata_base_url, "csvUrl": csv_url, "column": column},
+                            )
+                        )
+
         if municipality_code:
             observations = [row for row in observations if row.oktmo == municipality_code]
 
@@ -125,5 +185,9 @@ class OpendataRbConnector(BaseConnector):
             observations=observations,
             raw_payload_hash=self.hash_observations(observations),
             fetched_at=datetime.now(timezone.utc),
-            stats={"skipped_unresolved_labels": skipped_unresolved},
+            stats={
+                "skipped_unresolved_labels": skipped_unresolved,
+                "datasets_processed": datasets_processed,
+                "numeric_columns": numeric_columns_total,
+            },
         )

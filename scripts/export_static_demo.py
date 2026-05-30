@@ -10,7 +10,7 @@ import httpx
 
 BACKEND = Path(__file__).resolve().parents[1] / "backend"
 OUT = BACKEND.parent / "frontend" / "public" / "demo-data"
-NATIVE_DB = BACKEND / "data" / "native_demo.db"
+NATIVE_DB = BACKEND / "data" / os.environ.get("NATIVE_DEMO_DB", "native_demo.db")
 DB = BACKEND / "data" / "static_export.db"
 
 HEAD_PASSWORD = "district12345"

@@ -8,7 +8,7 @@ from app.config import get_settings
 settings = get_settings()
 engine_kwargs: dict = {"echo": settings.debug}
 if settings.database_url.startswith("sqlite"):
-    engine_kwargs["connect_args"] = {"timeout": 30}
+    engine_kwargs["connect_args"] = {"timeout": 120}
 
 engine = create_async_engine(settings.database_url, **engine_kwargs)
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)

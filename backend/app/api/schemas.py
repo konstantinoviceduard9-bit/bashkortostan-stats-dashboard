@@ -6,7 +6,9 @@ from pydantic import BaseModel, Field
 class DataSourceInfo(BaseModel):
     connector_id: str
     display_name: str
+    status: str = "not_run"
     last_success_at: datetime | None
+    last_run_at: datetime | None = None
     period: date | None
     message: str | None = None
 

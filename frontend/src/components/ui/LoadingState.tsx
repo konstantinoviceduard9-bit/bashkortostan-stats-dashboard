@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AlertCircle, DatabaseZap, FolderSearch, RefreshCcw } from "lucide-react";
+import { AlertCircle, DatabaseZap, FolderSearch } from "lucide-react";
 
 export function LoadingState({ label = "Загрузка…" }: { label?: string }) {
   return (
@@ -64,18 +64,45 @@ export function EmptyState({
   );
 }
 
-export function SourceBadge({ mode }: { mode: "live" | "demo" }) {
+export function SourceBadge({ mode }: { mode: "live" | "demo" | "skipped" | "empty" | "failed" | "manual" | "not_run" }) {
+  const styles: Record<string, string> = {
+    live: "border-emerald-400/40 bg-emerald-50 text-emerald-800",
+    demo: "border-amber-400/40 bg-amber-50 text-amber-800",
+    skipped: "border-slate-300 bg-slate-50 text-slate-600",
+    empty: "border-orange-300/50 bg-orange-50 text-orange-800",
+    failed: "border-red-300/50 bg-red-50 text-red-800",
+    manual: "border-violet-300/50 bg-violet-50 text-violet-800",
+    not_run: "border-slate-200 bg-slate-50 text-slate-500",
+  };
+  const labels: Record<string, string> = {
+    live: "Live",
+    demo: "Demo",
+    skipped: "Не настроен",
+    empty: "Нет данных",
+    failed: "Ошибка",
+    manual: "Ручной",
+    not_run: "Не запускался",
+  };
   const isLive = mode === "live";
+
   return (
     <span
-      className={
-        isLive
-          ? "inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-800"
-          : "inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-800"
-      }
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${styles[mode] ?? styles.demo}`}
     >
-      {isLive ? <RefreshCcw size={12} /> : <AlertCircle size={12} />}
-      {isLive ? "Live" : "Demo"}
+      {isLive ? (
+        <>
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          </span>
+          {labels.live}
+        </>
+      ) : (
+        <>
+          <AlertCircle size={11} />
+          {labels[mode] ?? mode}
+        </>
+      )}
     </span>
   );
 }

@@ -1,6 +1,78 @@
 {
   "recent": [
     {
+      "connector_id": "bdmo_tochno",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 24708 наблюдений, сохранено 24537, без привязки к МО — 171",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T12:03:40.237996",
+      "finished_at": "2026-05-30T12:30:20.199559"
+    },
+    {
+      "connector_id": "rosstat_bdpmo",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 110 наблюдений, сохранено 98, без привязки к МО — 12, показателей Росстат — 2",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T12:03:37.182196",
+      "finished_at": "2026-05-30T12:03:40.215685"
+    },
+    {
+      "connector_id": "opendata_rb",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 50 наблюдений, сохранено 50, наборов данных — 5; числовых колонок — 4",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T12:03:34.986906",
+      "finished_at": "2026-05-30T12:03:37.170511"
+    },
+    {
+      "connector_id": "emiss",
+      "period": "2023-01-01",
+      "status": "skipped",
+      "message": "Пропущено: Не задан URL выгрузки ЕМИСС (EMISS_SDMX_URL в .env)",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T12:03:34.966958",
+      "finished_at": "2026-05-30T12:03:34.974089"
+    },
+    {
+      "connector_id": "minfin_rb",
+      "period": "2023-01-01",
+      "status": "skipped",
+      "message": "Пропущено: Не задан URL отчёта Минфина (MINFIN_REPORT_URL в .env)",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T12:03:34.927811",
+      "finished_at": "2026-05-30T12:03:34.946841"
+    },
+    {
+      "connector_id": "opendata_rb",
+      "period": "2023-01-01",
+      "status": "success",
+      "message": "Загружено 50 наблюдений, сохранено 50, наборов данных — 5; числовых колонок — 4",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T11:41:27.025086",
+      "finished_at": "2026-05-30T11:41:28.834134"
+    },
+    {
+      "connector_id": "emiss",
+      "period": "2023-01-01",
+      "status": "skipped",
+      "message": "Пропущено: Не задан URL выгрузки ЕМИСС (EMISS_SDMX_URL в .env)",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T11:41:27.005497",
+      "finished_at": "2026-05-30T11:41:27.013406"
+    },
+    {
+      "connector_id": "minfin_rb",
+      "period": "2023-01-01",
+      "status": "skipped",
+      "message": "Пропущено: Не задан URL отчёта Минфина (MINFIN_REPORT_URL в .env)",
+      "consecutive_failures": 0,
+      "started_at": "2026-05-30T11:41:26.950112",
+      "finished_at": "2026-05-30T11:41:26.982698"
+    },
+    {
       "connector_id": "emiss",
       "period": "2023-01-01",
       "status": "success",

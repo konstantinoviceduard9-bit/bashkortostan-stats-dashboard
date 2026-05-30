@@ -260,6 +260,66 @@
     "source": "catalog"
   },
   {
+    "code": "rosstat_8006001",
+    "name": "Численность населения на конец года",
+    "category": "Население",
+    "value": 455300.0,
+    "unit": "чел.",
+    "change_percent": null,
+    "republic_average": 262433.28979591833,
+    "source": "rosstat_bdpmo"
+  },
+  {
+    "code": "rosstat_8006003",
+    "name": "Численность населения — женщины",
+    "category": "Население",
+    "value": 549.1,
+    "unit": "чел.",
+    "change_percent": null,
+    "republic_average": 406.7836734693878,
+    "source": "rosstat_bdpmo"
+  },
+  {
+    "code": "opendata_23_п/п",
+    "name": "Список больниц: п/п",
+    "category": "Открытые данные",
+    "value": 72.0,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 60.86666666666667,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_26_п/п",
+    "name": "Список диспансеров: п/п",
+    "category": "Открытые данные",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 13.0,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_28_п/п",
+    "name": "Список колледжей: п/п",
+    "category": "Открытые данные",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 6.0,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_30_п/п",
+    "name": "Список поликлиник: п/п",
+    "category": "Открытые данные",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 36.0,
+    "source": "opendata_rb"
+  },
+  {
     "code": "Y48007019",
     "name": "Валовые сборы сельскохозяйственных культур",
     "category": "Сельское хозяйство",

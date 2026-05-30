@@ -155,7 +155,9 @@ async def summary(
         DataSourceInfo(
             connector_id=row["connector_id"],
             display_name=row["display_name"],
+            status=row["status"],
             last_success_at=row["last_success_at"],
+            last_run_at=row["last_run_at"],
             period=row["period"],
             message=row["message"],
         )
