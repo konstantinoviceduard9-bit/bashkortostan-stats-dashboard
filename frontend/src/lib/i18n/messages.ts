@@ -150,17 +150,17 @@ export const messages = {
       allLink: "Все показатели",
     },
     triggers: {
-      title: "Триггеры",
-      hint: "Контроль порогов · {triggered} сработало · {watch} на контроле",
+      title: "Контроль",
+      hint: "Пороговые значения · {triggered} тревога · {watch} на контроле",
       noValue: "—",
       liveData: "Актуальные данные",
       awaitingData: "Ожидается загрузка показателя",
-      thresholdAbove: "Внимание от {watch}{unit} · сработка от {trigger}{unit}",
-      thresholdBelow: "Внимание ниже {watch}{unit} · сработка ниже {trigger}{unit}",
+      thresholdAbove: "Внимание от {watch}{unit} · тревога от {trigger}{unit}",
+      thresholdBelow: "Внимание ниже {watch}{unit} · тревога ниже {trigger}{unit}",
       status: {
         ok: "Норма",
         watch: "Внимание",
-        triggered: "Сработал",
+        triggered: "Тревога",
         unknown: "Нет данных",
       },
       items: {
@@ -341,8 +341,8 @@ export const messages = {
       allLink: "All indicators",
     },
     triggers: {
-      title: "Triggers",
-      hint: "Threshold monitoring · {triggered} fired · {watch} on watch",
+      title: "Monitoring",
+      hint: "Threshold values · {triggered} alert · {watch} on watch",
       noValue: "—",
       liveData: "Live data",
       awaitingData: "Awaiting indicator data",
@@ -351,7 +351,7 @@ export const messages = {
       status: {
         ok: "Normal",
         watch: "Watch",
-        triggered: "Triggered",
+        triggered: "Alert",
         unknown: "No data",
       },
       items: {
@@ -532,8 +532,8 @@ export const messages = {
       allLink: "Барлыҡ күрсәткесләр",
     },
     triggers: {
-      title: "Триггерҙар",
-      hint: "Порог контроле · {triggered} эсеү · {watch} иҫкәртеү",
+      title: "Контроль",
+      hint: "Порог мәғлүмәттәре · {triggered} хәүеф · {watch} иҫкәртеү",
       noValue: "—",
       liveData: "Актуал мәғлүмәт",
       awaitingData: "Күрсәткес көтөлә",
