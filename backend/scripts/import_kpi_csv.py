@@ -12,7 +12,7 @@ from pathlib import Path
 
 from sqlalchemy import select
 
-from app.application.ranking import rebuild_rankings
+from app.application.ranking import rebuild_dashboard_rankings
 from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality
 from app.infrastructure.db.session import SessionLocal
 
@@ -92,8 +92,7 @@ async def import_file(path: Path, default_period: date) -> None:
                     )
                 imported += 1
 
-        salary = await session.scalar(select(Indicator).where(Indicator.code == "average_salary"))
-        await rebuild_rankings(session, default_period, indicator_id=salary.id if salary else None)
+        await rebuild_dashboard_rankings(session, default_period)
         await session.commit()
         print(f"Imported {imported} values from {path}")
 

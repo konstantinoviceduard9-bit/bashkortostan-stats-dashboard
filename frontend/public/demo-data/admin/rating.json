@@ -1,6 +1,317 @@
 {
-  "self_rank": null,
-  "self_total": 63,
-  "top": [],
+  "self_rank": 1,
+  "self_total": 62,
+  "top": [
+    {
+      "rank": 1,
+      "label": "г. Уфа",
+      "is_self": true
+    },
+    {
+      "rank": 2,
+      "label": "Уфимский район",
+      "is_self": false
+    },
+    {
+      "rank": 3,
+      "label": "г. Стерлитамак",
+      "is_self": false
+    },
+    {
+      "rank": 4,
+      "label": "Туймазинский район",
+      "is_self": false
+    },
+    {
+      "rank": 5,
+      "label": "г. Октябрьский",
+      "is_self": false
+    },
+    {
+      "rank": 6,
+      "label": "Мелеузовский район",
+      "is_self": false
+    },
+    {
+      "rank": 7,
+      "label": "Иглинский район",
+      "is_self": false
+    },
+    {
+      "rank": 8,
+      "label": "Белебеевский район",
+      "is_self": false
+    },
+    {
+      "rank": 9,
+      "label": "Ишимбайский район",
+      "is_self": false
+    },
+    {
+      "rank": 10,
+      "label": "Белорецкий район",
+      "is_self": false
+    },
+    {
+      "rank": 11,
+      "label": "г. Нефтекамск",
+      "is_self": false
+    },
+    {
+      "rank": 12,
+      "label": "г. Салават",
+      "is_self": false
+    },
+    {
+      "rank": 13,
+      "label": "Благовещенский район",
+      "is_self": false
+    },
+    {
+      "rank": 14,
+      "label": "Дюртюлинский район",
+      "is_self": false
+    },
+    {
+      "rank": 15,
+      "label": "Учалинский район",
+      "is_self": false
+    },
+    {
+      "rank": 16,
+      "label": "Абзелиловский район",
+      "is_self": false
+    },
+    {
+      "rank": 17,
+      "label": "Давлекановский район",
+      "is_self": false
+    },
+    {
+      "rank": 18,
+      "label": "Хайбуллинский район",
+      "is_self": false
+    },
+    {
+      "rank": 19,
+      "label": "Кармаскалинский район",
+      "is_self": false
+    },
+    {
+      "rank": 20,
+      "label": "Баймакский район",
+      "is_self": false
+    },
+    {
+      "rank": 21,
+      "label": "Аургазинский район",
+      "is_self": false
+    },
+    {
+      "rank": 22,
+      "label": "Кугарчинский район",
+      "is_self": false
+    },
+    {
+      "rank": 23,
+      "label": "Зианчуринский район",
+      "is_self": false
+    },
+    {
+      "rank": 24,
+      "label": "Стерлитамакский район",
+      "is_self": false
+    },
+    {
+      "rank": 25,
+      "label": "Краснокамский район",
+      "is_self": false
+    },
+    {
+      "rank": 26,
+      "label": "Илишевский район",
+      "is_self": false
+    },
+    {
+      "rank": 27,
+      "label": "г. Сибай",
+      "is_self": false
+    },
+    {
+      "rank": 28,
+      "label": "Кушнаренковский район",
+      "is_self": false
+    },
+    {
+      "rank": 29,
+      "label": "Чишминский район",
+      "is_self": false
+    },
+    {
+      "rank": 30,
+      "label": "Гафурийский район",
+      "is_self": false
+    },
+    {
+      "rank": 31,
+      "label": "Бакалинский район",
+      "is_self": false
+    },
+    {
+      "rank": 32,
+      "label": "Бураевский район",
+      "is_self": false
+    },
+    {
+      "rank": 33,
+      "label": "г. Кумертау",
+      "is_self": false
+    },
+    {
+      "rank": 34,
+      "label": "Бирский район",
+      "is_self": false
+    },
+    {
+      "rank": 35,
+      "label": "Альшеевский район",
+      "is_self": false
+    },
+    {
+      "rank": 36,
+      "label": "Дуванский район",
+      "is_self": false
+    },
+    {
+      "rank": 37,
+      "label": "Калтасинский район",
+      "is_self": false
+    },
+    {
+      "rank": 38,
+      "label": "Янаульский район",
+      "is_self": false
+    },
+    {
+      "rank": 39,
+      "label": "Чекмагушевский район",
+      "is_self": false
+    },
+    {
+      "rank": 40,
+      "label": "Татышлинский район",
+      "is_self": false
+    },
+    {
+      "rank": 41,
+      "label": "Зилаирский район",
+      "is_self": false
+    },
+    {
+      "rank": 42,
+      "label": "Шаранский район",
+      "is_self": false
+    },
+    {
+      "rank": 43,
+      "label": "Нуримановский район",
+      "is_self": false
+    },
+    {
+      "rank": 44,
+      "label": "Стерлибашевский район",
+      "is_self": false
+    },
+    {
+      "rank": 45,
+      "label": "Караидельский район",
+      "is_self": false
+    },
+    {
+      "rank": 46,
+      "label": "Аскинский район",
+      "is_self": false
+    },
+    {
+      "rank": 47,
+      "label": "Миякинский район",
+      "is_self": false
+    },
+    {
+      "rank": 48,
+      "label": "Мечетлинский район",
+      "is_self": false
+    },
+    {
+      "rank": 49,
+      "label": "Буздякский район",
+      "is_self": false
+    },
+    {
+      "rank": 50,
+      "label": "Бижбулякский район",
+      "is_self": false
+    },
+    {
+      "rank": 51,
+      "label": "Благоварский район",
+      "is_self": false
+    },
+    {
+      "rank": 52,
+      "label": "Кигинский район",
+      "is_self": false
+    },
+    {
+      "rank": 53,
+      "label": "г. Агидель",
+      "is_self": false
+    },
+    {
+      "rank": 54,
+      "label": "Куюргазинский район",
+      "is_self": false
+    },
+    {
+      "rank": 55,
+      "label": "Белокатайский район",
+      "is_self": false
+    },
+    {
+      "rank": 56,
+      "label": "Фёдоровский район",
+      "is_self": false
+    },
+    {
+      "rank": 57,
+      "label": "Салаватский район",
+      "is_self": false
+    },
+    {
+      "rank": 58,
+      "label": "Мишкинский район",
+      "is_self": false
+    },
+    {
+      "rank": 59,
+      "label": "Бурзянский район",
+      "is_self": false
+    },
+    {
+      "rank": 60,
+      "label": "Балтачевский район",
+      "is_self": false
+    },
+    {
+      "rank": 61,
+      "label": "Архангельский район",
+      "is_self": false
+    },
+    {
+      "rank": 62,
+      "label": "Ермекеевский район",
+      "is_self": false
+    }
+  ],
   "bottom": []
 }

@@ -320,6 +320,16 @@
     "source": "opendata_rb"
   },
   {
+    "code": "composite_index",
+    "name": "Сводный индекс эффективности",
+    "category": "Рейтинг",
+    "value": null,
+    "unit": "балл",
+    "change_percent": null,
+    "republic_average": null,
+    "source": "computed"
+  },
+  {
     "code": "Y48007019",
     "name": "Валовые сборы сельскохозяйственных культур",
     "category": "Сельское хозяйство",

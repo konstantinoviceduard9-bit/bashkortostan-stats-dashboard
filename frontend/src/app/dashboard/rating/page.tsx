@@ -50,7 +50,7 @@ export default function RatingPage() {
     <div className="space-y-6">
       <PageHeader
         title="Рейтинг муниципалитетов"
-        subtitle="Сводный рейтинг на основе ключевых показателей эффективности · 63 МО Республики."
+        subtitle="Сводный индекс по KPI с live-данными (жильё, бюджет и др.) · 63 МО Республики."
         badge={process.env.NEXT_PUBLIC_STATIC_DEMO === "true" ? "demo" : "live"}
       />
 

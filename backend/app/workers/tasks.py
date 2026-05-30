@@ -4,7 +4,7 @@ from datetime import date
 from sqlalchemy import select
 
 from app.application.ingestion import run_connector
-from app.application.ranking import rebuild_rankings
+from app.application.ranking import rebuild_dashboard_rankings
 from app.config import get_settings
 from app.infrastructure.connectors.registry import get_scheduled_connectors
 from app.infrastructure.db.models import Indicator, Municipality, User
@@ -27,12 +27,7 @@ async def _run_connectors_async() -> None:
             except Exception:
                 await session.rollback()
                 continue
-        salary_indicator = await session.scalar(select(Indicator).where(Indicator.code == "average_salary"))
-        await rebuild_rankings(
-            session,
-            target_period,
-            indicator_id=salary_indicator.id if salary_indicator else None,
-        )
+        await rebuild_dashboard_rankings(session, target_period)
         await session.commit()
 
 

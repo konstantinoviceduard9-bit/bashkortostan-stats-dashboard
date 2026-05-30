@@ -14,8 +14,8 @@ from app.application.agents.emiss_agent import EmissSourceAgent
 from app.application.agents.minfin_agent import MinfinSourceAgent
 from app.application.agents.opendata_agent import OpendataSourceAgent
 from app.application.agents.rosstat_agent import RosstatSourceAgent
-from app.application.ranking import rebuild_rankings
-from app.infrastructure.db.models import Indicator, IndicatorValue
+from app.application.ranking import rebuild_dashboard_rankings
+from app.infrastructure.db.models import IndicatorValue
 
 
 @dataclass(frozen=True)
@@ -81,8 +81,7 @@ class DashboardOrchestrator:
         if rank_period is None:
             rank_period = period
 
-        salary = await session.scalar(select(Indicator).where(Indicator.code == "average_salary"))
-        await rebuild_rankings(session, rank_period, indicator_id=salary.id if salary else None)
+        rank_stats = await rebuild_dashboard_rankings(session, rank_period)
         await session.commit()
 
         return OrchestratorReport(period=period, agents=reports, ranking_period=rank_period)

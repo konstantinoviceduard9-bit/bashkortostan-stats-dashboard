@@ -16,6 +16,7 @@ KPI_DEFINITIONS = [
     ("natural_growth", "Естественный прирост", "чел.", "Население"),
     ("doctors_per_capita", "Обеспеченность врачами", "врач/10 тыс.", "Здравоохранение"),
     ("housing_commissioned", "Ввод жилья", "кв. м", "ЖКХ"),
+    ("composite_index", "Сводный индекс эффективности", "балл", "Рейтинг"),
 ]
 
 HEAD_PASSWORD = "district12345"

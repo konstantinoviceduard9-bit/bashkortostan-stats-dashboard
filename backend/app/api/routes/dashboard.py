@@ -30,7 +30,7 @@ KPI_CODES = [
     "housing_commissioned",
 ]
 
-RANKING_INDICATOR_CODE = "average_salary"
+RANKING_INDICATOR_CODE = "composite_index"
 
 
 @router.get("/me", response_model=UserProfile)

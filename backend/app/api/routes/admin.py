@@ -8,7 +8,7 @@ from app.api.dependencies import CurrentUser, require_admin
 from app.api.schemas import AdminNotifyRequest
 from app.application.agents.dashboard_orchestrator import DashboardOrchestrator
 from app.application.ingestion import persist_connector_result
-from app.application.ranking import rebuild_rankings
+from app.application.ranking import rebuild_dashboard_rankings
 from app.infrastructure.connectors.gas_manual import GasManualConnector
 from app.infrastructure.db.models import ConnectorRun, Municipality, User
 from app.infrastructure.db.session import get_db
@@ -89,7 +89,7 @@ async def upload_gas_data(
     changed, stats = await persist_connector_result(session, result)
     if changed:
         enqueue_new_data_event({"connector_id": connector.connector_id, "period": target_period.isoformat()})
-    await rebuild_rankings(session, target_period)
+    await rebuild_dashboard_rankings(session, target_period)
     await session.commit()
     return {"status": "success", "rows": len(result.observations), "changed": changed, "stats": stats}
 
