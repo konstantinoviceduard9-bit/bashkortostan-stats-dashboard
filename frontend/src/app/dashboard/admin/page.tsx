@@ -5,6 +5,7 @@ import { apiFetch } from "@/lib/api";
 import { apiUpload } from "@/lib/apiUpload";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
+import { CONNECTOR_LABELS, RUN_STATUS_LABELS } from "@/lib/dashboard-meta";
 
 interface ConnectorStatus {
   connector_id: string;
@@ -50,7 +51,7 @@ export default function AdminPage() {
       const form = new FormData();
       form.append("file", gasFile);
       const result = await apiUpload<{ rows: number; changed: boolean }>("/admin/gas/upload", form);
-      setLog(`ГАС: загружено ${result.rows} строк, changed=${result.changed}`);
+      setLog(`ГАС: загружено ${result.rows} строк, изменено=${result.changed}`);
     } catch (error) {
       setLog(error instanceof Error ? error.message : "Ошибка загрузки");
     } finally {
@@ -60,18 +61,23 @@ export default function AdminPage() {
 
   const runEtl = async () => {
     setBusy(true);
-    setLog("Запуск ETL…");
+    setLog("Запуск загрузки данных…");
     try {
       const result = await apiFetch<{ period: string; results: { connector: string; status: string; message: string }[] }>(
         "/admin/connectors/run",
         { method: "POST" }
       );
       setLog(
-        result.results.map((row) => `${row.connector}: ${row.status} — ${row.message}`).join("\n") || "Готово"
+        result.results
+          .map(
+            (row) =>
+              `${CONNECTOR_LABELS[row.connector] ?? row.connector}: ${RUN_STATUS_LABELS[row.status] ?? row.status} — ${row.message}`
+          )
+          .join("\n") || "Готово"
       );
       load();
     } catch (error) {
-      setLog(error instanceof Error ? error.message : "Ошибка ETL");
+      setLog(error instanceof Error ? error.message : "Ошибка загрузки данных");
     } finally {
       setBusy(false);
     }
@@ -84,7 +90,7 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Администрирование ETL" subtitle="Запуск коннекторов, загрузка ГАС и мониторинг статусов." />
+      <PageHeader title="Загрузка данных" subtitle="Запуск коннекторов, загрузка ГАС и мониторинг статусов." />
 
       <div className="flex flex-wrap gap-3">
         <Button onClick={runEtl} disabled={busy}>
@@ -96,7 +102,7 @@ export default function AdminPage() {
       </div>
 
       <section className="card-bashkir space-y-3">
-        <h3 className="font-semibold text-bashkir-blue">Загрузка ГАС (CSV/Excel)</h3>
+        <h3 className="font-semibold text-bashkir-blue">Загрузка ГАС (таблица)</h3>
         <p className="text-sm text-slate-600">
           Шаблон: <code className="text-xs">backend/data/gas_upload_template.csv</code>
         </p>
@@ -128,8 +134,8 @@ export default function AdminPage() {
           <tbody>
             {status.map((row, index) => (
               <tr key={`${row.connector_id}-${index}`} className="border-b border-slate-100">
-                <td className="py-2 pr-4 font-medium">{row.connector_id}</td>
-                <td className="py-2 pr-4">{row.status}</td>
+                <td className="py-2 pr-4 font-medium">{CONNECTOR_LABELS[row.connector_id] ?? row.connector_id}</td>
+                <td className="py-2 pr-4">{RUN_STATUS_LABELS[row.status] ?? row.status}</td>
                 <td className="py-2 pr-4">{row.period}</td>
                 <td className="py-2 text-slate-600">{row.message ?? "—"}</td>
               </tr>

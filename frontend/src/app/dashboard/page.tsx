@@ -58,7 +58,7 @@ export default function DashboardPage() {
       <PageHeader
         title={summary.municipality_name}
         subtitle={`Период данных: ${formatDate(summary.period)}. Сводка ключевых показателей муниципального образования среди ${summary.total} МО Республики.`}
-        badge={hasLiveData ? "live" : "demo"}
+        badge={hasLiveData ? "live" : undefined}
       />
 
       <section className="grid gap-4 lg:grid-cols-[1fr_auto]">
@@ -89,16 +89,16 @@ export default function DashboardPage() {
           </article>
 
           <article className="stat-card">
-            <p className="stat-label">KPI с данными</p>
+            <p className="stat-label">Показатели с данными</p>
             <p className="kpi-value text-bashkir-blue">
               {liveKpis}
               <span className="text-lg font-medium text-bashkir-muted"> / {summary.kpis.length}</span>
             </p>
-            <p className="mt-2 text-sm text-bashkir-muted">Живые показатели на дашборде</p>
+            <p className="mt-2 text-sm text-bashkir-muted">Из подключённых источников</p>
           </article>
 
           <article className="stat-card">
-            <p className="stat-label">Источники Live</p>
+            <p className="stat-label">Актуальные источники</p>
             <p className="kpi-value text-bashkir-green">
               {liveSources}
               <span className="text-lg font-medium text-bashkir-muted"> / {summary.data_sources.length}</span>
@@ -109,18 +109,18 @@ export default function DashboardPage() {
           </article>
 
           <article className="stat-card">
-            <p className="stat-label">Обновление ETL</p>
+            <p className="stat-label">Последняя загрузка</p>
             <p className={`text-lg font-bold ${hasLiveData ? "text-bashkir-blue" : "text-bashkir-gold"}`}>
               {lastUpdate ? formatDate(lastUpdate) : "—"}
             </p>
             <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-bashkir-muted">
-              <Clock3 size={15} /> Последний прогон
+              <Clock3 size={15} /> Последнее обновление данных
             </p>
           </article>
         </div>
 
         <div className="stat-card flex flex-col items-center justify-center gap-2 px-6 py-4 lg:min-w-[10rem]">
-          <CoverageRing filled={liveKpis} total={summary.kpis.length} label="KPI" />
+          <CoverageRing filled={liveKpis} total={summary.kpis.length} label="Показатели" />
         </div>
       </section>
 
@@ -139,9 +139,9 @@ export default function DashboardPage() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h3 className="section-title">Ключевые показатели</h3>
-            <p className="mt-1 text-sm text-bashkir-muted">Все 6 KPI · динамика и источник данных</p>
+            <p className="mt-1 text-sm text-bashkir-muted">Все 6 показателей · динамика и источник данных</p>
           </div>
-          <SourceBadge mode={hasLiveData ? "live" : "demo"} />
+          {hasLiveData ? <SourceBadge mode="live" /> : null}
         </div>
 
         {summary.kpis.length === 0 ? (
@@ -165,12 +165,12 @@ export default function DashboardPage() {
         <div className="card-bashkir">
           <h3 className="section-title inline-flex items-center gap-2">
             <BarChart3 size={22} className="text-bashkir-blue" />
-            Сводный профиль KPI
+            Сводный профиль показателей
           </h3>
           <p className="mt-1 text-sm text-bashkir-muted">Сравнение заполненных показателей муниципалитета</p>
           {chartData.every((d) => d.value === 0) ? (
             <div className="mt-6">
-              <EmptyState title="Недостаточно данных" description="Заполните KPI из источников ETL." icon="search" />
+              <EmptyState title="Недостаточно данных" description="Заполните показатели из подключённых источников." icon="search" />
             </div>
           ) : (
             <div className="mt-6 h-80">
@@ -178,7 +178,7 @@ export default function DashboardPage() {
                 <BarChart data={chartData} margin={{ top: 8, right: 8, left: -8, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                   <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => (v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(0)}k` : v)} />
+                  <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => (v >= 1e6 ? `${(v / 1e6).toFixed(1)} млн` : v >= 1e3 ? `${(v / 1e3).toFixed(0)} тыс.` : v)} />
                   <Tooltip
                     contentStyle={{
                       borderRadius: 12,
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                   <dd className="font-semibold text-bashkir-ink">{formatDate(summary.period)}</dd>
                 </div>
                 <div>
-                  <dt className="text-bashkir-muted">Live KPI</dt>
+                  <dt className="text-bashkir-muted">Актуальные показатели</dt>
                   <dd className="font-semibold text-bashkir-green">{liveKpis} из {summary.kpis.length}</dd>
                 </div>
                 <div>

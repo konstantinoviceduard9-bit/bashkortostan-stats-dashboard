@@ -61,9 +61,9 @@ export function Sidebar() {
         ) : null}
       </div>
 
-      {!collapsed ? (
+      {!collapsed && !isStaticDemo ? (
         <div className="px-4 pb-2">
-          <SourceBadge mode={isStaticDemo ? "demo" : "live"} />
+          <SourceBadge mode="live" />
         </div>
       ) : null}
 
@@ -86,7 +86,7 @@ export function Sidebar() {
           <Link
             href="/dashboard/admin"
             className={cn("sidebar__link", isActive("/dashboard/admin") && "sidebar__link--active")}
-            title={collapsed ? "Админ" : undefined}
+            title={collapsed ? "Администрирование" : undefined}
           >
             <Settings2 size={20} />
             {!collapsed ? <span>Администрирование</span> : null}

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { AlertCircle, DatabaseZap, FolderSearch } from "lucide-react";
+import { SOURCE_BADGE_LABELS, type SourceStatus } from "@/lib/dashboard-meta";
 
 export function LoadingState({ label = "Загрузка…" }: { label?: string }) {
   return (
@@ -64,30 +65,23 @@ export function EmptyState({
   );
 }
 
-export function SourceBadge({ mode }: { mode: "live" | "demo" | "skipped" | "empty" | "failed" | "manual" | "not_run" }) {
+export function SourceBadge({ mode }: { mode: SourceStatus }) {
+  if (mode === "demo") return null;
+
   const styles: Record<string, string> = {
     live: "border-emerald-400/40 bg-emerald-50 text-emerald-800",
-    demo: "border-amber-400/40 bg-amber-50 text-amber-800",
     skipped: "border-slate-300 bg-slate-50 text-slate-600",
     empty: "border-orange-300/50 bg-orange-50 text-orange-800",
     failed: "border-red-300/50 bg-red-50 text-red-800",
     manual: "border-violet-300/50 bg-violet-50 text-violet-800",
     not_run: "border-slate-200 bg-slate-50 text-slate-500",
   };
-  const labels: Record<string, string> = {
-    live: "Live",
-    demo: "Demo",
-    skipped: "Не настроен",
-    empty: "Нет данных",
-    failed: "Ошибка",
-    manual: "Ручной",
-    not_run: "Не запускался",
-  };
+  const labels = SOURCE_BADGE_LABELS;
   const isLive = mode === "live";
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${styles[mode] ?? styles.demo}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${styles[mode] ?? styles.skipped}`}
     >
       {isLive ? (
         <>

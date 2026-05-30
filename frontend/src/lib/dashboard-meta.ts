@@ -3,16 +3,49 @@ import { BarChart3, CloudUpload, Database, Globe2, Landmark, LineChart } from "l
 
 export type SourceStatus = "live" | "demo" | "skipped" | "empty" | "failed" | "manual" | "not_run";
 
+export const HIDDEN_SOURCE_CODES = new Set(["demo", "catalog"]);
+
+export const SOURCE_BADGE_LABELS: Record<Exclude<SourceStatus, "demo">, string> = {
+  live: "Актуальные",
+  skipped: "Не настроен",
+  empty: "Нет данных",
+  failed: "Ошибка",
+  manual: "Ручной ввод",
+  not_run: "Не запускался",
+};
+
 export const SOURCE_LABELS: Record<string, string> = {
-  demo: "Демо",
   catalog: "Справочник",
   bdmo_tochno: "БД ПМО",
-  opendata_rb: "Opendata РБ",
+  opendata_rb: "Открытые данные РБ",
   rosstat_bdpmo: "Росстат",
   minfin_rb: "Минфин РБ",
   emiss: "ЕМИСС",
-  manual_csv: "CSV",
+  manual_csv: "Ручной импорт",
   gas_manual: "ГАС",
+};
+
+export const CONNECTOR_LABELS: Record<string, string> = {
+  bdmo_tochno: "БД ПМО",
+  opendata_rb: "Открытые данные РБ",
+  rosstat_bdpmo: "Росстат БД ПМО",
+  minfin_rb: "Минфин РБ",
+  emiss: "ЕМИСС",
+  gas_manual: "ГАС «Управление»",
+};
+
+export const RUN_STATUS_LABELS: Record<string, string> = {
+  success: "Успешно",
+  skipped: "Пропущен",
+  empty: "Нет данных",
+  failed: "Ошибка",
+  error: "Ошибка",
+  running: "Выполняется",
+};
+
+export const ROLE_LABELS: Record<string, string> = {
+  admin: "Администратор",
+  user: "Пользователь",
 };
 
 export const CONNECTOR_META: Record<
@@ -22,7 +55,7 @@ export const CONNECTOR_META: Record<
   bdmo_tochno: {
     icon: Database,
     color: "from-bashkir-blue/20 to-bashkir-blue/5 text-bashkir-blue",
-    description: "Муниципальная статистика tochno.st",
+    description: "Официальная муниципальная статистика",
   },
   opendata_rb: {
     icon: Globe2,
@@ -47,7 +80,7 @@ export const CONNECTOR_META: Record<
   gas_manual: {
     icon: CloudUpload,
     color: "from-orange-500/20 to-orange-500/5 text-orange-700",
-    description: "Ручная загрузка CSV",
+    description: "Ручная загрузка из таблицы",
   },
 };
 
@@ -59,3 +92,8 @@ export const KPI_CHART_LABELS: Record<string, string> = {
   doctors_per_capita: "Врачи",
   housing_commissioned: "Жильё",
 };
+
+export function formatSourceLabel(source: string): string | null {
+  if (HIDDEN_SOURCE_CODES.has(source)) return null;
+  return SOURCE_LABELS[source] ?? source;
+}

@@ -113,7 +113,7 @@ export default function LoginPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-bashkir-blue">Вход</p>
                 <h2 className="mt-2 font-display text-3xl font-bold text-bashkir-ink">Личный кабинет</h2>
               </div>
-              <SourceBadge mode={isStatic ? "demo" : "live"} />
+              {!isStatic ? <SourceBadge mode="live" /> : null}
             </div>
 
             <div className="mb-6 flex items-center gap-3 rounded-2xl border border-bashkir-blue/20 bg-bashkir-blue/5 px-4 py-3 text-sm text-bashkir-ink">
@@ -163,7 +163,7 @@ export default function LoginPage() {
               </label>
               {error ? <ErrorBanner message={error} /> : null}
               <Button type="submit" className="w-full py-3 text-base" disabled={loading || !login}>
-                {loading ? "Вход…" : "Войти в дашборд"}
+                {loading ? "Вход…" : "Войти в личный кабинет"}
               </Button>
             </form>
 

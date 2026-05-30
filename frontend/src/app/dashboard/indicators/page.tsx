@@ -5,7 +5,7 @@ import { RefreshCw, Search } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EmptyState, ErrorBanner, SourceBadge, TableSkeleton } from "@/components/ui/LoadingState";
-import { SOURCE_LABELS } from "@/lib/dashboard-meta";
+import { formatSourceLabel } from "@/lib/dashboard-meta";
 import { formatValue } from "@/lib/format";
 
 interface IndicatorRow {
@@ -49,7 +49,7 @@ export default function IndicatorsPage() {
     );
   }, [rows, search]);
 
-  const mode = rows.some((row) => row.source !== "demo" && row.source !== "catalog") ? "live" : "demo";
+  const hasLiveData = rows.some((row) => row.source !== "demo" && row.source !== "catalog");
   const withValues = filtered.filter((r) => r.value !== null).length;
 
   return (
@@ -57,7 +57,7 @@ export default function IndicatorsPage() {
       <PageHeader
         title="Показатели"
         subtitle={`${withValues} показателей с данными · сравнение со средним по Республике Башкортостан.`}
-        badge={mode}
+        badge={hasLiveData ? "live" : undefined}
       />
 
       <div className="card-bashkir space-y-4">
@@ -121,7 +121,10 @@ export default function IndicatorsPage() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((row) => (
+                {filtered.map((row) => {
+                  const sourceLabel = formatSourceLabel(row.source);
+                  const showLiveBadge = row.source !== "demo" && row.source !== "catalog";
+                  return (
                   <tr key={row.code}>
                     <td className="px-4 py-3">
                       <div className="font-medium text-bashkir-ink">{row.name}</div>
@@ -146,14 +149,17 @@ export default function IndicatorsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
-                          {SOURCE_LABELS[row.source] ?? row.source}
-                        </span>
-                        <SourceBadge mode={row.source === "demo" || row.source === "catalog" ? "demo" : "live"} />
+                        {sourceLabel ? (
+                          <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                            {sourceLabel}
+                          </span>
+                        ) : null}
+                        {showLiveBadge ? <SourceBadge mode="live" /> : null}
                       </div>
                     </td>
                   </tr>
-                ))}
+                );
+                })}
               </tbody>
             </table>
           </div>

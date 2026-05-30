@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.db.models import ConnectorRun, Indicator, IndicatorValue
 
 CONNECTOR_LABELS = {
-    "bdmo_tochno": "БД ПМО / tochno.st",
+    "bdmo_tochno": "БД ПМО",
     "opendata_rb": "Портал открытых данных РБ",
     "rosstat_bdpmo": "Росстат БД ПМО",
     "minfin_rb": "Минфин РБ",
@@ -87,9 +87,9 @@ async def kpi_source_notes(session: AsyncSession, municipality_id: int, period: 
         if value_row is None:
             continue
         if indicator.source == "demo":
-            notes.append(f"{indicator.name}: демонстрационные данные (сид)")
+            continue
         elif indicator.source == "manual_csv":
-            notes.append(f"{indicator.name}: ручной импорт CSV")
+            notes.append(f"{indicator.name}: ручной импорт из таблицы")
         elif indicator.source == "bdmo_tochno":
             notes.append(f"{indicator.name}: БД ПМО (официальная муниципальная статистика)")
         elif indicator.source == "rosstat_bdpmo":

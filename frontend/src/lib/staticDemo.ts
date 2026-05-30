@@ -83,7 +83,7 @@ export async function staticApiFetch<T>(
     if (path === "/admin/connectors/run") {
       return {
         period: "2024-12-01",
-        results: [{ connector: "bdmo_tochno", status: "demo", message: "Статическое демо на GitHub Pages" }],
+        results: [{ connector: "bdmo_tochno", status: "success", message: "Загрузка недоступна на статическом сайте" }],
       } as T;
     }
   }
@@ -93,7 +93,7 @@ export async function staticApiFetch<T>(
   }
 
   const file = endpointFile(path, login);
-  if (!file) throw new Error(`Статическое демо: неизвестный путь ${path}`);
+  if (!file) throw new Error(`Неизвестный путь данных: ${path}`);
 
   if (path.includes("?")) {
     const data = await loadJson<Record<string, unknown>[]>(file);

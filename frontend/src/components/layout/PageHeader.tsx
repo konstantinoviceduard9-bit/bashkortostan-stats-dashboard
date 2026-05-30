@@ -9,7 +9,7 @@ export function PageHeader({
 }: {
   title: string;
   subtitle?: string;
-  badge?: "live" | "demo";
+  badge?: "live";
   action?: ReactNode;
 }) {
   return (

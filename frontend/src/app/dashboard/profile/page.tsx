@@ -5,6 +5,7 @@ import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { LoadingState } from "@/components/ui/LoadingState";
+import { ROLE_LABELS } from "@/lib/dashboard-meta";
 
 interface UserProfile {
   login: string;
@@ -39,7 +40,10 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
-      <PageHeader title="Профиль" subtitle={`${profile.login} · ${profile.municipality_name ?? "—"} · ${profile.role}`} />
+      <PageHeader
+        title="Профиль"
+        subtitle={`${profile.login} · ${profile.municipality_name ?? "—"} · ${ROLE_LABELS[profile.role] ?? profile.role}`}
+      />
       <div className="card-bashkir">
         <form className="space-y-4" onSubmit={onSubmit}>
           <label className="block text-sm font-medium text-slate-700">

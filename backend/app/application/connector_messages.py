@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 SKIP_REASONS: dict[str, str] = {
-    "MINFIN_REPORT_URL not set": "Не задан URL отчёта Минфина (MINFIN_REPORT_URL в .env)",
-    "EMISS_SDMX_URL not set": "Не задан URL выгрузки ЕМИСС (EMISS_SDMX_URL в .env)",
-    "ROSSTAT_BDPMO disabled": "Коннектор Росстат БД ПМО отключён (ROSSTAT_BDPMO_ENABLED=false)",
+    "MINFIN_REPORT_URL not set": "Не задан адрес отчёта Минфина",
+    "EMISS_SDMX_URL not set": "Не задан адрес выгрузки ЕМИСС",
+    "ROSSTAT_BDPMO disabled": "Коннектор Росстат БД ПМО отключён",
 }
 
 

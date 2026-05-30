@@ -56,7 +56,9 @@ export function Header() {
             </h1>
           </div>
         </Link>
-        <div className="hidden lg:block">{isStaticDemo ? <SourceBadge mode="demo" /> : <SourceBadge mode="live" />}</div>
+        <div className="hidden lg:block">
+          {!isStaticDemo ? <SourceBadge mode="live" /> : null}
+        </div>
         <button
           type="button"
           className="rounded-lg border border-slate-200 p-2 text-sm md:hidden"
@@ -76,7 +78,7 @@ export function Header() {
           {role === "admin" ? (
             <Link href="/dashboard/admin" className={`${navClass("/dashboard/admin")} inline-flex items-center gap-2`}>
               <Building2 size={16} />
-              Админ
+              Администрирование
             </Link>
           ) : null}
           <button type="button" onClick={logout} className="ml-2 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-100">
@@ -86,7 +88,11 @@ export function Header() {
       </div>
       {open ? (
         <nav className="border-t border-slate-100 bg-white px-4 py-3 md:hidden">
-          <div className="mb-3">{isStaticDemo ? <SourceBadge mode="demo" /> : <SourceBadge mode="live" />}</div>
+          {!isStaticDemo ? (
+            <div className="mb-3">
+              <SourceBadge mode="live" />
+            </div>
+          ) : null}
           <ul className="space-y-1 text-sm">
             {NAV.map((item) => (
               <li key={item.href}>
@@ -98,7 +104,7 @@ export function Header() {
             {role === "admin" ? (
               <li>
                 <Link href="/dashboard/admin" className={`block ${navClass("/dashboard/admin")}`} onClick={() => setOpen(false)}>
-                  Админ
+                  Администрирование
                 </Link>
               </li>
             ) : null}

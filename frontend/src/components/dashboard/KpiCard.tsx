@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, ChevronRight } from "lucide-react";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 import { formatValueParts } from "@/lib/format";
-import { SOURCE_LABELS } from "@/lib/dashboard-meta";
+import { formatSourceLabel } from "@/lib/dashboard-meta";
 import { SourceBadge } from "@/components/ui/LoadingState";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +38,7 @@ export function KpiCard({ kpi }: { kpi: KpiCardData }) {
             <p className="mt-0.5 text-[11px] text-bashkir-muted">Период {kpi.data_period.slice(0, 7)}</p>
           ) : null}
         </div>
-        <SourceBadge mode={live ? "live" : hasValue ? "demo" : "empty"} />
+        {live ? <SourceBadge mode="live" /> : !hasValue ? <SourceBadge mode="empty" /> : null}
       </div>
 
       <p className="kpi-card__value mt-3">
@@ -64,9 +64,9 @@ export function KpiCard({ kpi }: { kpi: KpiCardData }) {
         </p>
       )}
 
-      {kpi.source && hasValue ? (
+      {kpi.source && hasValue && formatSourceLabel(kpi.source) ? (
         <p className="mt-2 text-[11px] font-medium text-bashkir-muted">
-          Источник: {SOURCE_LABELS[kpi.source] ?? kpi.source}
+          Источник: {formatSourceLabel(kpi.source)}
         </p>
       ) : null}
 
