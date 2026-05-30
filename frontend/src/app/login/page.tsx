@@ -1,19 +1,51 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { KeyRound, MapPin, ShieldCheck } from "lucide-react";
 import { apiFetch, setToken } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { ErrorBanner, SourceBadge } from "@/components/ui/LoadingState";
+import { getHeadPassword, loadMunicipalities, type MunicipalityOption } from "@/lib/staticDemo";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const isStatic = process.env.NEXT_PUBLIC_STATIC_DEMO === "true";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [municipalities, setMunicipalities] = useState<MunicipalityOption[]>([]);
+  const [selectedLogin, setSelectedLogin] = useState("");
   const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("district12345");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function bootstrap() {
+      try {
+        const list = isStatic
+          ? await loadMunicipalities()
+          : await fetch(`${BASE}/demo-data/municipalities.json`).then((r) => r.json() as Promise<MunicipalityOption[]>);
+        setMunicipalities(list);
+        if (list.length > 0) {
+          setSelectedLogin(list[0].login);
+          setLogin(list[0].login);
+        }
+        if (isStatic) {
+          setPassword(await getHeadPassword());
+        }
+      } catch {
+        setMunicipalities([]);
+      }
+    }
+    bootstrap();
+  }, []);
+
+  function onMunicipalityChange(value: string) {
+    setSelectedLogin(value);
+    setLogin(value);
+  }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -33,6 +65,8 @@ export default function LoginPage() {
     }
   }
 
+  const selectedName = municipalities.find((item) => item.login === selectedLogin)?.name;
+
   return (
     <main className="login-page flex min-h-screen items-center justify-center p-4 md:p-8">
       <div className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/60 bg-white/80 shadow-2xl backdrop-blur-xl">
@@ -46,7 +80,7 @@ export default function LoginPage() {
             <div className="relative">
               <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-bashkir-gold/30 bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-widest text-bashkir-green backdrop-blur">
                 <ShieldCheck size={14} />
-                Официальный портал
+                63 муниципальных образования
               </div>
               <h1 className="font-display text-5xl font-bold leading-[1.1] text-bashkir-ink">
                 Муниципальная
@@ -58,8 +92,7 @@ export default function LoginPage() {
                 Башкортостана
               </h1>
               <p className="mt-5 max-w-md text-base leading-relaxed text-bashkir-muted">
-                Мониторинг ключевых показателей 63 муниципальных образований: экономика, социальная сфера, бюджет и
-                рейтинг эффективности.
+                Личный кабинет для глав районов и городских округов: показатели, рейтинг и сравнение с республикой.
               </p>
               <div className="mt-10 flex items-center gap-4 rounded-2xl border border-bashkir-blue/15 bg-white/60 p-4 backdrop-blur">
                 <Image src="/emblem-rb.svg" alt="Герб РБ" width={64} height={64} className="shrink-0" priority />
@@ -67,7 +100,7 @@ export default function LoginPage() {
                   <p className="font-semibold text-bashkir-ink">Правительство Республики Башкортостан</p>
                   <p className="mt-1 flex items-center gap-1.5 text-sm text-bashkir-muted">
                     <MapPin size={14} className="text-bashkir-blue" />
-                    Для глав муниципальных районов и городских округов
+                    Отдельный доступ для каждого МО
                   </p>
                 </div>
               </div>
@@ -80,12 +113,12 @@ export default function LoginPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-bashkir-blue">Вход</p>
                 <h2 className="mt-2 font-display text-3xl font-bold text-bashkir-ink">Личный кабинет</h2>
               </div>
-              <SourceBadge mode={process.env.NEXT_PUBLIC_STATIC_DEMO === "true" ? "demo" : "live"} />
+              <SourceBadge mode={isStatic ? "demo" : "live"} />
             </div>
 
             <div className="mb-6 flex items-center gap-3 rounded-2xl border border-bashkir-blue/20 bg-bashkir-blue/5 px-4 py-3 text-sm text-bashkir-ink">
               <KeyRound size={18} className="shrink-0 text-bashkir-blue" />
-              Доступ только для зарегистрированных пользователей
+              Выберите своё муниципальное образование из списка 63 районов и городов
             </div>
 
             <div className="mb-6 flex justify-center lg:hidden">
@@ -94,16 +127,29 @@ export default function LoginPage() {
 
             <form className="space-y-5" onSubmit={onSubmit}>
               <label className="block text-sm font-semibold text-bashkir-ink">
-                Логин
-                <input
+                Муниципальное образование
+                <select
                   className="input-bashkir"
-                  value={login}
-                  onChange={(event) => setLogin(event.target.value)}
-                  autoComplete="username"
-                  placeholder="glava_ufa"
+                  value={selectedLogin}
+                  onChange={(event) => onMunicipalityChange(event.target.value)}
                   required
-                />
+                >
+                  {municipalities.length === 0 ? (
+                    <option value="">Загрузка списка…</option>
+                  ) : (
+                    municipalities.map((item) => (
+                      <option key={item.login} value={item.login}>
+                        {item.name}
+                      </option>
+                    ))
+                  )}
+                </select>
               </label>
+              {selectedName ? (
+                <p className="text-xs text-bashkir-muted">
+                  Логин: <code className="rounded bg-bashkir-cream px-1.5 py-0.5">{login}</code>
+                </p>
+              ) : null}
               <label className="block text-sm font-semibold text-bashkir-ink">
                 Пароль
                 <input
@@ -116,15 +162,14 @@ export default function LoginPage() {
                 />
               </label>
               {error ? <ErrorBanner message={error} /> : null}
-              <Button type="submit" className="w-full py-3 text-base" disabled={loading}>
+              <Button type="submit" className="w-full py-3 text-base" disabled={loading || !login}>
                 {loading ? "Вход…" : "Войти в дашборд"}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-xs text-bashkir-muted">
-              Демо:{" "}
-              <code className="rounded-lg bg-bashkir-cream px-2 py-0.5 font-medium text-bashkir-ink">glava_ufa</code> /{" "}
-              <code className="rounded-lg bg-bashkir-cream px-2 py-0.5 font-medium text-bashkir-ink">district12345</code>
+              Администратор: <code className="rounded-lg bg-bashkir-cream px-2 py-0.5">admin</code> /{" "}
+              <code className="rounded-lg bg-bashkir-cream px-2 py-0.5">admin12345</code>
             </p>
           </section>
         </div>

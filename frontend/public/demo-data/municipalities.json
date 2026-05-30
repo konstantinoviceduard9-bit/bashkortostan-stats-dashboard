@@ -1,0 +1,443 @@
+[
+  {
+    "login": "glava_abzelilovsky",
+    "slug": "abzelilovsky",
+    "name": "Абзелиловский район",
+    "type": "district",
+    "oktmo": "80601000"
+  },
+  {
+    "login": "glava_alsheevsky",
+    "slug": "alsheevsky",
+    "name": "Альшеевский район",
+    "type": "district",
+    "oktmo": "80602000"
+  },
+  {
+    "login": "glava_arkhangelsky",
+    "slug": "arkhangelsky",
+    "name": "Архангельский район",
+    "type": "district",
+    "oktmo": "80603000"
+  },
+  {
+    "login": "glava_askinsky",
+    "slug": "askinsky",
+    "name": "Аскинский район",
+    "type": "district",
+    "oktmo": "80604000"
+  },
+  {
+    "login": "glava_aurgazinsky",
+    "slug": "aurgazinsky",
+    "name": "Аургазинский район",
+    "type": "district",
+    "oktmo": "80605000"
+  },
+  {
+    "login": "glava_baymaksky",
+    "slug": "baymaksky",
+    "name": "Баймакский район",
+    "type": "district",
+    "oktmo": "80606000"
+  },
+  {
+    "login": "glava_bakalinsky",
+    "slug": "bakalinsky",
+    "name": "Бакалинский район",
+    "type": "district",
+    "oktmo": "80607000"
+  },
+  {
+    "login": "glava_baltachevsky",
+    "slug": "baltachevsky",
+    "name": "Балтачевский район",
+    "type": "district",
+    "oktmo": "80608000"
+  },
+  {
+    "login": "glava_belebeyevsky",
+    "slug": "belebeyevsky",
+    "name": "Белебеевский район",
+    "type": "district",
+    "oktmo": "80609000"
+  },
+  {
+    "login": "glava_belokataysky",
+    "slug": "belokataysky",
+    "name": "Белокатайский район",
+    "type": "district",
+    "oktmo": "80610000"
+  },
+  {
+    "login": "glava_beloretsk",
+    "slug": "beloretsk",
+    "name": "Белорецкий район",
+    "type": "district",
+    "oktmo": "80611000"
+  },
+  {
+    "login": "glava_bizhbulyaksky",
+    "slug": "bizhbulyaksky",
+    "name": "Бижбулякский район",
+    "type": "district",
+    "oktmo": "80612000"
+  },
+  {
+    "login": "glava_birsk",
+    "slug": "birsk",
+    "name": "Бирский район",
+    "type": "district",
+    "oktmo": "80613000"
+  },
+  {
+    "login": "glava_blagovarsky",
+    "slug": "blagovarsky",
+    "name": "Благоварский район",
+    "type": "district",
+    "oktmo": "80614000"
+  },
+  {
+    "login": "glava_blagoveshchensky",
+    "slug": "blagoveshchensky",
+    "name": "Благовещенский район",
+    "type": "district",
+    "oktmo": "80615000"
+  },
+  {
+    "login": "glava_buzdyaksky",
+    "slug": "buzdyaksky",
+    "name": "Буздякский район",
+    "type": "district",
+    "oktmo": "80616000"
+  },
+  {
+    "login": "glava_buraevsky",
+    "slug": "buraevsky",
+    "name": "Бураевский район",
+    "type": "district",
+    "oktmo": "80617000"
+  },
+  {
+    "login": "glava_burzyansky",
+    "slug": "burzyansky",
+    "name": "Бурзянский район",
+    "type": "district",
+    "oktmo": "80618000"
+  },
+  {
+    "login": "glava_gafuriysky",
+    "slug": "gafuriysky",
+    "name": "Гафурийский район",
+    "type": "district",
+    "oktmo": "80619000"
+  },
+  {
+    "login": "glava_davlekanovsky",
+    "slug": "davlekanovsky",
+    "name": "Давлекановский район",
+    "type": "district",
+    "oktmo": "80620000"
+  },
+  {
+    "login": "glava_duvansky",
+    "slug": "duvansky",
+    "name": "Дуванский район",
+    "type": "district",
+    "oktmo": "80621000"
+  },
+  {
+    "login": "glava_dyurtyulinsky",
+    "slug": "dyurtyulinsky",
+    "name": "Дюртюлинский район",
+    "type": "district",
+    "oktmo": "80622000"
+  },
+  {
+    "login": "glava_ermekeyevsky",
+    "slug": "ermekeyevsky",
+    "name": "Ермекеевский район",
+    "type": "district",
+    "oktmo": "80623000"
+  },
+  {
+    "login": "glava_zianchurinsky",
+    "slug": "zianchurinsky",
+    "name": "Зианчуринский район",
+    "type": "district",
+    "oktmo": "80624000"
+  },
+  {
+    "login": "glava_zilairsky",
+    "slug": "zilairsky",
+    "name": "Зилаирский район",
+    "type": "district",
+    "oktmo": "80625000"
+  },
+  {
+    "login": "glava_iglinsky",
+    "slug": "iglinsky",
+    "name": "Иглинский район",
+    "type": "district",
+    "oktmo": "80626000"
+  },
+  {
+    "login": "glava_ilishevsky",
+    "slug": "ilishevsky",
+    "name": "Илишевский район",
+    "type": "district",
+    "oktmo": "80627000"
+  },
+  {
+    "login": "glava_ishimbay",
+    "slug": "ishimbay",
+    "name": "Ишимбайский район",
+    "type": "district",
+    "oktmo": "80628000"
+  },
+  {
+    "login": "glava_kaltasinsky",
+    "slug": "kaltasinsky",
+    "name": "Калтасинский район",
+    "type": "district",
+    "oktmo": "80629000"
+  },
+  {
+    "login": "glava_karaidelsky",
+    "slug": "karaidelsky",
+    "name": "Караидельский район",
+    "type": "district",
+    "oktmo": "80630000"
+  },
+  {
+    "login": "glava_karmaskalinsky",
+    "slug": "karmaskalinsky",
+    "name": "Кармаскалинский район",
+    "type": "district",
+    "oktmo": "80631000"
+  },
+  {
+    "login": "glava_kiginsky",
+    "slug": "kiginsky",
+    "name": "Кигинский район",
+    "type": "district",
+    "oktmo": "80632000"
+  },
+  {
+    "login": "glava_krasnokamsky",
+    "slug": "krasnokamsky",
+    "name": "Краснокамский район",
+    "type": "district",
+    "oktmo": "80633000"
+  },
+  {
+    "login": "glava_kugarchinsky",
+    "slug": "kugarchinsky",
+    "name": "Кугарчинский район",
+    "type": "district",
+    "oktmo": "80634000"
+  },
+  {
+    "login": "glava_kushnarenkovsky",
+    "slug": "kushnarenkovsky",
+    "name": "Кушнаренковский район",
+    "type": "district",
+    "oktmo": "80635000"
+  },
+  {
+    "login": "glava_kuyurgazinsky",
+    "slug": "kuyurgazinsky",
+    "name": "Куюргазинский район",
+    "type": "district",
+    "oktmo": "80636000"
+  },
+  {
+    "login": "glava_meleuz",
+    "slug": "meleuz",
+    "name": "Мелеузовский район",
+    "type": "district",
+    "oktmo": "80637000"
+  },
+  {
+    "login": "glava_mechetlinsky",
+    "slug": "mechetlinsky",
+    "name": "Мечетлинский район",
+    "type": "district",
+    "oktmo": "80638000"
+  },
+  {
+    "login": "glava_mishkinsky",
+    "slug": "mishkinsky",
+    "name": "Мишкинский район",
+    "type": "district",
+    "oktmo": "80639000"
+  },
+  {
+    "login": "glava_miyakinsky",
+    "slug": "miyakinsky",
+    "name": "Миякинский район",
+    "type": "district",
+    "oktmo": "80640000"
+  },
+  {
+    "login": "glava_nurimanovsky",
+    "slug": "nurimanovsky",
+    "name": "Нуримановский район",
+    "type": "district",
+    "oktmo": "80641000"
+  },
+  {
+    "login": "glava_salavatsky",
+    "slug": "salavatsky",
+    "name": "Салаватский район",
+    "type": "district",
+    "oktmo": "80642000"
+  },
+  {
+    "login": "glava_sterlibashevsky",
+    "slug": "sterlibashevsky",
+    "name": "Стерлибашевский район",
+    "type": "district",
+    "oktmo": "80643000"
+  },
+  {
+    "login": "glava_sterlitamaksky",
+    "slug": "sterlitamaksky",
+    "name": "Стерлитамакский район",
+    "type": "district",
+    "oktmo": "80644000"
+  },
+  {
+    "login": "glava_tatyshlinsky",
+    "slug": "tatyshlinsky",
+    "name": "Татышлинский район",
+    "type": "district",
+    "oktmo": "80645000"
+  },
+  {
+    "login": "glava_tuymazy",
+    "slug": "tuymazy",
+    "name": "Туймазинский район",
+    "type": "district",
+    "oktmo": "80646000"
+  },
+  {
+    "login": "glava_ufimsky",
+    "slug": "ufimsky",
+    "name": "Уфимский район",
+    "type": "district",
+    "oktmo": "80647000"
+  },
+  {
+    "login": "glava_uchaly_district",
+    "slug": "uchaly_district",
+    "name": "Учалинский район",
+    "type": "district",
+    "oktmo": "80648000"
+  },
+  {
+    "login": "glava_fedorovsky",
+    "slug": "fedorovsky",
+    "name": "Фёдоровский район",
+    "type": "district",
+    "oktmo": "80649000"
+  },
+  {
+    "login": "glava_khaibullinsky",
+    "slug": "khaibullinsky",
+    "name": "Хайбуллинский район",
+    "type": "district",
+    "oktmo": "80650000"
+  },
+  {
+    "login": "glava_chekmagushevsky",
+    "slug": "chekmagushevsky",
+    "name": "Чекмагушевский район",
+    "type": "district",
+    "oktmo": "80651000"
+  },
+  {
+    "login": "glava_chishminsky",
+    "slug": "chishminsky",
+    "name": "Чишминский район",
+    "type": "district",
+    "oktmo": "80652000"
+  },
+  {
+    "login": "glava_sharansky",
+    "slug": "sharansky",
+    "name": "Шаранский район",
+    "type": "district",
+    "oktmo": "80653000"
+  },
+  {
+    "login": "glava_yanaulsky",
+    "slug": "yanaulsky",
+    "name": "Янаульский район",
+    "type": "district",
+    "oktmo": "80654000"
+  },
+  {
+    "login": "glava_agidel",
+    "slug": "agidel",
+    "name": "г. Агидель",
+    "type": "city",
+    "oktmo": "80701000"
+  },
+  {
+    "login": "glava_kumertau",
+    "slug": "kumertau",
+    "name": "г. Кумертау",
+    "type": "city",
+    "oktmo": "80702000"
+  },
+  {
+    "login": "glava_mezhgorye",
+    "slug": "mezhgorye",
+    "name": "г. Межгорье",
+    "type": "city",
+    "oktmo": "80703000"
+  },
+  {
+    "login": "glava_neftekamsk",
+    "slug": "neftekamsk",
+    "name": "г. Нефтекамск",
+    "type": "city",
+    "oktmo": "80704000"
+  },
+  {
+    "login": "glava_oktyabrsky",
+    "slug": "oktyabrsky",
+    "name": "г. Октябрьский",
+    "type": "city",
+    "oktmo": "80705000"
+  },
+  {
+    "login": "glava_salavat",
+    "slug": "salavat",
+    "name": "г. Салават",
+    "type": "city",
+    "oktmo": "80706000"
+  },
+  {
+    "login": "glava_sibay",
+    "slug": "sibay",
+    "name": "г. Сибай",
+    "type": "city",
+    "oktmo": "80707000"
+  },
+  {
+    "login": "glava_sterlitamak",
+    "slug": "sterlitamak",
+    "name": "г. Стерлитамак",
+    "type": "city",
+    "oktmo": "80708000"
+  },
+  {
+    "login": "glava_ufa",
+    "slug": "ufa",
+    "name": "г. Уфа",
+    "type": "city",
+    "oktmo": "80709000"
+  }
+]

@@ -1,0 +1,120 @@
+{
+  "municipality_name": "Миякинский район",
+  "rank": null,
+  "total": 63,
+  "rank_delta": null,
+  "period": "2023-01-01",
+  "kpis": [
+    {
+      "code": "budget_security",
+      "name": "Бюджетная обеспеченность",
+      "value": 8074.0,
+      "unit": "%",
+      "change_percent": null,
+      "sparkline": [
+        8074.0
+      ],
+      "source": "bdmo_tochno",
+      "is_live": true,
+      "data_period": "2023-01-01"
+    },
+    {
+      "code": "unemployment",
+      "name": "Безработица",
+      "value": null,
+      "unit": "%",
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
+    },
+    {
+      "code": "average_salary",
+      "name": "Средняя зарплата",
+      "value": null,
+      "unit": "руб.",
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
+    },
+    {
+      "code": "natural_growth",
+      "name": "Естественный прирост",
+      "value": null,
+      "unit": "чел.",
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
+    },
+    {
+      "code": "doctors_per_capita",
+      "name": "Обеспеченность врачами",
+      "value": null,
+      "unit": "врач/10 тыс.",
+      "change_percent": null,
+      "sparkline": [],
+      "source": null,
+      "is_live": false,
+      "data_period": null
+    },
+    {
+      "code": "housing_commissioned",
+      "name": "Ввод жилья",
+      "value": 832.1,
+      "unit": "кв. м",
+      "change_percent": null,
+      "sparkline": [
+        832.1
+      ],
+      "source": "bdmo_tochno",
+      "is_live": true,
+      "data_period": "2023-01-01"
+    }
+  ],
+  "data_sources": [
+    {
+      "connector_id": "bdmo_tochno",
+      "display_name": "БД ПМО / tochno.st",
+      "last_success_at": "2026-05-29T19:56:33.756424",
+      "period": "2023-01-01",
+      "message": "Загружено 24708 наблюдений, сохранено 24537, без МО 171"
+    },
+    {
+      "connector_id": "opendata_rb",
+      "display_name": "Портал открытых данных РБ",
+      "last_success_at": "2026-05-29T19:56:35.231073",
+      "period": "2023-01-01",
+      "message": "Загружено 26 наблюдений, сохранено 26, без МО 0; {'skipped_unresolved_labels': 0}"
+    },
+    {
+      "connector_id": "minfin_rb",
+      "display_name": "Минфин РБ",
+      "last_success_at": "2026-05-29T19:56:35.257678",
+      "period": "2023-01-01",
+      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'MINFIN_REPORT_URL not set'}"
+    },
+    {
+      "connector_id": "emiss",
+      "display_name": "Башкортостанстат / ЕМИСС",
+      "last_success_at": "2026-05-29T19:56:35.262821",
+      "period": "2023-01-01",
+      "message": "Загружено 0 наблюдений, сохранено 0, без МО 0; {'skipped': 'EMISS_SDMX_URL not set'}"
+    },
+    {
+      "connector_id": "gas_manual",
+      "display_name": "ГАС «Управление»",
+      "last_success_at": null,
+      "period": null,
+      "message": null
+    }
+  ],
+  "source_notes": [
+    "Бюджетная обеспеченность: БД ПМО (официальная муниципальная статистика)",
+    "Ввод жилья: БД ПМО (официальная муниципальная статистика)"
+  ]
+}

@@ -1,25 +1,29 @@
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const DEMO_ROOT = `${BASE}/demo-data`;
 
-const VALID_LOGINS = new Set(["admin", "glava_ufa", "glava_beloretsk"]);
+let usersCache: Record<string, string> | null = null;
+
+async function loadUsers(): Promise<Record<string, string>> {
+  if (usersCache) return usersCache;
+  const response = await fetch(`${DEMO_ROOT}/users.json`);
+  if (!response.ok) throw new Error("Не удалось загрузить список пользователей демо");
+  usersCache = (await response.json()) as Record<string, string>;
+  return usersCache;
+}
 
 function loginFromToken(token: string | null): string | null {
   if (!token?.startsWith("static:")) return null;
   const login = token.slice("static:".length);
-  return VALID_LOGINS.has(login) ? login : null;
+  return login || null;
 }
 
-function loginFromBody(body: string | undefined): string | null {
+async function loginFromBody(body: string | undefined): Promise<string | null> {
   if (!body) return null;
   try {
     const parsed = JSON.parse(body) as { login?: string; password?: string };
     if (!parsed.login || !parsed.password) return null;
-    const expected: Record<string, string> = {
-      admin: "admin12345",
-      glava_ufa: "district12345",
-      glava_beloretsk: "district12345",
-    };
-    if (expected[parsed.login] === parsed.password) return parsed.login;
+    const users = await loadUsers();
+    if (users[parsed.login] === parsed.password) return parsed.login;
   } catch {
     return null;
   }
@@ -57,13 +61,16 @@ export async function staticApiFetch<T>(
   const method = (init.method ?? "GET").toUpperCase();
 
   if (method === "POST" && path === "/auth/login") {
-    const login = loginFromBody(typeof init.body === "string" ? init.body : undefined);
+    const login = await loginFromBody(typeof init.body === "string" ? init.body : undefined);
     if (!login) throw new Error("Неверный логин или пароль");
     return { access_token: `static:${login}`, token_type: "bearer" } as T;
   }
 
   const login = loginFromToken(token);
   if (!login) throw new Error("Требуется авторизация");
+
+  const users = await loadUsers();
+  if (!users[login]) throw new Error("Неизвестный пользователь демо");
 
   if (method === "PATCH" && path === "/profile") {
     const body = init.body ? (JSON.parse(String(init.body)) as { max_user_id?: string }) : {};
@@ -76,9 +83,7 @@ export async function staticApiFetch<T>(
     if (path === "/admin/connectors/run") {
       return {
         period: "2024-12-01",
-        results: [
-          { connector: "bdmo_tochno", status: "demo", message: "Статическое демо на GitHub Pages" },
-        ],
+        results: [{ connector: "bdmo_tochno", status: "demo", message: "Статическое демо на GitHub Pages" }],
       } as T;
     }
   }
@@ -104,4 +109,22 @@ export async function staticApiFetch<T>(
 
 export async function staticApiUpload<T>(_path: string, _form: FormData): Promise<T> {
   return { rows: 12, changed: true } as T;
+}
+
+export interface MunicipalityOption {
+  login: string;
+  slug: string;
+  name: string;
+  type: string;
+  oktmo: string;
+}
+
+export async function loadMunicipalities(): Promise<MunicipalityOption[]> {
+  return loadJson<MunicipalityOption[]>(`${DEMO_ROOT}/municipalities.json`);
+}
+
+export async function getHeadPassword(): Promise<string> {
+  const users = await loadUsers();
+  const sample = Object.entries(users).find(([login]) => login.startsWith("glava_"));
+  return sample?.[1] ?? "district12345";
 }

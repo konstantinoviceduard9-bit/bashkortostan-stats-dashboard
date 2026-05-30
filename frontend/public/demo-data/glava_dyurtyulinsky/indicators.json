@@ -1,0 +1,552 @@
+[
+  {
+    "code": "budget_security",
+    "name": "Бюджетная обеспеченность",
+    "category": "Бюджет",
+    "value": 54021.0,
+    "unit": "%",
+    "change_percent": null,
+    "republic_average": 76304.5,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "housing_commissioned",
+    "name": "Ввод жилья",
+    "category": "ЖКХ",
+    "value": 1772.86,
+    "unit": "кв. м",
+    "change_percent": null,
+    "republic_average": 1936.93,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "doctors_per_capita",
+    "name": "Обеспеченность врачами",
+    "category": "Здравоохранение",
+    "value": null,
+    "unit": "врач/10 тыс.",
+    "change_percent": null,
+    "republic_average": null,
+    "source": "catalog"
+  },
+  {
+    "code": "opendata_health_23_count",
+    "name": "Список больниц: количество объектов",
+    "category": "Здравоохранение",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 1.3333333333333333,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_health_26_count",
+    "name": "Список диспансеров: количество объектов",
+    "category": "Здравоохранение",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 2.0,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_health_28_count",
+    "name": "Список колледжей: количество объектов",
+    "category": "Здравоохранение",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 1.1666666666666667,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_health_30_count",
+    "name": "Список поликлиник: количество объектов",
+    "category": "Здравоохранение",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 3.0,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "opendata_health_32_count",
+    "name": "Список санаториев: количество объектов",
+    "category": "Здравоохранение",
+    "value": null,
+    "unit": "ед.",
+    "change_percent": null,
+    "republic_average": 1.0,
+    "source": "opendata_rb"
+  },
+  {
+    "code": "Y48109002",
+    "name": "Инвестиции в основной капитал организаций муниципальной формы собственности",
+    "category": "Инвестиции в основной капитал",
+    "value": 2631.0,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 146238.93548387097,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48109001",
+    "name": "Инвестиции в основной капитал, осуществляемые организациями, находящимися на территории муниципального образования (без субъектов малого предпринимательства)",
+    "category": "Инвестиции в основной капитал",
+    "value": 910.0,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 394200.51612903224,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48408028",
+    "name": "Количество населенных пунктов, не имеющих канализаций (отдельных канализационных сетей)",
+    "category": "Коммунальная сфера",
+    "value": 83.0,
+    "unit": "Единица",
+    "change_percent": null,
+    "republic_average": 75.8103448275862,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008018",
+    "name": "Количество негазифицированных населенных пунктов",
+    "category": "Коммунальная сфера",
+    "value": 7.0,
+    "unit": "Единица",
+    "change_percent": null,
+    "republic_average": 27.30909090909091,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y49010004",
+    "name": "Общая площадь жилых помещений, оборудованная одновременно водопроводом, водоотведением (канализацией), отоплением, горячим водоснабжением, газом или электрическими плитами",
+    "category": "Коммунальная сфера",
+    "value": 1229.9,
+    "unit": "Тысяча квадратных метров",
+    "change_percent": null,
+    "republic_average": 1418.626393442623,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008007",
+    "name": "Одиночное протяжение уличной водопроводной сети",
+    "category": "Коммунальная сфера",
+    "value": 346970.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 197469.56451612903,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008025",
+    "name": "Одиночное протяжение уличной водопроводной сети, которая заменена и отремонтирована",
+    "category": "Коммунальная сфера",
+    "value": 2700.0,
+    "unit": "Метр",
+    "change_percent": null,
+    "republic_average": 2356.898305084746,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008008",
+    "name": "Одиночное протяжение уличной водопроводной сети, нуждающейся в замене",
+    "category": "Коммунальная сфера",
+    "value": 80400.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 67934.96721311475,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008015",
+    "name": "Одиночное протяжение уличной газовой сети",
+    "category": "Коммунальная сфера",
+    "value": 605070.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 488195.12903225806,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008011",
+    "name": "Одиночное протяжение уличной канализационной сети",
+    "category": "Коммунальная сфера",
+    "value": 37100.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 27273.08510638298,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008026",
+    "name": "Одиночное протяжение уличной канализационной сети, которая заменена и отремонтирована",
+    "category": "Коммунальная сфера",
+    "value": null,
+    "unit": "Метр",
+    "change_percent": null,
+    "republic_average": 472.42105263157896,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008012",
+    "name": "Одиночное протяжение уличной канализационной сети, нуждающейся в замене",
+    "category": "Коммунальная сфера",
+    "value": 2700.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 12435.348837209302,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008003",
+    "name": "Протяженность тепловых и паровых сетей в двухтрубном исчислении",
+    "category": "Коммунальная сфера",
+    "value": 81400.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 61359.145161290326,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008004",
+    "name": "Протяженность тепловых и паровых сетей в двухтрубном исчислении, нуждающихся в замене",
+    "category": "Коммунальная сфера",
+    "value": 3800.0,
+    "unit": "2006 и 2007 гг. — тысяча метров, с 2008 г. — метр",
+    "change_percent": null,
+    "republic_average": 11696.727272727272,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008024",
+    "name": "Протяженность тепловых и паровых сетей, которые были заменены и отремонтированы",
+    "category": "Коммунальная сфера",
+    "value": 2100.0,
+    "unit": "Метр",
+    "change_percent": null,
+    "republic_average": 1330.9375,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008001",
+    "name": "Число источников теплоснабжения",
+    "category": "Коммунальная сфера",
+    "value": 59.0,
+    "unit": "Единица",
+    "change_percent": null,
+    "republic_average": 26.274193548387096,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48008002",
+    "name": "Число источников теплоснабжения мощностью до 3 Гкал/ч",
+    "category": "Коммунальная сфера",
+    "value": 55.0,
+    "unit": "Единица",
+    "change_percent": null,
+    "republic_average": 24.142857142857142,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "natural_growth",
+    "name": "Естественный прирост",
+    "category": "Население",
+    "value": null,
+    "unit": "чел.",
+    "change_percent": null,
+    "republic_average": null,
+    "source": "catalog"
+  },
+  {
+    "code": "Y48007019",
+    "name": "Валовые сборы сельскохозяйственных культур",
+    "category": "Сельское хозяйство",
+    "value": 999999999.0,
+    "unit": "Центнер (метрический) (100 кг), гектокилограмм, квинтал[*] (метрический), децитонна",
+    "change_percent": null,
+    "republic_average": 225834999.3467742,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007022",
+    "name": "Внесено минеральных удобрений (в пересчете на 100% питательных веществ) под посевы сельскохозяйственных культур в сельскохозяйственных организациях",
+    "category": "Сельское хозяйство",
+    "value": 14868.0,
+    "unit": "Центнер (метрический) (100 кг), гектокилограмм, квинтал[*] (метрический), децитонна",
+    "change_percent": null,
+    "republic_average": 17968.25605263158,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y49010001",
+    "name": "Внесено органических удобрений под посевы сельскохозяйственных культур в сельскохозяйственных организациях",
+    "category": "Сельское хозяйство",
+    "value": 135431.0,
+    "unit": "Тонна, метрическая тонна (1000 кг)",
+    "change_percent": null,
+    "republic_average": 102146.14285714286,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007015",
+    "name": "Индекс производства продукции животноводства (в сопоставимых ценах, в процентах к предыдущему году)",
+    "category": "Сельское хозяйство",
+    "value": 97.0,
+    "unit": "Процент",
+    "change_percent": null,
+    "republic_average": 93.09354838709677,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007014",
+    "name": "Индекс производства продукции растениеводства (в сопоставимых ценах, в процентах к предыдущему году)",
+    "category": "Сельское хозяйство",
+    "value": 62.5,
+    "unit": "Процент",
+    "change_percent": null,
+    "republic_average": 82.88870967741936,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007013",
+    "name": "Индекс производства продукции сельского хозяйства (в сопоставимых ценах, в процентах к предыдущему году)",
+    "category": "Сельское хозяйство",
+    "value": 71.2,
+    "unit": "Процент",
+    "change_percent": null,
+    "republic_average": 87.45483870967742,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007017",
+    "name": "Наличие сельскохозяйственной техники в сельскохозяйственных организациях",
+    "category": "Сельское хозяйство",
+    "value": 27.0,
+    "unit": "Штука",
+    "change_percent": null,
+    "republic_average": 73.08571428571429,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007023",
+    "name": "Площадь многолетних насаждений",
+    "category": "Сельское хозяйство",
+    "value": 140.9,
+    "unit": "Гектар",
+    "change_percent": null,
+    "republic_average": 16129074.681451613,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007020",
+    "name": "Поголовье скота и птицы",
+    "category": "Сельское хозяйство",
+    "value": 1554.0,
+    "unit": "Голова",
+    "change_percent": null,
+    "republic_average": 6483.5161290322585,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007018",
+    "name": "Посевные площади сельскохозяйственных культур",
+    "category": "Сельское хозяйство",
+    "value": 0.5,
+    "unit": "Гектар",
+    "change_percent": null,
+    "republic_average": 306456150.7803226,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y47000006",
+    "name": "Посевные площади сельскохозяйственных культур (весеннего учета)",
+    "category": "Сельское хозяйство",
+    "value": 29560.0,
+    "unit": "Гектар",
+    "change_percent": null,
+    "republic_average": 6878.81129032258,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007012",
+    "name": "Продукция животноводства (в фактически действовавших ценах)",
+    "category": "Сельское хозяйство",
+    "value": 1800276.0,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 1165507.6612903227,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007011",
+    "name": "Продукция растениеводства (в фактически действовавших ценах)",
+    "category": "Сельское хозяйство",
+    "value": 113220.0,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 868398.1612903225,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007010",
+    "name": "Продукция сельского хозяйства (в фактически действовавших ценах)",
+    "category": "Сельское хозяйство",
+    "value": 2767226.0,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 1976087.8709677418,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007021",
+    "name": "Производство продуктов животноводства",
+    "category": "Сельское хозяйство",
+    "value": 7029.0,
+    "unit": "Тонна, метрическая тонна (1000 кг)",
+    "change_percent": null,
+    "republic_average": 3734.8870967741937,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48097016",
+    "name": "Реализация продукции сельскохозяйственными организациями",
+    "category": "Сельское хозяйство",
+    "value": 1760.0,
+    "unit": "Нет",
+    "change_percent": null,
+    "republic_average": 79373.06754385964,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48007025",
+    "name": "Урожайность сельскохозяйственных культур (в расчете на убранную площадь)",
+    "category": "Сельское хозяйство",
+    "value": 16.8,
+    "unit": "Центнер с гектара убранной площади",
+    "change_percent": null,
+    "republic_average": 193548438.0919355,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48012004",
+    "name": "Объем средств, предусмотренных на предоставление социальной поддержки по оплате жилого помещения и коммунальных услуг",
+    "category": "Социальная поддержка населения",
+    "value": 25215.0,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 44609.31774193548,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48012002",
+    "name": "Сумма начисленных субсидий населению на оплату жилого помещения и коммунальных услуг",
+    "category": "Социальная поддержка населения",
+    "value": 33815.9,
+    "unit": "Тысяча рублей",
+    "change_percent": null,
+    "republic_average": 16742.429032258064,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48012003",
+    "name": "Численность граждан, пользующихся социальной поддержкой (льготами) по оплате жилого помещения и коммунальных услуг",
+    "category": "Социальная поддержка населения",
+    "value": 9795.0,
+    "unit": "Человек",
+    "change_percent": null,
+    "republic_average": 9434.935483870968,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48012005",
+    "name": "Число семей, получавших субсидии на оплату жилого помещения и коммунальных услуг",
+    "category": "Социальная поддержка населения",
+    "value": 622.0,
+    "unit": "Единица",
+    "change_percent": null,
+    "republic_average": 758.3709677419355,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48006010",
+    "name": "Количество автозаправочных станций (АЗС), расположенных на автомобильных дорогах общего пользования местного значения",
+    "category": "Территория",
+    "value": 2.0,
+    "unit": "Единица",
+    "change_percent": null,
+    "republic_average": 6.195652173913044,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48006001",
+    "name": "Общая площадь земель муниципального образования",
+    "category": "Территория",
+    "value": 169420.0,
+    "unit": "Гектар",
+    "change_percent": null,
+    "republic_average": 230203.1322580645,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48006003",
+    "name": "Общая протяженность освещенных частей улиц, проездов, набережных",
+    "category": "Территория",
+    "value": 362.6,
+    "unit": "Километр, тысяча метров",
+    "change_percent": null,
+    "republic_average": 384.56935483870967,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48006007",
+    "name": "Общая протяженность улиц, проездов, набережных",
+    "category": "Территория",
+    "value": 408.4,
+    "unit": "Километр, тысяча метров",
+    "change_percent": null,
+    "republic_average": 465.85161290322577,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48006005",
+    "name": "Протяженность автодорог общего пользования местного значения",
+    "category": "Территория",
+    "value": 218.5,
+    "unit": "Километр, тысяча метров",
+    "change_percent": null,
+    "republic_average": 408.26774193548385,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "Y48406005",
+    "name": "Протяженность мостов, путепроводов и эстакад, расположенных на автомобильных дорогах общего пользования местного значения",
+    "category": "Территория",
+    "value": 274.7,
+    "unit": "Погонный метр",
+    "change_percent": null,
+    "republic_average": 725.8833333333333,
+    "source": "bdmo_tochno"
+  },
+  {
+    "code": "unemployment",
+    "name": "Безработица",
+    "category": "Экономика",
+    "value": null,
+    "unit": "%",
+    "change_percent": null,
+    "republic_average": null,
+    "source": "catalog"
+  },
+  {
+    "code": "average_salary",
+    "name": "Средняя зарплата",
+    "category": "Экономика",
+    "value": null,
+    "unit": "руб.",
+    "change_percent": null,
+    "republic_average": null,
+    "source": "catalog"
+  }
+]

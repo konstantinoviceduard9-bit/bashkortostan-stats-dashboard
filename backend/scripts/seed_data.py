@@ -17,6 +17,36 @@ KPI_DEFINITIONS = [
     ("doctors_per_capita", "Обеспеченность врачами", "врач/10 тыс.", "Здравоохранение"),
     ("housing_commissioned", "Ввод жилья", "кв. м", "ЖКХ"),
 ]
+
+HEAD_PASSWORD = "district12345"
+ADMIN_PASSWORD = "admin12345"
+
+
+def head_login(slug: str) -> str:
+    return f"glava_{slug}"
+
+
+async def ensure_municipality_heads(session) -> int:
+    """Создаёт glava_{slug} для каждого из 63 МО (идемпотентно)."""
+    municipalities = (await session.execute(select(Municipality).order_by(Municipality.name))).scalars().all()
+    created = 0
+    for municipality in municipalities:
+        login = head_login(municipality.slug)
+        if await session.scalar(select(User).where(User.login == login)):
+            continue
+        session.add(
+            User(
+                login=login,
+                password_hash=hash_password(HEAD_PASSWORD),
+                role=UserRoleEnum.user,
+                municipality_id=municipality.id,
+                max_user_id=f"{municipality.slug}-max-id",
+            )
+        )
+        created += 1
+    return created
+
+
 async def seed() -> None:
     async with SessionLocal() as session:
         await session.execute(delete(IndicatorValue).where(IndicatorValue.payload_hash == "demo"))
@@ -37,40 +67,19 @@ async def seed() -> None:
         await session.flush()
 
         ufa = await session.scalar(select(Municipality).where(Municipality.slug == "ufa"))
-        beloretsk = await session.scalar(select(Municipality).where(Municipality.slug == "beloretsk"))
 
         if not await session.scalar(select(User).where(User.login == "admin")):
             session.add(
                 User(
                     login="admin",
-                    password_hash=hash_password("admin12345"),
+                    password_hash=hash_password(ADMIN_PASSWORD),
                     role=UserRoleEnum.admin,
                     municipality_id=ufa.id if ufa else None,
                     max_user_id="admin-max-id",
                 )
             )
 
-        if ufa and not await session.scalar(select(User).where(User.login == "glava_ufa")):
-            session.add(
-                User(
-                    login="glava_ufa",
-                    password_hash=hash_password("district12345"),
-                    role=UserRoleEnum.user,
-                    municipality_id=ufa.id,
-                    max_user_id="ufa-max-id",
-                )
-            )
-
-        if beloretsk and not await session.scalar(select(User).where(User.login == "glava_beloretsk")):
-            session.add(
-                User(
-                    login="glava_beloretsk",
-                    password_hash=hash_password("district12345"),
-                    role=UserRoleEnum.user,
-                    municipality_id=beloretsk.id,
-                    max_user_id="beloretsk-max-id",
-                )
-            )
+        heads_created = await ensure_municipality_heads(session)
 
         for code, name, unit, category in KPI_DEFINITIONS:
             indicator = await session.scalar(select(Indicator).where(Indicator.code == code))
@@ -81,7 +90,11 @@ async def seed() -> None:
 
         await session.commit()
         municipalities = (await session.execute(select(Municipality))).scalars().all()
-        print(f"Seed completed: {len(municipalities)} municipalities, demo KPI values removed")
+        users = (await session.execute(select(User))).scalars().all()
+        print(
+            f"Seed completed: {len(municipalities)} municipalities, "
+            f"{len(users)} users (+{heads_created} heads), demo KPI values removed"
+        )
 
 
 if __name__ == "__main__":
