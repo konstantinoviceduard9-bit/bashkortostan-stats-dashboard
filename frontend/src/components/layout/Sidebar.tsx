@@ -14,23 +14,27 @@ import {
   Settings2,
   UserRound,
 } from "lucide-react";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { apiFetch, clearToken } from "@/lib/api";
+import { assetPath } from "@/lib/assetPath";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
 import { SourceBadge } from "@/components/ui/LoadingState";
 import { cn } from "@/lib/utils";
-
-const NAV = [
-  { href: "/dashboard", label: "Обзор", icon: LayoutDashboard, exact: true },
-  { href: "/dashboard/indicators", label: "Показатели", icon: ChartNoAxesCombined },
-  { href: "/dashboard/rating", label: "Рейтинг", icon: Building2 },
-  { href: "/dashboard/profile", label: "Профиль", icon: UserRound },
-];
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useI18n();
   const [role, setRole] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
   const isStaticDemo = process.env.NEXT_PUBLIC_STATIC_DEMO === "true";
+
+  const NAV = [
+    { href: "/dashboard", label: t.nav.overview, icon: LayoutDashboard, exact: true },
+    { href: "/dashboard/indicators", label: t.nav.indicators, icon: ChartNoAxesCombined },
+    { href: "/dashboard/rating", label: t.nav.rating, icon: Building2 },
+    { href: "/dashboard/profile", label: t.nav.profile, icon: UserRound },
+  ];
 
   useEffect(() => {
     apiFetch<{ role: string }>("/dashboard/me")
@@ -52,11 +56,11 @@ export function Sidebar() {
     <aside className={cn("sidebar", collapsed && "sidebar--collapsed")}>
       <div className="sidebar__tricolor" aria-hidden />
       <div className="sidebar__brand">
-        <Image src="/emblem-rb.svg" alt="" width={44} height={44} className="sidebar__emblem" priority />
+        <Image src={assetPath("/emblem-rb.svg")} alt="Герб РБ" width={44} height={44} className="sidebar__emblem" priority />
         {!collapsed ? (
           <div className="min-w-0">
-            <p className="sidebar__brand-title">Муниципальная статистика</p>
-            <p className="sidebar__brand-sub">Башкортостан · 63 МО</p>
+            <p className="sidebar__brand-title">{t.brand.title}</p>
+            <p className="sidebar__brand-sub">{t.brand.subtitle}</p>
           </div>
         ) : null}
       </div>
@@ -86,22 +90,23 @@ export function Sidebar() {
           <Link
             href="/dashboard/admin"
             className={cn("sidebar__link", isActive("/dashboard/admin") && "sidebar__link--active")}
-            title={collapsed ? "Администрирование" : undefined}
+            title={collapsed ? t.nav.admin : undefined}
           >
             <Settings2 size={20} />
-            {!collapsed ? <span>Администрирование</span> : null}
+            {!collapsed ? <span>{t.nav.admin}</span> : null}
           </Link>
         ) : null}
       </nav>
 
       <div className="sidebar__footer">
-        <button type="button" className="sidebar__collapse" onClick={() => setCollapsed((v) => !v)} aria-label="Свернуть меню">
+        <LanguageSwitcher className={cn("sidebar__lang", collapsed && "sidebar__lang--collapsed")} />
+        <button type="button" className="sidebar__collapse" onClick={() => setCollapsed((v) => !v)} aria-label={t.nav.collapse}>
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-          {!collapsed ? <span>Свернуть</span> : null}
+          {!collapsed ? <span>{t.nav.collapse}</span> : null}
         </button>
-        <button type="button" className="sidebar__logout" onClick={logout} title="Выход">
+        <button type="button" className="sidebar__logout" onClick={logout} title={t.nav.logout}>
           <LogOut size={18} />
-          {!collapsed ? <span>Выход</span> : null}
+          {!collapsed ? <span>{t.nav.logout}</span> : null}
         </button>
       </div>
     </aside>

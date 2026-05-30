@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Building2, ChartNoAxesCombined, LayoutDashboard, Menu, UserRound, X } from "lucide-react";
 import { apiFetch, clearToken } from "@/lib/api";
+import { assetPath } from "@/lib/assetPath";
 import { SourceBadge } from "@/components/ui/LoadingState";
 
 const NAV = [
@@ -44,7 +45,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-bashkir-blue/15 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
         <Link href="/dashboard" className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-1 py-1">
-          <Image src="/emblem-rb.svg" alt="Герб РБ" width={48} height={48} priority className="shrink-0" />
+          <Image src={assetPath("/emblem-rb.svg")} alt="Герб РБ" width={48} height={48} priority className="shrink-0" />
           <div className="min-w-0">
             <div className="mb-1 flex h-2 w-28 overflow-hidden rounded-sm border border-slate-200">
               <span className="flex-1 bg-bashkir-blue" />

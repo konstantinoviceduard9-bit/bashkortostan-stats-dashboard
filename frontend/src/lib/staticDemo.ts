@@ -95,6 +95,44 @@ export async function staticApiFetch<T>(
   const file = endpointFile(path, login);
   if (!file) throw new Error(`Неизвестный путь данных: ${path}`);
 
+  const basePath = path.split("?")[0];
+  if (basePath === "/dashboard/indicators") {
+    type IndicatorJson = {
+      code: string;
+      source: string;
+      received_at?: string | null;
+      category: string;
+    };
+    const [indicators, summary, connectors] = await Promise.all([
+      loadJson<IndicatorJson[]>(file),
+      loadJson<{ kpis?: { code: string; data_period?: string | null }[] }>(`${DEMO_ROOT}/${login}/summary.json`),
+      loadJson<{ recent?: { connector_id: string; finished_at?: string | null }[] }>(
+        `${DEMO_ROOT}/admin-connectors.json`,
+      ).catch(() => ({ recent: [] })),
+    ]);
+    const periodByCode = Object.fromEntries(
+      (summary.kpis ?? []).map((kpi) => [kpi.code, kpi.data_period ?? null]),
+    );
+    const runBySource = Object.fromEntries(
+      (connectors.recent ?? [])
+        .filter((row) => row.finished_at)
+        .map((row) => [row.connector_id, row.finished_at as string]),
+    );
+    let enriched = indicators.map((row) => ({
+      ...row,
+      received_at:
+        row.received_at ??
+        (row.source !== "demo" && row.source !== "catalog"
+          ? runBySource[row.source] ?? periodByCode[row.code] ?? null
+          : null),
+    }));
+    if (path.includes("?")) {
+      const category = new URLSearchParams(path.split("?")[1]).get("category");
+      if (category) enriched = enriched.filter((row) => row.category === category);
+    }
+    return enriched as T;
+  }
+
   if (path.includes("?")) {
     const data = await loadJson<Record<string, unknown>[]>(file);
     const params = new URLSearchParams(path.split("?")[1]);

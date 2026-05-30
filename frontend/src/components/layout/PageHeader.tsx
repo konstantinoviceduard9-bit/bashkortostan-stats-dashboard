@@ -1,5 +1,8 @@
+"use client";
+
 import { ReactNode } from "react";
 import { SourceBadge } from "@/components/ui/LoadingState";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
 
 export function PageHeader({
   title,
@@ -12,11 +15,13 @@ export function PageHeader({
   badge?: "live";
   action?: ReactNode;
 }) {
+  const { t } = useI18n();
+
   return (
     <header className="page-hero">
       <div className="page-hero__inner">
         <div className="page-hero__text">
-          <p className="page-hero__eyebrow">Республика Башкортостан</p>
+          <p className="page-hero__eyebrow">{t.brand.eyebrow}</p>
           <h1 className="page-hero__title">{title}</h1>
           {subtitle ? <p className="page-hero__subtitle">{subtitle}</p> : null}
         </div>

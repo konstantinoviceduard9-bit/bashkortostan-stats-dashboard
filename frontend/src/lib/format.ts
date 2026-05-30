@@ -26,10 +26,26 @@ export function formatDate(iso: string | null | undefined): string {
   return dateFmt.format(new Date(iso));
 }
 
+export function formatPeriod(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  return formatDate(iso);
+}
+
+function humanizeConnectorMessage(message: string): string {
+  return message
+    .replace(" (MINFIN_REPORT_URL в .env)", "")
+    .replace(" (EMISS_SDMX_URL в .env)", "")
+    .replace("Не задан URL отчёта Минфина", "Не задан адрес отчёта Минфина")
+    .replace("Не задан URL выгрузки ЕМИСС", "Не задан адрес выгрузки ЕМИСС")
+    .trim();
+}
+
 export function formatDateTime(iso: string | null | undefined): string {
   if (!iso) return "—";
   return dateTimeFmt.format(new Date(iso));
 }
+
+export { humanizeConnectorMessage };
 
 export function formatPercent(value: number | null | undefined): string {
   if (value === null || value === undefined) return "—";

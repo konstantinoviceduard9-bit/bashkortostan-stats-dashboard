@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, ChevronRight } from "lucide-react";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 import { formatValueParts } from "@/lib/format";
 import { formatSourceLabel } from "@/lib/dashboard-meta";
 import { SourceBadge } from "@/components/ui/LoadingState";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
 import { cn } from "@/lib/utils";
 
 export interface KpiCardData {
@@ -19,23 +22,20 @@ export interface KpiCardData {
 }
 
 export function KpiCard({ kpi }: { kpi: KpiCardData }) {
+  const { t } = useI18n();
   const { main } = formatValueParts(kpi.value);
   const hasValue = kpi.value !== null && kpi.value !== undefined;
   const live = kpi.is_live && hasValue;
 
   return (
-    <article
-      className={cn(
-        "kpi-card group",
-        live && "kpi-card--live",
-        !hasValue && "kpi-card--empty"
-      )}
-    >
+    <article className={cn("kpi-card group", live && "kpi-card--live", !hasValue && "kpi-card--empty")}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h4 className="text-sm font-semibold leading-snug text-bashkir-ink">{kpi.name}</h4>
           {kpi.data_period ? (
-            <p className="mt-0.5 text-[11px] text-bashkir-muted">Период {kpi.data_period.slice(0, 7)}</p>
+            <p className="mt-0.5 text-[11px] text-bashkir-muted">
+              {t.kpi.period} {kpi.data_period.slice(0, 7)}
+            </p>
           ) : null}
         </div>
         {live ? <SourceBadge mode="live" /> : !hasValue ? <SourceBadge mode="empty" /> : null}
@@ -52,21 +52,21 @@ export function KpiCard({ kpi }: { kpi: KpiCardData }) {
         <p
           className={cn(
             "mt-1 inline-flex items-center gap-0.5 text-sm font-semibold",
-            kpi.change_percent >= 0 ? "text-bashkir-green" : "text-red-600"
+            kpi.change_percent >= 0 ? "text-bashkir-green" : "text-red-600",
           )}
         >
           {kpi.change_percent >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-          {Math.abs(kpi.change_percent)}% к прошлому периоду
+          {Math.abs(kpi.change_percent)}% {t.kpi.changeVsPrev}
         </p>
       ) : (
         <p className="mt-1 text-xs text-bashkir-muted">
-          {hasValue ? "Нет сравнения с прошлым периодом" : "Ожидается загрузка из источников"}
+          {hasValue ? t.kpi.noCompare : t.kpi.awaiting}
         </p>
       )}
 
       {kpi.source && hasValue && formatSourceLabel(kpi.source) ? (
         <p className="mt-2 text-[11px] font-medium text-bashkir-muted">
-          Источник: {formatSourceLabel(kpi.source)}
+          {t.kpi.source} {formatSourceLabel(kpi.source)}
         </p>
       ) : null}
 
@@ -90,7 +90,7 @@ export function KpiCard({ kpi }: { kpi: KpiCardData }) {
         href="/dashboard/indicators"
         className="mt-3 inline-flex items-center gap-0.5 text-xs font-semibold text-bashkir-blue opacity-0 transition group-hover:opacity-100"
       >
-        Все показатели
+        {t.kpi.allLink}
         <ChevronRight size={14} />
       </Link>
     </article>

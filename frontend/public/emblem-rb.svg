@@ -1,7 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label=" 5A?C1;8:0 0H:>@B>AB0=">
-  <circle cx="32" cy="32" r="30" fill="#fff" stroke="#C9A227" stroke-width="2"/>
-  <rect x="8" y="18" width="48" height="10" fill="#0080C6"/>
-  <rect x="8" y="28" width="48" height="8" fill="#fff"/>
-  <rect x="8" y="36" width="48" height="10" fill="#009B3A"/>
-  <text x="32" y="54" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#0080C6"> </text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Герб Республики Башкортостан">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0D060"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0094D9"/>
+      <stop offset="100%" stop-color="#005F8F"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="31" fill="#fff" stroke="#C9A227" stroke-width="1.5"/>
+  <path d="M32 6 L54 16 V34 C54 47 43 57 32 58 C21 57 10 47 10 34 V16 Z" fill="url(#blue)" stroke="#C9A227" stroke-width="1.2"/>
+  <g transform="translate(32 33)" fill="url(#gold)">
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(51.43)"/>
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(102.86)"/>
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(154.29)"/>
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(205.71)"/>
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(257.14)"/>
+    <ellipse cx="0" cy="-10" rx="4.5" ry="9" transform="rotate(308.57)"/>
+    <circle cx="0" cy="0" r="3.5" fill="#E8C547"/>
+    <rect x="-1" y="0" width="2" height="12" rx="1" fill="url(#gold)"/>
+  </g>
+  <rect x="12" y="52" width="40" height="3" rx="1" fill="#009B3A"/>
 </svg>

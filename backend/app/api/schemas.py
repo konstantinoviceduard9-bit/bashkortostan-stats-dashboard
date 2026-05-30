@@ -42,6 +42,20 @@ class KpiCard(BaseModel):
     data_period: date | None = None
 
 
+class TriggerCard(BaseModel):
+    code: str
+    kpi_code: str
+    name: str
+    description: str
+    value: float | None
+    unit: str
+    status: str
+    watch_at: float
+    trigger_at: float
+    direction: str
+    is_live: bool = False
+
+
 class DashboardSummary(BaseModel):
     municipality_name: str
     rank: int | None
@@ -49,6 +63,7 @@ class DashboardSummary(BaseModel):
     rank_delta: int | None
     period: date
     kpis: list[KpiCard]
+    triggers: list[TriggerCard] = []
     data_sources: list[DataSourceInfo] = []
     source_notes: list[str] = []
 
@@ -62,6 +77,7 @@ class IndicatorRow(BaseModel):
     change_percent: float | None
     republic_average: float | None
     source: str
+    received_at: datetime | None = None
 
 
 class RatingRow(BaseModel):

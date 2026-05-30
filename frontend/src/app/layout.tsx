@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Onest } from "next/font/google";
+import { Providers } from "@/components/layout/Providers";
 import "./globals.css";
 
 const onest = Onest({
@@ -19,10 +20,20 @@ export const metadata: Metadata = {
   description: "Официальная статистика для глав муниципальных районов",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0077b6",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
-      <body className={`${onest.variable} ${cormorant.variable} font-sans`}>{children}</body>
+      <body className={`${onest.variable} ${cormorant.variable} font-sans`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

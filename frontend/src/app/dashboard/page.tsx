@@ -5,12 +5,15 @@ import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis
 import { ArrowDownRight, ArrowUpRight, BarChart3, Clock3, Database, MapPin, Sparkles } from "lucide-react";
 import { CoverageRing } from "@/components/dashboard/CoverageRing";
 import { KpiCard, type KpiCardData } from "@/components/dashboard/KpiCard";
+import { TriggerCard } from "@/components/dashboard/TriggerCard";
 import { SourceGrid, type DataSourceInfo } from "@/components/dashboard/SourceGrid";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { DashboardSkeleton, EmptyState, ErrorBanner, SourceBadge } from "@/components/ui/LoadingState";
 import { KPI_CHART_LABELS } from "@/lib/dashboard-meta";
 import { formatDate } from "@/lib/format";
 import { apiFetch } from "@/lib/api";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
+import { buildTriggers, countByStatus, type TriggerItem } from "@/lib/triggers";
 
 interface DashboardSummary {
   municipality_name: string;
@@ -19,6 +22,7 @@ interface DashboardSummary {
   rank_delta: number | null;
   period: string;
   kpis: KpiCardData[];
+  triggers?: TriggerItem[];
   data_sources: DataSourceInfo[];
   source_notes: string[];
 }
@@ -26,14 +30,15 @@ interface DashboardSummary {
 const CHART_COLORS = ["#0077B6", "#1B5E3B", "#D4A017", "#6366f1", "#059669", "#dc2626"];
 
 export default function DashboardPage() {
+  const { t, fmt } = useI18n();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     apiFetch<DashboardSummary>("/dashboard/summary")
       .then(setSummary)
-      .catch((loadError) => setError(loadError instanceof Error ? loadError.message : "Ошибка загрузки"));
-  }, []);
+      .catch((loadError) => setError(loadError instanceof Error ? loadError.message : t.dashboard.loadError));
+  }, [t.dashboard.loadError]);
 
   if (error) return <ErrorBanner message={error} />;
   if (!summary) return <DashboardSkeleton />;
@@ -53,18 +58,32 @@ export default function DashboardPage() {
     live: kpi.is_live,
   }));
 
+  const triggerLabels = Object.fromEntries(
+    Object.entries(t.triggers.items).map(([code, item]) => [code, item]),
+  ) as Record<string, { name: string; description: string }>;
+  const triggers =
+    summary.triggers && summary.triggers.length > 0
+      ? summary.triggers.map((item) => ({
+          ...item,
+          name: triggerLabels[item.code]?.name ?? item.name,
+          description: triggerLabels[item.code]?.description ?? item.description,
+        }))
+      : buildTriggers(summary.kpis, triggerLabels);
+  const triggerCounts = countByStatus(triggers);
+  const hasActiveTriggers = triggerCounts.triggered > 0 || triggerCounts.watch > 0;
+
   return (
     <div className="dashboard-page space-y-8">
       <PageHeader
         title={summary.municipality_name}
-        subtitle={`Период данных: ${formatDate(summary.period)}. Сводка ключевых показателей муниципального образования среди ${summary.total} МО Республики.`}
+        subtitle={fmt(t.dashboard.summarySubtitle, { period: formatDate(summary.period), total: summary.total })}
         badge={hasLiveData ? "live" : undefined}
       />
 
       <section className="grid gap-4 lg:grid-cols-[1fr_auto]">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           <article className="stat-card">
-            <p className="stat-label">Место в рейтинге</p>
+            <p className="stat-label">{t.dashboard.rankPlace}</p>
             <p className="kpi-value flex items-end gap-2 text-bashkir-green">
               {summary.rank ?? "—"}
               <span className="text-lg font-medium text-bashkir-muted">/ {summary.total}</span>
@@ -73,54 +92,54 @@ export default function DashboardPage() {
               <p className="mt-2 inline-flex items-center gap-1 text-sm font-medium">
                 {summary.rank_delta > 0 ? (
                   <>
-                    <ArrowUpRight size={16} className="text-emerald-600" /> +{Math.abs(summary.rank_delta)} поз.
+                    <ArrowUpRight size={16} className="text-emerald-600" /> +{Math.abs(summary.rank_delta)} {t.common.positions}
                   </>
                 ) : summary.rank_delta < 0 ? (
                   <>
-                    <ArrowDownRight size={16} className="text-red-600" /> −{Math.abs(summary.rank_delta)} поз.
+                    <ArrowDownRight size={16} className="text-red-600" /> −{Math.abs(summary.rank_delta)} {t.common.positions}
                   </>
                 ) : (
-                  "Без изменений"
+                  t.dashboard.rankUnchanged
                 )}
               </p>
             ) : (
-              <p className="mt-2 text-sm text-bashkir-muted">Рейтинг после расчёта индекса</p>
+              <p className="mt-2 text-sm text-bashkir-muted">{t.dashboard.rankAfterCalc}</p>
             )}
           </article>
 
           <article className="stat-card">
-            <p className="stat-label">Показатели с данными</p>
+            <p className="stat-label">{t.dashboard.indicatorsWithData}</p>
             <p className="kpi-value text-bashkir-blue">
               {liveKpis}
               <span className="text-lg font-medium text-bashkir-muted"> / {summary.kpis.length}</span>
             </p>
-            <p className="mt-2 text-sm text-bashkir-muted">Из подключённых источников</p>
+            <p className="mt-2 text-sm text-bashkir-muted">{t.dashboard.fromSources}</p>
           </article>
 
           <article className="stat-card">
-            <p className="stat-label">Актуальные источники</p>
+            <p className="stat-label">{t.dashboard.activeSources}</p>
             <p className="kpi-value text-bashkir-green">
               {liveSources}
               <span className="text-lg font-medium text-bashkir-muted"> / {summary.data_sources.length}</span>
             </p>
             <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-bashkir-muted">
-              <Database size={15} /> Подключённые системы
+              <Database size={15} /> {t.dashboard.connectedSystems}
             </p>
           </article>
 
           <article className="stat-card">
-            <p className="stat-label">Последняя загрузка</p>
+            <p className="stat-label">{t.dashboard.lastLoad}</p>
             <p className={`text-lg font-bold ${hasLiveData ? "text-bashkir-blue" : "text-bashkir-gold"}`}>
               {lastUpdate ? formatDate(lastUpdate) : "—"}
             </p>
             <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-bashkir-muted">
-              <Clock3 size={15} /> Последнее обновление данных
+              <Clock3 size={15} /> {t.dashboard.lastUpdate}
             </p>
           </article>
         </div>
 
         <div className="stat-card flex flex-col items-center justify-center gap-2 px-6 py-4 lg:min-w-[10rem]">
-          <CoverageRing filled={liveKpis} total={summary.kpis.length} label="Показатели" />
+          <CoverageRing filled={liveKpis} total={summary.kpis.length} label={t.nav.indicators} />
         </div>
       </section>
 
@@ -138,8 +157,8 @@ export default function DashboardPage() {
       <section className="card-bashkir">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h3 className="section-title">Ключевые показатели</h3>
-            <p className="mt-1 text-sm text-bashkir-muted">Все 6 показателей · динамика и источник данных</p>
+            <h3 className="section-title">{t.dashboard.keyIndicators}</h3>
+            <p className="mt-1 text-sm text-bashkir-muted">{t.dashboard.allIndicatorsHint}</p>
           </div>
           {hasLiveData ? <SourceBadge mode="live" /> : null}
         </div>
@@ -147,8 +166,8 @@ export default function DashboardPage() {
         {summary.kpis.length === 0 ? (
           <div className="mt-6">
             <EmptyState
-              title="Нет показателей"
-              description="Данные появятся после загрузки из БД ПМО и других источников."
+              title={t.dashboard.noIndicators}
+              description={t.dashboard.noIndicatorsDesc}
               icon="database"
             />
           </div>
@@ -161,19 +180,52 @@ export default function DashboardPage() {
         )}
       </section>
 
+      <section className="card-bashkir">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h3 className="section-title">{t.triggers.title}</h3>
+            <p className="mt-1 text-sm text-bashkir-muted">
+              {fmt(t.triggers.hint, { triggered: triggerCounts.triggered, watch: triggerCounts.watch })}
+            </p>
+          </div>
+          {hasActiveTriggers ? (
+            <span className="trigger-summary-badge">
+              {triggerCounts.triggered > 0 ? (
+                <span className="trigger-summary-badge__item trigger-summary-badge__item--alert">
+                  {triggerCounts.triggered}
+                </span>
+              ) : null}
+              {triggerCounts.watch > 0 ? (
+                <span className="trigger-summary-badge__item trigger-summary-badge__item--watch">
+                  {triggerCounts.watch}
+                </span>
+              ) : null}
+            </span>
+          ) : triggerCounts.ok > 0 ? (
+            <SourceBadge mode="live" />
+          ) : null}
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {triggers.map((trigger) => (
+            <TriggerCard key={trigger.code} trigger={trigger} />
+          ))}
+        </div>
+      </section>
+
       <section className="grid gap-6 xl:grid-cols-[1.2fr_1fr]">
         <div className="card-bashkir">
           <h3 className="section-title inline-flex items-center gap-2">
             <BarChart3 size={22} className="text-bashkir-blue" />
-            Сводный профиль показателей
+            {t.dashboard.chartTitle}
           </h3>
-          <p className="mt-1 text-sm text-bashkir-muted">Сравнение заполненных показателей муниципалитета</p>
+          <p className="mt-1 text-sm text-bashkir-muted">{t.dashboard.chartDesc}</p>
           {chartData.every((d) => d.value === 0) ? (
             <div className="mt-6">
-              <EmptyState title="Недостаточно данных" description="Заполните показатели из подключённых источников." icon="search" />
+              <EmptyState title={t.dashboard.notEnoughData} description={t.dashboard.fillFromSources} icon="search" />
             </div>
           ) : (
-            <div className="mt-6 h-80">
+            <div className="mt-6 h-56 sm:h-72 lg:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 8, right: 8, left: -8, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
@@ -186,7 +238,7 @@ export default function DashboardPage() {
                       boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
                       fontSize: 13,
                     }}
-                    formatter={(value: number) => [value.toLocaleString("ru-RU"), "Значение"]}
+                    formatter={(value: number) => [value.toLocaleString("ru-RU"), t.dashboard.chartValue]}
                   />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {chartData.map((entry, index) => (
@@ -207,23 +259,23 @@ export default function DashboardPage() {
             <div>
               <h3 className="font-display text-xl font-bold text-bashkir-ink">{summary.municipality_name}</h3>
               <p className="mt-1 text-sm text-bashkir-muted">
-                Республика Башкортостан · {summary.total} муниципалитетов
+                {fmt(t.dashboard.republicMunicipalities, { total: summary.total })}
               </p>
               <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <dt className="text-bashkir-muted">Период</dt>
+                  <dt className="text-bashkir-muted">{t.common.period}</dt>
                   <dd className="font-semibold text-bashkir-ink">{formatDate(summary.period)}</dd>
                 </div>
                 <div>
-                  <dt className="text-bashkir-muted">Актуальные показатели</dt>
-                  <dd className="font-semibold text-bashkir-green">{liveKpis} из {summary.kpis.length}</dd>
+                  <dt className="text-bashkir-muted">{t.dashboard.activeIndicators}</dt>
+                  <dd className="font-semibold text-bashkir-green">{liveKpis} {t.common.of} {summary.kpis.length}</dd>
                 </div>
                 <div>
-                  <dt className="text-bashkir-muted">Источники</dt>
-                  <dd className="font-semibold text-bashkir-blue">{liveSources} активных</dd>
+                  <dt className="text-bashkir-muted">{t.dashboard.sources}</dt>
+                  <dd className="font-semibold text-bashkir-blue">{liveSources} {t.dashboard.activeCount}</dd>
                 </div>
                 <div>
-                  <dt className="text-bashkir-muted">Рейтинг</dt>
+                  <dt className="text-bashkir-muted">{t.dashboard.rank}</dt>
                   <dd className="font-semibold text-bashkir-ink">{summary.rank ? `#${summary.rank}` : "—"}</dd>
                 </div>
               </dl>

@@ -8,12 +8,16 @@ import { apiFetch, setToken } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { ErrorBanner, SourceBadge } from "@/components/ui/LoadingState";
 import { getHeadPassword, loadMunicipalities, type MunicipalityOption } from "@/lib/staticDemo";
+import { assetPath } from "@/lib/assetPath";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const isStatic = process.env.NEXT_PUBLIC_STATIC_DEMO === "true";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [municipalities, setMunicipalities] = useState<MunicipalityOption[]>([]);
   const [selectedLogin, setSelectedLogin] = useState("");
   const [login, setLogin] = useState("");
@@ -59,7 +63,7 @@ export default function LoginPage() {
       setToken(result.access_token);
       router.push("/dashboard");
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Ошибка входа");
+      setError(submitError instanceof Error ? submitError.message : t.login.error);
     } finally {
       setLoading(false);
     }
@@ -69,38 +73,39 @@ export default function LoginPage() {
 
   return (
     <main className="login-page flex min-h-screen items-center justify-center p-4 md:p-8">
+      <LanguageSwitcher className="lang-switcher--login" />
       <div className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/60 bg-white/80 shadow-2xl backdrop-blur-xl">
         <div className="h-1.5 w-full bg-tricolor" aria-hidden />
         <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
           <section className="relative hidden overflow-hidden p-10 lg:block">
             <div
               className="pointer-events-none absolute inset-0 opacity-40"
-              style={{ background: "url('/ornament.svg') repeat", backgroundSize: "180px" }}
+              style={{ background: `url('${assetPath("/ornament.svg")}') repeat`, backgroundSize: "180px" }}
             />
             <div className="relative">
               <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-bashkir-gold/30 bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-widest text-bashkir-green backdrop-blur">
                 <ShieldCheck size={14} />
-                63 муниципальных образования
+                {t.login.tagline}
               </div>
               <h1 className="font-display text-5xl font-bold leading-[1.1] text-bashkir-ink">
-                Муниципальная
+                {t.login.heroTitle1}
                 <br />
                 <span className="bg-gradient-to-r from-bashkir-blue via-bashkir-gold to-bashkir-green bg-clip-text text-transparent">
-                  статистика
+                  {t.login.heroTitle2}
                 </span>
                 <br />
-                Башкортостана
+                {t.login.heroTitle3}
               </h1>
               <p className="mt-5 max-w-md text-base leading-relaxed text-bashkir-muted">
-                Личный кабинет для глав районов и городских округов: показатели, рейтинг и сравнение с республикой.
+                {t.login.heroDesc}
               </p>
               <div className="mt-10 flex items-center gap-4 rounded-2xl border border-bashkir-blue/15 bg-white/60 p-4 backdrop-blur">
-                <Image src="/emblem-rb.svg" alt="Герб РБ" width={64} height={64} className="shrink-0" priority />
+                <Image src={assetPath("/emblem-rb.svg")} alt="Герб РБ" width={64} height={64} className="shrink-0" priority />
                 <div>
-                  <p className="font-semibold text-bashkir-ink">Правительство Республики Башкортостан</p>
+                  <p className="font-semibold text-bashkir-ink">{t.login.gov}</p>
                   <p className="mt-1 flex items-center gap-1.5 text-sm text-bashkir-muted">
                     <MapPin size={14} className="text-bashkir-blue" />
-                    Отдельный доступ для каждого МО
+                    {t.login.access}
                   </p>
                 </div>
               </div>
@@ -110,24 +115,24 @@ export default function LoginPage() {
           <section className="border-t border-slate-100 p-8 lg:border-l lg:border-t-0 lg:p-10">
             <div className="mb-8 flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-bashkir-blue">Вход</p>
-                <h2 className="mt-2 font-display text-3xl font-bold text-bashkir-ink">Личный кабинет</h2>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-bashkir-blue">{t.login.signInLabel}</p>
+                <h2 className="mt-2 font-display text-3xl font-bold text-bashkir-ink">{t.login.cabinet}</h2>
               </div>
               {!isStatic ? <SourceBadge mode="live" /> : null}
             </div>
 
             <div className="mb-6 flex items-center gap-3 rounded-2xl border border-bashkir-blue/20 bg-bashkir-blue/5 px-4 py-3 text-sm text-bashkir-ink">
               <KeyRound size={18} className="shrink-0 text-bashkir-blue" />
-              Выберите своё муниципальное образование из списка 63 районов и городов
+              {t.login.selectMunicipality}
             </div>
 
             <div className="mb-6 flex justify-center lg:hidden">
-              <Image src="/emblem-rb.svg" alt="Герб РБ" width={72} height={72} priority />
+              <Image src={assetPath("/emblem-rb.svg")} alt="Герб РБ" width={72} height={72} priority />
             </div>
 
             <form className="space-y-5" onSubmit={onSubmit}>
               <label className="block text-sm font-semibold text-bashkir-ink">
-                Муниципальное образование
+                {t.login.municipality}
                 <select
                   className="input-bashkir"
                   value={selectedLogin}
@@ -135,7 +140,7 @@ export default function LoginPage() {
                   required
                 >
                   {municipalities.length === 0 ? (
-                    <option value="">Загрузка списка…</option>
+                    <option value="">{t.login.loadingList}</option>
                   ) : (
                     municipalities.map((item) => (
                       <option key={item.login} value={item.login}>
@@ -147,11 +152,11 @@ export default function LoginPage() {
               </label>
               {selectedName ? (
                 <p className="text-xs text-bashkir-muted">
-                  Логин: <code className="rounded bg-bashkir-cream px-1.5 py-0.5">{login}</code>
+                  {t.login.loginHint} <code className="rounded bg-bashkir-cream px-1.5 py-0.5">{login}</code>
                 </p>
               ) : null}
               <label className="block text-sm font-semibold text-bashkir-ink">
-                Пароль
+                {t.login.password}
                 <input
                   type="password"
                   className="input-bashkir"
@@ -163,12 +168,12 @@ export default function LoginPage() {
               </label>
               {error ? <ErrorBanner message={error} /> : null}
               <Button type="submit" className="w-full py-3 text-base" disabled={loading || !login}>
-                {loading ? "Вход…" : "Войти в личный кабинет"}
+                {loading ? t.login.submitting : t.login.submit}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-xs text-bashkir-muted">
-              Администратор: <code className="rounded-lg bg-bashkir-cream px-2 py-0.5">admin</code> /{" "}
+              {t.login.adminHint} <code className="rounded-lg bg-bashkir-cream px-2 py-0.5">admin</code> /{" "}
               <code className="rounded-lg bg-bashkir-cream px-2 py-0.5">admin12345</code>
             </p>
           </section>

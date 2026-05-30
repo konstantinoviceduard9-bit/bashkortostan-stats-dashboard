@@ -1,6 +1,9 @@
+"use client";
+
 import { ReactNode } from "react";
 import { AlertCircle, DatabaseZap, FolderSearch } from "lucide-react";
-import { SOURCE_BADGE_LABELS, type SourceStatus } from "@/lib/dashboard-meta";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
+import type { SourceStatus } from "@/lib/dashboard-meta";
 
 export function LoadingState({ label = "Загрузка…" }: { label?: string }) {
   return (
@@ -66,6 +69,7 @@ export function EmptyState({
 }
 
 export function SourceBadge({ mode }: { mode: SourceStatus }) {
+  const { t } = useI18n();
   if (mode === "demo") return null;
 
   const styles: Record<string, string> = {
@@ -76,7 +80,7 @@ export function SourceBadge({ mode }: { mode: SourceStatus }) {
     manual: "border-violet-300/50 bg-violet-50 text-violet-800",
     not_run: "border-slate-200 bg-slate-50 text-slate-500",
   };
-  const labels = SOURCE_BADGE_LABELS;
+  const labels = t.badge;
   const isLive = mode === "live";
 
   return (

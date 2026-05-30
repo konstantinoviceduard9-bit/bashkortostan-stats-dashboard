@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { LoadingState } from "@/components/ui/LoadingState";
-import { ROLE_LABELS } from "@/lib/dashboard-meta";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
 
 interface UserProfile {
   login: string;
@@ -15,6 +15,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
+  const { t } = useI18n();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [maxUserId, setMaxUserId] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -33,25 +34,27 @@ export default function ProfilePage() {
       body: JSON.stringify({ max_user_id: maxUserId }),
     });
     setProfile(updated);
-    setMessage("Профиль сохранён");
+    setMessage(t.profile.saved);
   }
 
-  if (!profile) return <LoadingState label="Загрузка профиля…" />;
+  if (!profile) return <LoadingState label={t.profile.loading} />;
+
+  const roleLabel = t.roles[profile.role as keyof typeof t.roles] ?? profile.role;
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <PageHeader
-        title="Профиль"
-        subtitle={`${profile.login} · ${profile.municipality_name ?? "—"} · ${ROLE_LABELS[profile.role] ?? profile.role}`}
+        title={t.profile.title}
+        subtitle={`${profile.login} · ${profile.municipality_name ?? t.common.noData} · ${roleLabel}`}
       />
       <div className="card-bashkir">
         <form className="space-y-4" onSubmit={onSubmit}>
           <label className="block text-sm font-medium text-slate-700">
-            Идентификатор в мессенджере «Макс»
+            {t.profile.maxId}
             <input className="input-bashkir" value={maxUserId} onChange={(event) => setMaxUserId(event.target.value)} />
           </label>
           {message ? <p className="text-sm text-bashkir-green">{message}</p> : null}
-          <Button type="submit">Сохранить</Button>
+          <Button type="submit">{t.common.save}</Button>
         </form>
       </div>
     </div>

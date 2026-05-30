@@ -13,7 +13,7 @@ class BdmoTochnoConnector(BaseConnector):
     """БД ПМО через плоские CSV tochno.st (region_id=80 — Республика Башкортостан)."""
 
     connector_id = "bdmo_tochno"
-    display_name = "БД ПМО / tochno.st"
+    display_name = "БД ПМО"
 
     def __init__(self, sections: tuple[int, ...] | None = None) -> None:
         self.sections = sections or DEFAULT_SECTIONS

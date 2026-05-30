@@ -75,7 +75,7 @@ export const CONNECTOR_META: Record<
   emiss: {
     icon: LineChart,
     color: "from-sky-500/20 to-sky-500/5 text-sky-700",
-    description: "ЕМИСС / Башкортостанстат",
+    description: "ЕМИСС и Башкортостанстат",
   },
   gas_manual: {
     icon: CloudUpload,

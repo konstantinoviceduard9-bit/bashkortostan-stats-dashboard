@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
@@ -16,6 +16,7 @@ from app.api.schemas import (
 )
 from app.application.dashboard_metrics import load_sparkline, percent_change
 from app.application.data_freshness import kpi_source_notes, latest_connector_runs
+from app.application.triggers import build_triggers
 from app.infrastructure.db.models import Indicator, IndicatorValue, Municipality, RankingSnapshot, UserRoleEnum
 from app.infrastructure.db.session import get_db
 
@@ -165,6 +166,9 @@ async def summary(
     ]
     notes = await kpi_source_notes(session, municipality.id, latest_period)
 
+    kpi_payload = [k.model_dump() for k in kpis]
+    triggers = build_triggers(kpi_payload)
+
     return DashboardSummary(
         municipality_name=municipality.name,
         rank=rank_row.rank if rank_row else None,
@@ -172,6 +176,7 @@ async def summary(
         rank_delta=rank_row.rank_delta if rank_row else None,
         period=latest_period,
         kpis=kpis,
+        triggers=triggers,
         data_sources=sources,
         source_notes=notes,
     )
@@ -198,6 +203,12 @@ async def indicators(
         latest_period = await session.scalar(select(func.max(IndicatorValue.period)))
     if latest_period is None:
         latest_period = date.today()
+    connector_runs = await latest_connector_runs(session)
+    received_by_source = {
+        row["connector_id"]: row["last_run_at"] or row["last_success_at"]
+        for row in connector_runs
+        if row["last_run_at"] or row["last_success_at"]
+    }
     result: list[IndicatorRow] = []
 
     for indicator in indicator_rows:
@@ -214,6 +225,11 @@ async def indicators(
                 IndicatorValue.period == latest_period,
             )
         )
+        received_at = None
+        if value_row:
+            received_at = received_by_source.get(indicator.source)
+            if received_at is None and indicator.source not in {"demo", "catalog"}:
+                received_at = datetime.combine(value_row.period, datetime.min.time()).replace(tzinfo=timezone.utc)
         result.append(
             IndicatorRow(
                 code=indicator.code,
@@ -224,6 +240,7 @@ async def indicators(
                 change_percent=None,
                 republic_average=float(republic_avg) if republic_avg is not None else None,
                 source=indicator.source,
+                received_at=received_at,
             )
         )
 

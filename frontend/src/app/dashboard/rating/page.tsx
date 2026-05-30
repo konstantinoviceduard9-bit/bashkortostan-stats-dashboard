@@ -6,6 +6,7 @@ import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CoverageRing } from "@/components/dashboard/CoverageRing";
 import { EmptyState, ErrorBanner, TableSkeleton } from "@/components/ui/LoadingState";
+import { useI18n } from "@/lib/i18n/LocaleProvider";
 
 interface RatingRow {
   rank: number;
@@ -23,13 +24,14 @@ interface RatingView {
 const PODIUM = ["🥇", "🥈", "🥉"];
 
 export default function RatingPage() {
+  const { t, fmt } = useI18n();
   const [view, setView] = useState<RatingView | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     apiFetch<RatingView>("/dashboard/rating")
       .then(setView)
-      .catch((loadError) => setError(loadError instanceof Error ? loadError.message : "Ошибка загрузки рейтинга"));
+      .catch((loadError) => setError(loadError instanceof Error ? loadError.message : t.rating.loadError));
   }, []);
 
   if (error) return <ErrorBanner message={error} />;
@@ -37,8 +39,8 @@ export default function RatingPage() {
   if (view.top.length === 0 && view.bottom.length === 0) {
     return (
       <EmptyState
-        title="Рейтинг пока недоступен"
-        description="После расчёта сводного индекса по муниципалитетам таблица рейтинга появится здесь."
+        title={t.rating.unavailable}
+        description={t.rating.unavailableDesc}
         icon="database"
       />
     );
@@ -49,17 +51,19 @@ export default function RatingPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Рейтинг муниципалитетов"
-        subtitle="Сводный индекс по показателям с актуальными данными (жильё, бюджет и др.) · 63 МО Республики."
+        title={t.rating.title}
+        subtitle={t.rating.subtitle}
         badge={process.env.NEXT_PUBLIC_STATIC_DEMO !== "true" ? "live" : undefined}
       />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
         <article className="stat-card">
-          <p className="stat-label">Ваше место</p>
+          <p className="stat-label">{t.rating.yourPlace}</p>
           <p className="kpi-value text-bashkir-green">
-            {view.self_rank ?? "—"}{" "}
-            <span className="text-lg font-normal text-bashkir-muted">из {view.self_total}</span>
+            {view.self_rank ?? t.common.noData}{" "}
+            <span className="text-lg font-normal text-bashkir-muted">
+              {t.common.of} {view.self_total}
+            </span>
           </p>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
             <div
@@ -68,14 +72,14 @@ export default function RatingPage() {
             />
           </div>
           <p className="mt-2 inline-flex items-center gap-2 text-sm text-bashkir-muted">
-            <TrendingUp size={15} /> Лучше {rankPct}% муниципалитетов
+            <TrendingUp size={15} /> {fmt(t.rating.betterThan, { pct: rankPct })}
           </p>
         </article>
         <div className="stat-card flex items-center justify-center">
           <CoverageRing
             filled={view.self_rank ? view.self_total - view.self_rank + 1 : 0}
             total={view.self_total}
-            label="Место"
+            label={t.rating.placeLabel}
           />
         </div>
       </div>
@@ -84,7 +88,7 @@ export default function RatingPage() {
         <section className="card-bashkir border-emerald-200/50 bg-gradient-to-br from-white to-emerald-50/20">
           <h3 className="heading-section inline-flex items-center gap-2 text-bashkir-green">
             <Medal size={18} />
-            Топ‑3
+            {t.rating.top3}
           </h3>
           <ul className="mt-4 space-y-2">
             {view.top.map((row, i) => (
@@ -107,7 +111,7 @@ export default function RatingPage() {
         <section className="card-bashkir border-red-200/50 bg-gradient-to-br from-white to-red-50/20">
           <h3 className="heading-section inline-flex items-center gap-2 text-red-700">
             <TriangleAlert size={18} />
-            Антитоп‑3
+            {t.rating.bottom3}
           </h3>
           <ul className="mt-4 space-y-2">
             {view.bottom.map((row) => (

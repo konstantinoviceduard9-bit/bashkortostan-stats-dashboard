@@ -10,7 +10,7 @@ CONNECTOR_LABELS = {
     "opendata_rb": "Портал открытых данных РБ",
     "rosstat_bdpmo": "Росстат БД ПМО",
     "minfin_rb": "Минфин РБ",
-    "emiss": "Башкортостанстат / ЕМИСС",
+    "emiss": "ЕМИСС",
     "gas_manual": "ГАС «Управление»",
 }
 
